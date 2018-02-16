@@ -15,6 +15,8 @@ class puff {
 	std::deque<
 		std::list<sector<T>>> sectors;
 
+	bool grow();
+
 public:
 	size_t depth() const;
 
@@ -31,42 +33,48 @@ public:
 
 template<class T>
 inline puff<T>::puff(const graph_impl<T>& gr, size_t max_depth) {
-	if (max_depth != 0) {
+	if (max_depth == 0) throw std::invalid_argument("max_depth must be at least 1");
 
-		sectors.push_back({});
-		for (auto&& i : gr.nodes) {
-			sectors.front().emplace_back(i.get());
-		}
+	sectors.push_back({});
+	for (auto&& i : gr.nodes) {
+		sectors.front().emplace_back(i.get());
+	}
 
-		for (size_t level = 1; level < max_depth; level++) {
-			//Expand all elements of previous level by 1 and insert
-			std::list<sector<T>> new_level;
+	for (size_t level = 1; level < max_depth; level++) {
+		if (!grow()) break;
+	}
+}
 
-			bool expanded = false;
+template<class T>
+inline bool puff<T>::grow() {
+	if (sectors.empty()) throw std::runtime_error("attemted to grow an empty puff");
 
-			for (auto&& i : sectors.back()) {
-				auto expanded_sectors = i.expand();
-				if (!expanded_sectors.empty()) {
-					expanded = true;
-					new_level.insert(
-						new_level.end(), expanded_sectors.begin(), expanded_sectors.end());
-				}
-			}
-			if (!expanded) break;
+	//Expand all elements of previous level by 1 and insert
+	std::list<sector<T>> new_level;
 
-			//Trim: join identical sectors' children
-			new_level.sort(sector_lexicographical_order<T>());
-
-			for (auto control = new_level.begin(); control != new_level.end(); control++) {
-				for (auto check = std::next(control); check != new_level.end() && control->nodes == check->nodes;) {
-					control->join_children(*check);
-					check = new_level.erase(check);
-				}
-			}
-
-			sectors.emplace_back(std::move(new_level));
+	bool expanded = false;
+	for (auto&& i : sectors.back()) {
+		auto expanded_sectors = i.expand();
+		if (!expanded_sectors.empty()) {
+			expanded = true;
+			new_level.insert(
+				new_level.end(), expanded_sectors.begin(), expanded_sectors.end());
 		}
 	}
+	if (!expanded) return false;
+
+	//Trim: join identical sectors' children
+	new_level.sort(sector_lexicographical_order<T>());
+
+	for (auto control = new_level.begin(); control != new_level.end(); control++) {
+		for (auto check = std::next(control); check != new_level.end() && control->nodes == check->nodes;) {
+			control->join_children(*check);
+			check = new_level.erase(check);
+		}
+	}
+
+	sectors.emplace_back(std::move(new_level));
+	return true;
 }
 
 template<class T>
