@@ -7,11 +7,11 @@
 template <typename T>
 class graph : public graph_impl<T> {
 public:
-	std::set<graph_match> contains(const graph& other);
+	std::set<graph_match> contains(const graph& other) const;
 };
 
 template<typename T>
-inline std::set<graph_match> graph<T>::contains(const graph& other) {
+inline std::set<graph_match> graph<T>::contains(const graph& other) const {
 	puff<T> other_puff(other);
 	puff<T> my_puff(*this, other_puff.depth());
 
