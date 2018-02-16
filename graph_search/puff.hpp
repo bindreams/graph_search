@@ -5,8 +5,10 @@
 #include <vector>
 #include <list>
 #include <deque>
+#include <future>
 #include "sector.hpp"
 #include "graph_impl.hpp"
+#include "puff_info.hpp"
 
 template <class T>
 class puff {
@@ -16,8 +18,9 @@ class puff {
 		std::list<sector<T>>> sectors;
 
 	bool grow();
-
 public:
+	mutable puff_info info;
+
 	size_t depth() const;
 
 	std::set<graph_match> contains(const puff<T>& other) const;
@@ -25,11 +28,17 @@ public:
 	size_t size() const;
 	size_t size_in_bytes() const;
 
+	puff();
 	puff(const graph_impl<T>& gr, size_t max_depth = std::numeric_limits<std::size_t>::max());
 
 	template <class T_>
 	friend std::ostream& operator<<(std::ostream& os, const puff<T_>& obj);
 };
+
+template<class T>
+inline puff<T>::puff() :
+	async_calls (0) {
+}
 
 template<class T>
 inline puff<T>::puff(const graph_impl<T>& gr, size_t max_depth) {
@@ -52,15 +61,21 @@ inline bool puff<T>::grow() {
 	//Expand all elements of previous level by 1 and insert
 	std::list<sector<T>> new_level;
 
-	bool expanded = false;
+	std::vector<std::future<std::set<sector<T>>>> expanded_sectors;
 	for (auto&& i : sectors.back()) {
-		auto expanded_sectors = i.expand();
-		if (!expanded_sectors.empty()) {
-			expanded = true;
-			new_level.insert(
-				new_level.end(), expanded_sectors.begin(), expanded_sectors.end());
-		}
+		info.async_calls_ctor_++;
+		expanded_sectors.push_back(std::move(std::async(&sector<T>::expand, &i)));
 	}
+	
+	bool expanded = false;
+	
+	for (auto&& i : expanded_sectors) {
+		auto temp = std::move(i.get());
+		if (!temp.empty()) expanded = true;
+		new_level.insert(
+			new_level.end(), temp.begin(), temp.end());
+	}
+	
 	if (!expanded) return false;
 
 	//Trim: join identical sectors' children
@@ -84,6 +99,8 @@ inline size_t puff<T>::depth() const {
 
 template<class T>
 inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
+	info.async_calls_contains_ = 0;
+
 	if (other.depth() > depth()) {
 		return {};
 	}
@@ -92,10 +109,18 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 
 	for (auto&& i : other.sectors[other.depth() - 1]) {
 		std::set<graph_match> matches_of_one;
+
+		std::vector<std::future<graph_match>> matches;
 		for (auto&& j : sectors[other.depth() - 1]) {
-			graph_match match (j.contains(i));
+			info.async_calls_contains_++;
+			matches.push_back(std::move(std::async(&sector<T>::contains, &j, std::cref(i))));
+		}
+
+		for (auto&& j : matches) {
+			graph_match match (std::move(j.get()));
 			if (match) matches_of_one.emplace(match);
 		}
+
 		if (matches_of_one.empty()) return {};
 		rslt = merge(rslt, matches_of_one);
 	}

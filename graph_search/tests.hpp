@@ -6,6 +6,36 @@
 #include "graph.hpp"
 #include "puff.hpp"
 
+template<class T>
+void generic_test(const graph<T>& graph1, const graph<T>& graph2) {
+	puff<T> puff1(graph1);
+	puff<T> puff2(graph2);
+
+	std::cout << "= Graph info ===================================================================" << std::endl;
+	std::cout << "graph 1: " << graph1 << std::endl;
+	std::cout << "puff 1: " << puff1 << std::endl;
+	std::cout << "Made " << puff1.info.async_calls_ctor() << " asynchronous calls while building" << std::endl;
+	puff1.contains(puff2);
+	std::cout << "Made " << puff1.info.async_calls_contains() << " asynchronous calls while checking puff1.contains(puff2)" << std::endl;
+
+	std::cout << "graph 2: " << graph2 << std::endl;
+	std::cout << "puff 2: " << puff2 << std::endl;
+	std::cout << "Made " << puff2.info.async_calls_ctor() << " asynchronous calls while building" << std::endl;
+	puff2.contains(puff1);
+	std::cout << "Made " << puff2.info.async_calls_contains() << " asynchronous calls while checking puff2.contains(puff1)" << std::endl;
+
+	std::cout << "= Results and benchmarks =======================================================" << std::endl;
+	std::cout << "Answer: graph 1 " << (graph1.contains(graph2).empty() ? "does not contain" : "contains") << " graph 2" << std::endl;
+	std::cout << "Benchmarks:" << std::endl;
+	std::cout << "Size of puff 1: " << puff1.size() << " sectors (" << puff1.size_in_bytes() << " bytes)" << std::endl;
+	std::cout << "Size of puff 2: " << puff2.size() << " sectors (" << puff2.size_in_bytes() << " bytes)" << std::endl;
+
+	TIME(10000, puff<int> pf(graph1));
+	TIME(10000, puff<int> pf(graph2));
+	TIME(10000, puff1.contains(puff2));
+	TIME(10000, graph1.contains(graph2));
+}
+
 void test1() {
 	graph<int> graph1;
 	auto n11 = graph1.attach(1);
@@ -19,25 +49,7 @@ void test1() {
 	auto n22 = graph2.attach(2, {n21});
 	auto n23 = graph2.attach(3, {n21, n22});
 
-	puff<int> puff1(graph1);
-	puff<int> puff2(graph2);
-
-	std::cout << "graph_impl 1: " << graph1 << std::endl;
-	std::cout << "puff 1: " << puff1 << std::endl;
-
-	std::cout << "graph_impl 2: " << graph2 << std::endl;
-	std::cout << "puff 2: " << puff2 << std::endl;
-
-	std::cout << "================================================================================" << std::endl;
-	std::cout << "Answer: graph 1 " << (graph1.contains(graph2).empty() ? "does not contain" : "contains") << " graph 2" << std::endl;
-	std::cout << "Benchmarks:" << std::endl;
-	std::cout << "Size of puff 1: " << puff1.size() << " sectors (" << puff1.size_in_bytes() << " bytes)" << std::endl;
-	std::cout << "Size of puff 2: " << puff2.size() << " sectors (" << puff2.size_in_bytes() << " bytes)" << std::endl;
-
-	TIME(10, puff<int> pf(graph1));
-	TIME(10, puff<int> pf(graph2));
-	TIME(10, puff1.contains(puff2));
-	TIME(10, graph1.contains(graph2));
+	generic_test(graph1, graph2);
 }
 
 void test2() {
@@ -52,31 +64,5 @@ void test2() {
 	auto n21 = graph2.attach(1);
 	auto n22 = graph2.attach(2, {n21});
 
-	puff<int> puff1(graph1);
-	puff<int> puff2(graph2);
-
-	std::cout << "graph_impl 1: " << graph1 << std::endl;
-	std::cout << "puff 1: " << puff1 << std::endl;
-
-	std::cout << "graph_impl 2: " << graph2 << std::endl;
-	std::cout << "puff 2: " << puff2 << std::endl;
-
-	std::cout << "================================================================================" << std::endl;
-	auto matches = puff1.contains(puff2);
-	std::cout << "Answer: graph 1 " << (graph1.contains(graph2).empty() ? "does not contain" : "contains") << " graph 2" << std::endl;
-	if (!matches.empty()) {
-		std::cout << "Can be mapped in " << matches.size() << " different ways:" << std::endl;
-		for (auto&& i : matches) {
-			std::cout << "map " << i << std::endl;
-		}
-	}
-
-	std::cout << "Benchmarks:" << std::endl;
-	std::cout << "Size of puff 1: " << puff1.size() << " sectors (" << puff1.size_in_bytes() << " bytes)" << std::endl;
-	std::cout << "Size of puff 2: " << puff2.size() << " sectors (" << puff2.size_in_bytes() << " bytes)" << std::endl;
-
-	TIME(10, puff<int> pf(graph1));
-	TIME(10, puff<int> pf(graph2));
-	TIME(10, puff1.contains(puff2));
-	TIME(10, graph1.contains(graph2));
+	generic_test(graph1, graph2);
 }
