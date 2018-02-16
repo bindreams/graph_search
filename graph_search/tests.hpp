@@ -34,10 +34,10 @@ void test1() {
 	std::cout << "Size of puff 1: " << puff1.size() << " sectors (" << puff1.size_in_bytes() << " bytes)" << std::endl;
 	std::cout << "Size of puff 2: " << puff2.size() << " sectors (" << puff2.size_in_bytes() << " bytes)" << std::endl;
 
-	TIME(10000, puff<int> pf(graph1));
-	TIME(10000, puff<int> pf(graph2));
-	TIME(10000, puff1.contains(puff2));
-	TIME(10000, graph1.contains(graph2));
+	TIME(10, puff<int> pf(graph1));
+	TIME(10, puff<int> pf(graph2));
+	TIME(10, puff1.contains(puff2));
+	TIME(10, graph1.contains(graph2));
 }
 
 void test2() {
@@ -75,8 +75,8 @@ void test2() {
 	std::cout << "Size of puff 1: " << puff1.size() << " sectors (" << puff1.size_in_bytes() << " bytes)" << std::endl;
 	std::cout << "Size of puff 2: " << puff2.size() << " sectors (" << puff2.size_in_bytes() << " bytes)" << std::endl;
 
-	TIME(10000, puff<int> pf(graph1));
-	TIME(10000, puff<int> pf(graph2));
-	TIME(10000, puff1.contains(puff2));
-	TIME(10000, graph1.contains(graph2));
+	TIME(10, puff<int> pf(graph1));
+	TIME(10, puff<int> pf(graph2));
+	TIME(10, puff1.contains(puff2));
+	TIME(10, graph1.contains(graph2));
 }
