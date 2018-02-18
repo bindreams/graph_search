@@ -66,3 +66,16 @@ void test2() {
 
 	generic_test(graph1, graph2);
 }
+
+void test3() {
+	graph<int> graph1;
+	auto n11 = graph1.attach(2);
+	auto n12 = graph1.attach(1, {n11});
+	auto n13 = graph1.attach(1, {n11, n12});
+	auto n14 = graph1.attach(2, {n12});
+	auto n15 = graph1.attach(2, {n13});
+
+	graph<int> graph2;
+
+	generic_test(graph1, graph2);
+}
