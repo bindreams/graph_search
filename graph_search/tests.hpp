@@ -41,7 +41,7 @@ void generic_test(const graph<T>& graph1, const graph<T>& graph2) {
 	std::cout << "Size of puff 1: " << puff1.size() << " sectors (" << puff1.size_in_bytes() << " bytes)" << std::endl;
 	std::cout << "Size of puff 2: " << puff2.size() << " sectors (" << puff2.size_in_bytes() << " bytes)" << std::endl;
 
-	std::ofstream ofs("save.json");
+	std::ofstream ofs("last_test.json");
 	json j;
 	j["graph 1"] = graph1;
 	j["graph 2"] = graph2;
@@ -98,8 +98,8 @@ void test3() {
 	generic_test(graph1, graph2);
 }
 
-void test4() {
-	std::ifstream ifs("save.json");
+void test_from_file(const std::string& file) {
+	std::ifstream ifs(file);
 	json j;
 	ifs >> j;
 
