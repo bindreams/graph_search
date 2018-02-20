@@ -15,23 +15,29 @@ private:
 	id_manager ids;
 
 public:
+	void connect(size_t n1, size_t n2);
+	void disconnect(size_t n1, size_t n2);
+
 	size_t attach(const T& val, std::vector<size_t> connect_to = {});
 	void detach(size_t id);
 
-	template <class T>
-	friend class puff;
+	const std::unordered_map<size_t, node<T>>& get_nodes() const;
 
-	template <class T_>
-	friend std::ostream& operator<<(std::ostream& os, const graph_impl<T_>& obj);
-
-	template <class T_>
-	friend void to_json(json& j, const graph_impl<T_>& obj);
+	constexpr graph_impl() = default;
 
 	template <class T_>
 	friend void from_json(const json& j, graph_impl<T_>& obj);
-
-	friend graph_impl<int> random_graph(size_t size, double avg_connections, int max_value);
 };
+
+template<class T>
+inline void graph_impl<T>::connect(size_t n1, size_t n2) {
+	nodes.at(n1).bi_connect(&nodes.at(n2));
+}
+
+template<class T>
+inline void graph_impl<T>::disconnect(size_t n1, size_t n2) {
+	nodes.at(n1).bi_disconnect(&nodes.at(n2));
+}
 
 template<class T>
 inline size_t graph_impl<T>::attach(const T& val, std::vector<size_t> connect_to) {
@@ -52,11 +58,16 @@ inline void graph_impl<T>::detach(size_t id) {
 	nodes.erase(id);
 }
 
+template<class T>
+inline const std::unordered_map<size_t, node<T>>& graph_impl<T>::get_nodes() const {
+	return nodes;
+}
+
 template <class T>
 std::ostream& operator<<(std::ostream& os, const graph_impl<T>& obj) {
 	os << "{" << std::endl;
 
-	for (auto&& i : obj.nodes) {
+	for (auto&& i : obj.get_nodes()) {
 		os << "    " << i.second << " -> ";
 
 		for (auto&& connection : i.second.get_edges()) {
@@ -73,7 +84,7 @@ std::ostream& operator<<(std::ostream& os, const graph_impl<T>& obj) {
 
 template <class T>
 void to_json(json& j, const graph_impl<T>& obj) {
-	for (auto&& i : obj.nodes) {
+	for (auto&& i : obj.get_nodes()) {
 		j["nodes"].push_back(i.second);
 	}
 }
@@ -86,7 +97,7 @@ void from_json(const json& j, graph_impl<T>& obj) {
 	//Adding all nodes
 	size_t max_id = 0;
 	for (auto&& i : j["nodes"]) {
-		node<T> n = i.get<node<T>>();
+		node<T> n = i;
 		
 		size_t id = n.get_id();
 		if (id > max_id) max_id = id;
@@ -101,7 +112,7 @@ void from_json(const json& j, graph_impl<T>& obj) {
 	for (auto&& i : j["nodes"]) {
 		for (auto&& connect_id : i["edges"]) {
 			obj.nodes[i["id"]].bi_connect(
-				&obj.nodes[connect_id.get<size_t>()]);
+				&obj.nodes[connect_id]);
 		}
 	}
 }
