@@ -2,18 +2,21 @@
 #include <map>
 #include <set>
 #include <utility>
-#include "print.hpp"
 
 class graph_match {
+private:
+	std::map<size_t, size_t> matches;
 public:
-	std::map<const void*, const void*> matches;
-
-	template <typename T>
-	void add(const T* first, const T* second);
+	void add(size_t first, size_t second);
 
 	graph_match& operator+=(const graph_match& rhs);
 
 	explicit operator bool();
+
+	friend inline bool operator==(const graph_match& lhs, const graph_match& rhs);
+	friend inline bool operator< (const graph_match& lhs, const graph_match& rhs);
+
+	friend std::ostream& operator<<(std::ostream& os, const graph_match& obj);
 };
 
 inline graph_match::operator bool() {
@@ -32,6 +35,10 @@ inline bool operator< (const graph_match& lhs, const graph_match& rhs) {
 	return lhs.matches < rhs.matches;
 }
 
+inline void graph_match::add(size_t first, size_t second) {
+	matches[first] = second;
+}
+
 inline graph_match& graph_match::operator+=(const graph_match & rhs) {
 	matches.insert(rhs.matches.begin(), rhs.matches.end());
 
@@ -47,17 +54,12 @@ std::ostream& operator<<(std::ostream& os, const graph_match& obj) {
 	os << "{" << std::endl;
 
 	for (auto i : obj.matches) {
-		os << "    {" << tr(i.first) << " - " << tr(i.second) << "}" << std::endl;
+		os << "    {#" << i.first << " - #" << i.second << "}" << std::endl;
 	}
 
 	os << "}";
 
 	return os;
-}
-
-template<typename T>
-inline void graph_match::add(const T* first, const T* second) {
-	matches.insert(std::make_pair(static_cast<const void*>(first), static_cast<const void*>(second)));
 }
 
 inline std::set<graph_match> merge(const std::set<graph_match>& v1, const std::set<graph_match>& v2) {

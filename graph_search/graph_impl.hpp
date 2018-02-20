@@ -1,20 +1,21 @@
 #pragma once
 #include <algorithm>
-#include <vector>
-#include <vector>
+#include <unordered_map>
 #include <memory>
 
 #include "graph_match.hpp"
+#include "id_manager.hpp"
 #include "node.hpp"
 
 template <class T>
 class graph_impl {
 private:
-	std::vector<std::unique_ptr<node<T>>> nodes;
+	std::unordered_map<size_t, node<T>> nodes;
+	id_manager ids;
 
 public:
-	node<T>* attach(const T& val, std::vector<node<T>*> connect_to = {});
-	void detach(const node<T>* nd);
+	size_t attach(const T& val, std::vector<size_t> connect_to = {});
+	void detach(size_t id);
 
 	template <class T>
 	friend class puff;
@@ -24,22 +25,23 @@ public:
 };
 
 template<class T>
-inline node<T>* graph_impl<T>::attach(const T& val, std::vector<node<T>*> connect_to) {
-	nodes.push_back(std::make_unique<node<T>>(val));
+inline size_t graph_impl<T>::attach(const T& val, std::vector<size_t> connect_to) {
+	size_t id = ids.get();
+
+	nodes.emplace(id, node<T>(val, id));
 
 	//Establish connections (edges)
 	for (auto i : connect_to) {
-		i->edges.push_back(nodes.back().get());
-		nodes.back()->edges.push_back(&(*i));
+		nodes.at(i).edges.push_back(&nodes.at(id));
+		nodes.at(id).edges.push_back(&nodes.at(i));
 	}
 
-	return nodes.back().get();
+	return id;
 }
 
 template<class T>
-inline void graph_impl<T>::detach(const node<T>* nd) {
-	auto pos = std::find_if(nodes.begin(), nodes.end(), [&](const std::unique_ptr<node<T>>& p) {return p.get() == nd; });
-	nodes.erase(pos);
+inline void graph_impl<T>::detach(size_t id) {
+	nodes.erase(id);
 }
 
 template <class T>
@@ -47,9 +49,9 @@ std::ostream& operator<<(std::ostream& os, const graph_impl<T>& obj) {
 	os << "{" << std::endl;
 
 	for (auto&& i : obj.nodes) {
-		os << "    " << *i << " -> ";
+		os << "    " << i.second << " -> ";
 
-		for (auto&& connection : i->edges) {
+		for (auto&& connection : i.second.edges) {
 			os << *connection << " ";
 		}
 

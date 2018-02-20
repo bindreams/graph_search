@@ -128,8 +128,8 @@
     <ClInclude Include="graph.hpp" />
     <ClInclude Include="graph_impl.hpp" />
     <ClInclude Include="graph_match.hpp" />
+    <ClInclude Include="id_manager.hpp" />
     <ClInclude Include="node.hpp" />
-    <ClInclude Include="print.hpp" />
     <ClInclude Include="puff_info.hpp" />
     <ClInclude Include="sector.hpp" />
     <ClInclude Include="puff.hpp" />

@@ -25,7 +25,13 @@ void generic_test(const graph<T>& graph1, const graph<T>& graph2) {
 	std::cout << "Made " << puff2.info.async_calls_contains() << " asynchronous calls while checking puff2.contains(puff1)" << std::endl;
 
 	std::cout << "= Results and benchmarks =======================================================" << std::endl;
-	std::cout << "Answer: graph 1 " << (graph1.contains(graph2).empty() ? "does not contain" : "contains") << " graph 2" << std::endl;
+	auto mapping = graph1.contains(graph2);
+	std::cout << "Answer: graph 1 " << (!mapping.empty() ? "contains" : "does not contain") << " graph 2" << std::endl;
+	if (!mapping.empty()) std::cout << "Results:" << std::endl;
+	for (auto&& i : mapping) {
+		std::cout << "map " << i << std::endl;
+	}
+	
 	std::cout << "Benchmarks:" << std::endl;
 	std::cout << "Size of puff 1: " << puff1.size() << " sectors (" << puff1.size_in_bytes() << " bytes)" << std::endl;
 	std::cout << "Size of puff 2: " << puff2.size() << " sectors (" << puff2.size_in_bytes() << " bytes)" << std::endl;
