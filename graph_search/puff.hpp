@@ -6,6 +6,7 @@
 #include <list>
 #include <deque>
 #include <future>
+
 #include "sector.hpp"
 #include "graph_impl.hpp"
 #include "puff_info.hpp"
