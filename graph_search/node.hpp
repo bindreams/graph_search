@@ -6,15 +6,20 @@ using json = nlohmann::json;
 
 template <class T>
 class node {
-	template <class T_>
-	friend class graph_impl;
 private:
 	size_t id = 0;
+	std::unordered_set<node*> edges;
 
 public:
 	T value;
-	std::unordered_set<node*> edges;
+	
+	void fw_connect(node* n); //one-way connecting
+	void bi_connect(node* n); //two-way connecting
 
+	void fw_disconnect(node* n);
+	void bi_disconnect(node* n);
+
+	const std::unordered_set<node*>& get_edges() const;
 	size_t get_id() const;
 
 	constexpr node() = default;
@@ -24,6 +29,33 @@ public:
 	template <class T_>
 	friend void from_json(const json& j, node<T_>& obj);
 };
+
+template<class T>
+inline void node<T>::fw_connect(node * n) {
+	edges.emplace(n);
+}
+
+template<class T>
+inline void node<T>::bi_connect(node * n) {
+	fw_connect(n);
+	n->fw_connect(this);
+}
+
+template<class T>
+inline void node<T>::fw_disconnect(node * n) {
+	edges.erase(n);
+}
+
+template<class T>
+inline void node<T>::bi_disconnect(node * n) {
+	fw_disconnect(n);
+	n->fw_disconnect(this);
+}
+
+template<class T>
+inline const std::unordered_set<node<T>*>& node<T>::get_edges() const {
+	return edges;
+}
 
 template<class T>
 inline size_t node<T>::get_id() const {
@@ -69,7 +101,7 @@ void to_json(json& j, const node<T>& obj) {
 	j["value"] = obj.value;
 	j["id"] = obj.get_id();
 	
-	for (auto&& i : obj.edges) {
+	for (auto&& i : obj.get_edges()) {
 		j["edges"].push_back(i->get_id());
 	}
 }
