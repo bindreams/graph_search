@@ -47,7 +47,7 @@ inline graph_match sector<T>::contains(const sector& other) const {
 			(*other.nodes.begin())->value) return {};
 
 		graph_match rslt;
-		rslt.matches.emplace(std::make_pair((*nodes.begin()), (*other.nodes.begin())));
+		rslt.add((*nodes.begin())->get_id(), (*other.nodes.begin())->get_id());
 		return rslt;
 	}
 	else {

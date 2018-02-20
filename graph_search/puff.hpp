@@ -46,7 +46,7 @@ inline puff<T>::puff(const graph_impl<T>& gr, size_t max_depth) {
 
 	sectors.push_back({});
 	for (auto&& i : gr.nodes) {
-		sectors.front().emplace_back(i.get());
+		sectors.front().emplace_back(&i.second);
 	}
 
 	for (size_t level = 1; level < max_depth; level++) {
