@@ -31,11 +31,13 @@ public:
 	sector& join_children(const sector& other);
 	size_t size_in_bytes() const;
 
-	sector() = default;
+	constexpr sector() = default;
+	sector(const sector<T>& other) = default;
 	sector(const node<T>* nd);
 	sector(const sector<T>* sec, const node<T>* nd);
 
 	std::set<sector<T>> expand() const;
+	std::set<sector<T>> try_expand() const;
 };
 
 template<class T>
@@ -70,7 +72,7 @@ inline graph_match sector<T>::contains(const sector& other) const {
 
 template<class T>
 inline sector<T>& sector<T>::join_children(const sector<T>& other) {
-	//if (nodes != other.nodes) throw std::runtime_error("attempting to join different sectors");
+	if (nodes != other.nodes) throw std::runtime_error("attempting to join different sectors");
 
 	children.insert(other.children.begin(), other.children.end());
 
@@ -111,6 +113,22 @@ inline std::set<sector<T>> sector<T>::expand() const {
 		}
 	}
 
+	return rslt;
+}
+
+template<class T>
+inline std::set<sector<T>> sector<T>::try_expand() const {
+	//Tries to expand
+	std::set<sector<T>> rslt = expand();
+
+	if (rslt.empty()) {
+		//if fails, return copy of this with this as child
+		sector<T> copy_of_me(*this);
+		copy_of_me.children = {this};
+
+		rslt.emplace(std::move(copy_of_me));
+	}
+	
 	return rslt;
 }
 
