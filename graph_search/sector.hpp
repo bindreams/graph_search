@@ -13,7 +13,18 @@ struct sector_lexicographical_order {
 		return std::lexicographical_compare(
 			lhs.nodes.begin(), lhs.nodes.end(),
 			rhs.nodes.begin(), rhs.nodes.end(),
-			node_numerical_order<T>());
+			node_value_order<T>());
+	}
+
+	inline bool operator() (const sector<T>* const& lhs, const sector<T>* const& rhs) const {
+		return operator()(*lhs, *rhs);
+	}
+};
+
+template<class T>
+struct sector_nodes_equal {
+	inline bool operator() (sector<T> const& lhs, sector<T> const& rhs) const {
+		return lhs.nodes == rhs.nodes;
 	}
 
 	inline bool operator() (const sector<T>* const& lhs, const sector<T>* const& rhs) const {
@@ -24,7 +35,7 @@ struct sector_lexicographical_order {
 template <class T>
 class sector {
 public:
-	std::set<const node<T>*, node_numerical_order<T>> nodes;
+	std::set<const node<T>*, node_value_order<T>> nodes;
 	std::set<const sector<T>*, sector_lexicographical_order<T>> children;
 
 	graph_match contains(const sector& other) const;
@@ -42,7 +53,7 @@ public:
 
 template<class T>
 inline graph_match sector<T>::contains(const sector& other) const {
-	if (nodes.size() != other.nodes.size()) return {};
+	if (nodes.size() < other.nodes.size()) return {};
 
 	if (nodes.size() == 1) {
 		if ((*nodes.begin())->value !=
@@ -53,8 +64,8 @@ inline graph_match sector<T>::contains(const sector& other) const {
 		return rslt;
 	}
 	else {
-		if (!std::equal(nodes.begin(), nodes.end(), other.nodes.begin(),
-			node_equal_values<T>())) return {};
+		if (!std::includes(nodes.begin(), nodes.end(), other.nodes.begin(), other.nodes.end(),
+			node_value_compare<T>())) return {};
 
 		graph_match rslt;
 		for (auto i = other.children.begin(), j = children.begin(); i != other.children.end(); i++, j++) {
