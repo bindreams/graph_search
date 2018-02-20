@@ -15,6 +15,10 @@ graph_impl<int> random_graph(size_t size, double avg_connections = 0.5, int max_
 
 	//Attaching nodes
 	for (auto i = rslt.nodes.begin(); i != std::prev(rslt.nodes.end()); i++) {
-		
+		for (auto j = std::next(i); j != rslt.nodes.end(); j++) {
+			if (rand() % 10000 < avg_connections * 10000) {
+				//i->second.
+			}
+		}
 	}
 }

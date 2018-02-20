@@ -103,7 +103,7 @@ inline std::set<sector<T>> sector<T>::expand() const {
 	//For every node in current sector...
 	for (auto&& i : nodes) {
 		//...check its connected nodes...
-		for (auto&& j : i->edges) {
+		for (auto&& j : i->get_edges()) {
 			//...if this node is not in the sector, add
 			if (nodes.find(j) == nodes.end()) {
 				rslt.emplace(this, j);

@@ -7,6 +7,7 @@ public:
 	size_t get();
 	size_t last();
 	void set_next(size_t next);
+	void undo();
 	void reset();
 
 	constexpr id_manager();
@@ -22,6 +23,10 @@ inline size_t id_manager::last() {
 
 inline void id_manager::set_next(size_t next) {
 	free_id = next;
+}
+
+inline void id_manager::undo() {
+	set_next(last());
 }
 
 inline void id_manager::reset() {

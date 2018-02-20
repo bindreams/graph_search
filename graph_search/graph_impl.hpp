@@ -37,12 +37,11 @@ template<class T>
 inline size_t graph_impl<T>::attach(const T& val, std::vector<size_t> connect_to) {
 	size_t id = ids.get();
 
-	nodes.emplace(id, node<T>(val, id));
+	node<T>& element = nodes.emplace(id, node<T>(val, id)).first->second;
 
 	//Establish connections (edges)
 	for (auto i : connect_to) {
-		nodes.at(i).edges.emplace(&nodes.at(id));
-		nodes.at(id).edges.emplace(&nodes.at(i));
+		element.bi_connect(&nodes.at(i));
 	}
 
 	return id;
@@ -60,7 +59,7 @@ std::ostream& operator<<(std::ostream& os, const graph_impl<T>& obj) {
 	for (auto&& i : obj.nodes) {
 		os << "    " << i.second << " -> ";
 
-		for (auto&& connection : i.second.edges) {
+		for (auto&& connection : i.second.get_edges()) {
 			os << *connection << " ";
 		}
 
@@ -101,10 +100,8 @@ void from_json(const json& j, graph_impl<T>& obj) {
 	//Connecting
 	for (auto&& i : j["nodes"]) {
 		for (auto&& connect_id : i["edges"]) {
-			obj.nodes[i["id"]]
-				.edges.emplace(&obj.nodes[connect_id.get<size_t>()]);
-			obj.nodes[connect_id.get<size_t>()]
-				.edges.emplace(&obj.nodes[i["id"]]);
+			obj.nodes[i["id"]].bi_connect(
+				&obj.nodes[connect_id.get<size_t>()]);
 		}
 	}
 }
