@@ -132,6 +132,7 @@
     <ClInclude Include="json.hpp" />
     <ClInclude Include="node.hpp" />
     <ClInclude Include="puff_info.hpp" />
+    <ClInclude Include="random_graph.hpp" />
     <ClInclude Include="sector.hpp" />
     <ClInclude Include="puff.hpp" />
     <ClInclude Include="tests.hpp" />
