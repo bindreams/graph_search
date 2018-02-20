@@ -3,41 +3,43 @@
         "nodes": [
             {
                 "edges": [
-                    1
+                    1,
+                    2
                 ],
                 "id": 0,
-                "value": 0
+                "value": 2
             },
             {
                 "edges": [
-                    0
+                    3,
+                    0,
+                    2
                 ],
                 "id": 1,
                 "value": 1
             },
             {
                 "edges": [
-                    4,
-                    3
+                    1,
+                    0,
+                    4
                 ],
                 "id": 2,
+                "value": 1
+            },
+            {
+                "edges": [
+                    1
+                ],
+                "id": 3,
                 "value": 2
             },
             {
                 "edges": [
-                    2,
-                    4
-                ],
-                "id": 3,
-                "value": 3
-            },
-            {
-                "edges": [
-                    2,
-                    3
+                    2
                 ],
                 "id": 4,
-                "value": 4
+                "value": 2
             }
         ]
     },
@@ -48,17 +50,13 @@
                     1
                 ],
                 "id": 0,
-                "value": 0
+                "value": 1
             },
             {
                 "edges": [
                     0
                 ],
                 "id": 1,
-                "value": 1
-            },
-            {
-                "id": 2,
                 "value": 2
             }
         ]
