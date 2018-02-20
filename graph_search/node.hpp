@@ -1,5 +1,8 @@
 #pragma once
-#include <vector>
+#include <unordered_set>
+
+#include "json.hpp"
+using json = nlohmann::json;
 
 template <class T>
 class node {
@@ -10,12 +13,16 @@ private:
 
 public:
 	T value;
-	std::vector<node*> edges;
+	std::unordered_set<node*> edges;
 
 	size_t get_id() const;
 
+	constexpr node() = default;
 	node(const T& value_, size_t id_ = 0);
 	~node();
+
+	template <class T_>
+	friend void from_json(const json& j, node<T_>& obj);
 };
 
 template<class T>
@@ -32,8 +39,7 @@ inline node<T>::node(const T& value_, size_t id_) :
 template<class T>
 inline node<T>::~node() {
 	for (auto&& connected_node : edges) {
-		connected_node->edges.erase(
-			std::find(connected_node->edges.begin(), connected_node->edges.end(), this));
+		connected_node->edges.erase(this);
 	}
 }
 
@@ -56,4 +62,22 @@ template <class T>
 std::ostream& operator<<(std::ostream& os, const node<T>& obj) {
 	os << "{#" << obj.get_id() << ": " << obj.value << "}";
 	return os;
+}
+
+template <class T>
+void to_json(json& j, const node<T>& obj) {
+	j["value"] = obj.value;
+	j["id"] = obj.get_id();
+	
+	for (auto&& i : obj.edges) {
+		j["edges"].push_back(i->get_id());
+	}
+}
+
+template <class T>
+void from_json(const json& j, node<T>& obj) {
+	obj.value = j["value"].get<T>();
+	obj.id = j["id"];
+
+	obj.edges.clear();
 }

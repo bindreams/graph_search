@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdlib>
 #include <set>
 #include "graph_impl.hpp"
 #include "graph_match.hpp"

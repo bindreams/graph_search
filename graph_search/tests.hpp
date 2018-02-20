@@ -1,6 +1,11 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+#include <iomanip>
+
+#include "json.hpp"
+using json = nlohmann::json;
 
 #include "benchmark.hpp"
 #include "graph.hpp"
@@ -35,6 +40,13 @@ void generic_test(const graph<T>& graph1, const graph<T>& graph2) {
 	std::cout << "Benchmarks:" << std::endl;
 	std::cout << "Size of puff 1: " << puff1.size() << " sectors (" << puff1.size_in_bytes() << " bytes)" << std::endl;
 	std::cout << "Size of puff 2: " << puff2.size() << " sectors (" << puff2.size_in_bytes() << " bytes)" << std::endl;
+
+	std::ofstream ofs("save.json");
+	json j;
+	j["graph 1"] = graph1;
+	j["graph 2"] = graph2;
+	ofs << std::setw(4) << j;
+	ofs.close();
 
 	TIME(10000, puff<int> pf(graph1));
 	TIME(10000, puff<int> pf(graph2));
@@ -82,6 +94,17 @@ void test3() {
 	auto n15 = graph1.attach(2, {n13});
 
 	graph<int> graph2;
+
+	generic_test(graph1, graph2);
+}
+
+void test4() {
+	std::ifstream ifs("save.json");
+	json j;
+	ifs >> j;
+
+	graph<int> graph1 = j["graph 1"];
+	graph<int> graph2 = j["graph 2"];
 
 	generic_test(graph1, graph2);
 }
