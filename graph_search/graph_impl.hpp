@@ -68,7 +68,8 @@ std::ostream& operator<<(std::ostream& os, const graph_impl<T>& obj) {
 	os << "{" << std::endl;
 
 	for (auto&& i : obj.get_nodes()) {
-		os << "    " << i.second << " -> ";
+		os << "    " << i.second;
+		if (!i.second.get_edges().empty()) os << " -> ";
 
 		for (auto&& connection : i.second.get_edges()) {
 			os << *connection << " ";
@@ -77,7 +78,7 @@ std::ostream& operator<<(std::ostream& os, const graph_impl<T>& obj) {
 		os << std::endl;
 	}
 
-	os << "}" << std::endl;
+	os << "}";
 
 	return os;
 }

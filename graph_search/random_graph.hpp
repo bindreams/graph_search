@@ -1,12 +1,12 @@
 #pragma once
 #include <cstdlib>
 
-#include "graph_impl.hpp"
+#include "graph.hpp"
 
-graph_impl<int> random_graph(size_t size, double avg_connections = 0.5, int max_value = RAND_MAX) {
+graph<int> random_graph(size_t size, double avg_connections = 0.5, int max_value = RAND_MAX) {
 	if (avg_connections < 0 || avg_connections > 1) throw std::invalid_argument("avg_connections must be a ratio in [0, 1]");
 
-	graph_impl<int> rslt;
+	graph<int> rslt;
 
 	//Building nodes
 	for (size_t i = 0; i < size; i++) {
