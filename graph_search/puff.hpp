@@ -116,7 +116,7 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 		std::vector<std::future<graph_match>> matches;
 		for (auto&& j : sectors[other.depth() - 1]) {
 			info.async_calls_contains_++;
-			matches.push_back(std::move(std::async(std::launch::deferred, &sector<T>::contains, &j, std::cref(i))));
+			matches.push_back(std::move(std::async(/*std::launch::deferred, */&sector<T>::contains, &j, std::cref(i))));
 		}
 
 		for (auto&& j : matches) {
