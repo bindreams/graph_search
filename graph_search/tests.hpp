@@ -24,7 +24,7 @@ void short_test(const graph<T>& graph1, const graph<T>& graph2) {
 	for (auto&& i : mapping) {
 		std::cout << "map " << i << std::endl;
 	}
-	std::cin.get();
+
 	std::cout << std::endl << "= Benchmarks ===================================================================" << std::endl;
 	std::ofstream ofs("last_test.json");
 	json j;
