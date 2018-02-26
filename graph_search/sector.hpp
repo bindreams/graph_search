@@ -53,31 +53,47 @@ public:
 
 template<class T>
 inline graph_match sector<T>::contains(const sector& other) const {
-	if (nodes.size() < other.nodes.size()) return {};
+	if (nodes.size() != other.nodes.size()) return {}; //Exit 1: sectors are not of of one size
 
 	if (nodes.size() == 1) {
 		if ((*nodes.begin())->value !=
-			(*other.nodes.begin())->value) return {};
+			(*other.nodes.begin())->value) return {}; //Exit 2a: Values are different
+
+		//std::cout << "Sectors " << *this << " and " << other << " conform" << std::endl;
+		//std::cin.get();
 
 		graph_match rslt;
 		rslt.add((*nodes.begin())->get_id(), (*other.nodes.begin())->get_id());
 		return rslt;
 	}
 	else {
-		if (!std::includes(nodes.begin(), nodes.end(), other.nodes.begin(), other.nodes.end(),
-			node_value_compare<T>())) return {};
+		if (!std::equal(nodes.begin(), nodes.end(), other.nodes.begin(),
+			node_value_equal<T>())) return {}; //Exit 2b: Values are different
+
+		//std::cout << "Sectors " << *this << " and " << other << " conform so far" << std::endl;
+		//std::cin.get();
 
 		graph_match rslt;
-		for (auto i = other.children.begin(), j = children.begin(); i != other.children.end(); i++, j++) {
+		for (auto i = children.begin(), j = other.children.begin(); j != other.children.end(); j++) {
+			if (i == children.end()) {
+				//std::cout << "Sectors " << *this << " and " << other << " failed on children! 3a" << std::endl;
+				return {};
+			}; //Exit 3a: Children not conformant
+			
 			graph_match temp;
-			while (!(temp = (*j)->contains(**i))) {
-				j++;
-				if (j == children.end()) return {};
+			while (!(temp = (*i)->contains(**j))) {
+				i++;
+				if (i == children.end()) {
+					//std::cout << "Sectors " << *this << " and " << other << " failed on children! 3b" << std::endl;
+					return {};
+				}//Exit 3a: Children not conformant
 			}
 			rslt += temp;
 		}
 
-		return rslt;
+		//std::cout << "Sectors " << *this << " and " << other << " fully conform! 0" << std::endl;
+		//std::cout << "And return this: " << rslt << std::endl;
+		return rslt; //Exit 0: Success
 	}
 }
 
@@ -124,22 +140,6 @@ inline std::set<sector<T>> sector<T>::expand() const {
 		}
 	}
 
-	return rslt;
-}
-
-template<class T>
-inline std::set<sector<T>> sector<T>::try_expand() const {
-	//Tries to expand
-	std::set<sector<T>> rslt = expand();
-
-	if (rslt.empty()) {
-		//if fails, return copy of this with this as child
-		sector<T> copy_of_me(*this);
-		copy_of_me.children = {this};
-
-		rslt.emplace(std::move(copy_of_me));
-	}
-	
 	return rslt;
 }
 

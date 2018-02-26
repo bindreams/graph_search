@@ -51,8 +51,11 @@ inline puff<T>::puff(const graph_impl<T>& gr, size_t max_depth) {
 	}
 
 	for (size_t level = 1; level < max_depth; level++) {
+		//std::cout << "level " << level << " growth" << std::endl;
 		if (!grow()) break;
 	}
+
+	//std::cout << "Built a puff (max_depth: " << max_depth << ", levels: " << sectors.size() << ", depth at back(): " << sectors.back().size() << "): " << *this;
 }
 
 template<class T>
@@ -65,21 +68,20 @@ inline bool puff<T>::grow() {
 	std::vector<std::future<std::set<sector<T>>>> expanded_sectors;
 	for (auto&& i : sectors.back()) {
 		info.async_calls_ctor_++;
-		expanded_sectors.push_back(std::move(std::async(&sector<T>::try_expand, &i)));
+		expanded_sectors.push_back(std::move(std::async(&sector<T>::expand, &i)));
 	}
+	
+	bool expanded = false;
 	
 	for (auto&& i : expanded_sectors) {
 		auto temp = std::move(i.get());
+		if (!temp.empty()) expanded = true;
 		new_level.insert(
 			new_level.end(), temp.begin(), temp.end());
 	}
+	
+	if (!expanded) return false;
 	new_level.sort(sector_lexicographical_order<T>());
-
-	//Unlike expand(), try_expand() always returns values
-	//If a sector can't expand, try_expand will return copy of sector
-	//So, if new level is equal to old level, can't grow anymore
-	if (new_level.size() == sectors.back().size() &&
-		std::equal(new_level.begin(), new_level.end(), sectors.back().begin(), sector_nodes_equal<T>())) return false;
 
 	//Trim: join identical sectors' children
 	for (auto control = new_level.begin(); control != new_level.end(); control++) {
@@ -114,7 +116,7 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 		std::vector<std::future<graph_match>> matches;
 		for (auto&& j : sectors[other.depth() - 1]) {
 			info.async_calls_contains_++;
-			matches.push_back(std::move(std::async(&sector<T>::contains, &j, std::cref(i))));
+			matches.push_back(std::move(std::async(std::launch::deferred, &sector<T>::contains, &j, std::cref(i))));
 		}
 
 		for (auto&& j : matches) {
