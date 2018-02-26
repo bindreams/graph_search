@@ -48,7 +48,6 @@ public:
 	sector(const sector<T>* sec, const node<T>* nd);
 
 	std::set<sector<T>> expand() const;
-	std::set<sector<T>> try_expand() const;
 };
 
 template<class T>
@@ -64,6 +63,7 @@ inline graph_match sector<T>::contains(const sector& other) const {
 
 		graph_match rslt;
 		rslt.add((*nodes.begin())->get_id(), (*other.nodes.begin())->get_id());
+		//std::cout << "And return this: " << rslt << std::endl;
 		return rslt;
 	}
 	else {
@@ -74,7 +74,10 @@ inline graph_match sector<T>::contains(const sector& other) const {
 		//std::cin.get();
 
 		graph_match rslt;
-		for (auto i = children.begin(), j = other.children.begin(); j != other.children.end(); j++) {
+		//In the following loop, i represents this->children, and j - other.children
+		//For each j, there must be an equivalent i. So if i reaches end() before j
+		//return failure
+		for (auto i = children.begin(), j = other.children.begin(); j != other.children.end(); i++, j++) {
 			if (i == children.end()) {
 				//std::cout << "Sectors " << *this << " and " << other << " failed on children! 3a" << std::endl;
 				return {};
