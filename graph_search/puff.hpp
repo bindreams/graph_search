@@ -26,7 +26,8 @@ public:
 
 	std::set<graph_match> contains(const puff<T>& other) const;
 
-	size_t size() const;
+	size_t count_edges() const;
+	size_t count_sectors() const;
 	size_t size_in_bytes() const;
 
 	puff();
@@ -132,7 +133,20 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 }
 
 template<class T>
-inline size_t puff<T>::size() const {
+inline size_t puff<T>::count_edges() const {
+	size_t rslt = 0;
+
+	for (auto i : sectors) {
+		for (auto j : i) {
+			rslt += j.children.size();
+		}
+	}
+
+	return rslt;
+}
+
+template<class T>
+inline size_t puff<T>::count_sectors() const {
 	size_t rslt = 0;
 	
 	for (auto i : sectors) rslt += i.size();
