@@ -2,6 +2,7 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <ctime>
 
 #include "random_graph.hpp"
 #include "tests.hpp"
@@ -68,9 +69,15 @@ void report() {
 }
 
 int main() {
+	srand(time(nullptr));
+
 	std::cout << std::boolalpha;
 	std::cout << "Threads available: " << std::thread::hardware_concurrency() << std::endl;
 	
+	report<11>();
+	report<13>();
+	report<15>();
+	report<17>();
 	report<19>();
 
 	//auto x = random_graph(10, 0.2, 5);
