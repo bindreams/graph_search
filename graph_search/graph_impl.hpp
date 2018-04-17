@@ -23,6 +23,8 @@ public:
 
 	const std::unordered_map<size_t, node<T>>& get_nodes() const;
 
+	size_t count_edges() const;
+
 	constexpr graph_impl() = default;
 
 	template <class T_>
@@ -31,6 +33,8 @@ public:
 
 template<class T>
 inline void graph_impl<T>::connect(size_t n1, size_t n2) {
+	if (n1 == n2) throw std::invalid_argument("cannot connect node to itself");
+
 	nodes.at(n1).bi_connect(&nodes.at(n2));
 }
 
@@ -61,6 +65,18 @@ inline void graph_impl<T>::detach(size_t id) {
 template<class T>
 inline const std::unordered_map<size_t, node<T>>& graph_impl<T>::get_nodes() const {
 	return nodes;
+}
+
+template<class T>
+inline size_t graph_impl<T>::count_edges() const {
+	size_t rslt = 0;
+
+	for (auto&& i : nodes) {
+		rslt += i.second.get_edges().size();
+	}
+	rslt /= 2;
+
+	return rslt;
 }
 
 template <class T>

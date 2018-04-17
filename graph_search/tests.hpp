@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+using std::cout;
+using std::endl;
 #include <iomanip>
 #include <fstream>
 #include <iomanip>
@@ -13,19 +15,19 @@ using json = nlohmann::json;
 
 template<class T>
 void short_test(const graph<T>& graph1, const graph<T>& graph2) {
-	std::cout << "= Graph info ===================================================================" << std::endl;
-	std::cout << "graph 1: " << graph1 << std::endl;
-	std::cout << "graph 2: " << graph2 << std::endl;
+	cout << "= Graph info ===================================================================" << endl;
+	cout << "graph 1: " << graph1 << endl;
+	cout << "graph 2: " << graph2 << endl;
 
-	std::cout << std::endl << "= Results ======================================================================" << std::endl;
+	cout << endl << "= Results ======================================================================" << endl;
 	auto mapping = graph1.contains(graph2);
-	std::cout << "Answer: graph 1 " << (!mapping.empty() ? "contains" : "does not contain") << " graph 2" << std::endl;
-	if (!mapping.empty()) std::cout << "Results:" << std::endl;
+	cout << "Answer: graph 1 " << (!mapping.empty() ? "contains" : "does not contain") << " graph 2" << endl;
+	if (!mapping.empty()) cout << "Results:" << endl;
 	for (auto&& i : mapping) {
-		std::cout << "map " << i << std::endl;
+		cout << "map " << i << endl;
 	}
 
-	std::cout << std::endl << "= Benchmarks ===================================================================" << std::endl;
+	cout << endl << "= Benchmarks ===================================================================" << endl;
 	std::ofstream ofs("last_test.json");
 	json j;
 	j["graph 1"] = graph1;
@@ -41,30 +43,30 @@ void full_test(const graph<T>& graph1, const graph<T>& graph2) {
 	puff<T> puff1(graph1);
 	puff<T> puff2(graph2);
 
-	std::cout << "= Graph info ===================================================================" << std::endl;
-	std::cout << "graph 1: " << graph1 << std::endl;
-	std::cout << "puff 1: " << puff1 << std::endl;
-	std::cout << "Made " << puff1.info.async_calls_ctor() << " asynchronous calls while building" << std::endl;
+	cout << "= Graph info ===================================================================" << endl;
+	cout << "graph 1: " << graph1 << endl;
+	cout << "puff 1: " << puff1 << endl;
+	cout << "Made " << puff1.info.async_calls_ctor() << " asynchronous calls while building" << endl;
 	puff1.contains(puff2);
-	std::cout << "Made " << puff1.info.async_calls_contains() << " asynchronous calls while checking puff1.contains(puff2)" << std::endl;
+	cout << "Made " << puff1.info.async_calls_contains() << " asynchronous calls while checking puff1.contains(puff2)" << endl;
 
-	std::cout << "graph 2: " << graph2 << std::endl;
-	std::cout << "puff 2: " << puff2 << std::endl;
-	std::cout << "Made " << puff2.info.async_calls_ctor() << " asynchronous calls while building" << std::endl;
+	cout << "graph 2: " << graph2 << endl;
+	cout << "puff 2: " << puff2 << endl;
+	cout << "Made " << puff2.info.async_calls_ctor() << " asynchronous calls while building" << endl;
 	puff2.contains(puff1);
-	std::cout << "Made " << puff2.info.async_calls_contains() << " asynchronous calls while checking puff2.contains(puff1)" << std::endl;
+	cout << "Made " << puff2.info.async_calls_contains() << " asynchronous calls while checking puff2.contains(puff1)" << endl;
 
-	std::cout << std::endl << "= Results ======================================================================" << std::endl;
+	cout << endl << "= Results ======================================================================" << endl;
 	auto mapping = graph1.contains(graph2);
-	std::cout << "Answer: graph 1 " << (!mapping.empty() ? "contains" : "does not contain") << " graph 2" << std::endl;
-	if (!mapping.empty()) std::cout << "Results:" << std::endl;
+	cout << "Answer: graph 1 " << (!mapping.empty() ? "contains" : "does not contain") << " graph 2" << endl;
+	if (!mapping.empty()) cout << "Results:" << endl;
 	for (auto&& i : mapping) {
-		std::cout << "map " << i << std::endl;
+		cout << "map " << i << endl;
 	}
 	
-	std::cout << std::endl << "= Benchmarks ===================================================================" << std::endl;
-	std::cout << "Size of puff 1: " << puff1.size() << " sectors (" << puff1.size_in_bytes() << " bytes)" << std::endl;
-	std::cout << "Size of puff 2: " << puff2.size() << " sectors (" << puff2.size_in_bytes() << " bytes)" << std::endl;
+	cout << endl << "= Benchmarks ===================================================================" << endl;
+	cout << "Size of puff 1: " << puff1.count_sectors() << " sectors, " << puff1.count_edges() << " edges, " << puff1.size_in_bytes() << " bytes" << endl;
+	cout << "Size of puff 2: " << puff2.count_sectors() << " sectors, " << puff2.count_edges() << " edges, " << puff2.size_in_bytes() << " bytes" << endl;
 
 	std::ofstream ofs("last_test.json");
 	json j;
