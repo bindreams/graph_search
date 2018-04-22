@@ -4,12 +4,12 @@
 #include <vector>
 #include <ctime>
 
-#include "random_graph.hpp"
+#include "graph_manip.hpp"
 #include "tests.hpp"
 using namespace std;
 
 template <size_t graph_size>
-void report() {
+void report(const std::string& filename) {
 	const size_t sample_size = 100;
 	const double start_ratio = 0.01;
 	const double end_ratio = 0.2;
@@ -55,7 +55,7 @@ void report() {
 	}
 
 	json base;
-	std::ifstream ifs("report.json");
+	std::ifstream ifs(filename);
 	if (ifs.good()) {
 		ifs >> base;
 		ifs.close();
@@ -63,7 +63,7 @@ void report() {
 
 	base[to_string(graph_size)] = rslt;
 
-	std::ofstream ofs("report.json");
+	std::ofstream ofs(filename);
 	ofs << std::setw(4) << base;
 	ofs.close();
 }
@@ -74,11 +74,13 @@ int main() {
 	std::cout << std::boolalpha;
 	std::cout << "Threads available: " << std::thread::hardware_concurrency() << std::endl;
 	
-	report<11>();
-	report<13>();
-	report<15>();
-	report<17>();
-	report<19>();
+	std::string f = "D:/report.json";
+
+	report<11>(f);
+	report<13>(f);
+	report<15>(f);
+	report<17>(f);
+	report<19>(f);
 
 	//auto x = random_graph(10, 0.2, 5);
 	//auto y = random_graph(3, 1, 5);
