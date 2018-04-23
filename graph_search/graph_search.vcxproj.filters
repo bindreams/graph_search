@@ -56,5 +56,11 @@
     <ClInclude Include="graph_manip.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="generator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="report.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
