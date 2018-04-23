@@ -24,6 +24,8 @@ public:
 	const std::unordered_map<size_t, node<T>>& get_nodes() const;
 
 	size_t count_edges() const;
+	double ratio();
+	size_t size();
 
 	constexpr graph_impl() = default;
 
@@ -77,6 +79,19 @@ inline size_t graph_impl<T>::count_edges() const {
 	rslt /= 2;
 
 	return rslt;
+}
+
+template<class T>
+inline double graph_impl<T>::ratio() {
+	size_t max_edges = size() * (size() - 1) / 2;
+	size_t edges = g.count_edges();
+
+	return static_cast<double>(edges) / max_edges;
+}
+
+template<class T>
+inline size_t graph_impl<T>::size() {
+	return nodes.size();
 }
 
 template <class T>
