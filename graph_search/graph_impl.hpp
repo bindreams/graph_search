@@ -1,5 +1,6 @@
 #pragma once
 #include <unordered_map>
+#include <vector>
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -28,6 +29,9 @@ public:
 	size_t size();
 
 	constexpr graph_impl() = default;
+	graph_impl(const graph_impl& other);
+	graph_impl(graph_impl&& other) = default;
+	~graph_impl() = default;
 
 	template <class T_>
 	friend void from_json(const json& j, graph_impl<T_>& obj);
@@ -92,6 +96,32 @@ inline double graph_impl<T>::ratio() {
 template<class T>
 inline size_t graph_impl<T>::size() {
 	return nodes.size();
+}
+
+template<class T>
+inline graph_impl<T>::graph_impl(const graph_impl & other) :
+	nodes(other.nodes),
+	ids(other.ids) {
+	//Nodes connect using pointers. Pointers for this have to be reset
+	for (auto&& i : nodes) {
+		std::vector<node<T>*> new_edges;
+		//For every edge form other, find pointer to same edge in this
+		for (auto&& edge : i.second.get_edges()) {
+			//Insert into edges a node with the same id
+			new_edges.push_back(&nodes[edge->get_id()]);
+		}
+
+		//Disconnect all
+		while (!i.second.get_edges().empty()) {
+			i.second.fw_disconnect(
+				*i.second.get_edges().begin());
+		}
+
+		//Connect new
+		for (auto&& new_edge : new_edges) {
+			i.second.fw_connect(new_edge);
+		}
+	}
 }
 
 template <class T>
