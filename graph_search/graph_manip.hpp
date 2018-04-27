@@ -16,9 +16,9 @@ void push_edge(graph<T>& g) {
 	//cout << "Start with " << id1 << ", " << id2 << endl;
 
 	//Select id1 that is not yet connected to all nodes
-	while (g.get_nodes().at(id1).get_edges().size() == g.get_nodes().size() - 1) {
+	while (g[id1].get_edges().size() == g.size() - 1) {
 		id1++;
-		if (id1 >= g.get_nodes().size()) id1 = 0;
+		if (id1 >= g.size()) id1 = 0;
 	}
 	//cout << " id1 corrected to " << id1 << endl;
 
@@ -26,13 +26,13 @@ void push_edge(graph<T>& g) {
 	while (true) {
 		//Ensure non-collision
 		if (id2 == id1) id2++;
-		if (id2 >= g.get_nodes().size()) id2 = 0;
+		if (id2 >= g.size()) id2 = 0;
 		if (id2 == id1) id2++;
 		//cout << " id2 corrected to " << id2 << endl;
 
 		bool flag = false;
 
-		for (auto&& i : g.get_nodes().at(id1).get_edges()) {
+		for (auto&& i : g[id1].get_edges()) {
 			if (i->get_id() == id2) {
 				flag = true;
 				break;
@@ -57,15 +57,15 @@ void pop_edge(graph<T>& g) {
 	//cout << "Start with " << id1 << ", " << id2 << endl;
 
 	//Select id1 that is connected to at least on node
-	while (g.get_nodes().at(id1).get_edges().size() == 0) {
+	while (g[id1].get_edges().size() == 0) {
 		id1++;
-		if (id1 >= g.get_nodes().size()) id1 = 0;
+		if (id1 >= g.size()) id1 = 0;
 	}
 	//cout << " id1 corrected to " << id1 << endl;
 
 	//Select a random connected node
-	size_t t = gen(0, g.get_nodes().at(id1).get_edges().size());
-	auto iter = g.get_nodes().at(id1).get_edges().begin();
+	size_t t = gen(0, g[id1].get_edges().size());
+	auto iter = g[id1].get_edges().begin();
 	std::advance(iter, t);
 	size_t id2 = (*iter)->get_id();
 
@@ -75,7 +75,7 @@ void pop_edge(graph<T>& g) {
 template <class T, class Gen = generator<T>>
 void push_nodes(graph<T>& g, size_t count = 1) {
 	for (size_t i = 0; i < count; i++) {
-		g.attach(Gen()());
+		g.push(Gen()());
 	}
 }
 
@@ -86,7 +86,7 @@ void pop_nodes(graph<T>& g, size_t count = 1) {
 	generator<size_t> gen;
 
 	for (size_t i = 0; i < count; i++) {
-		g.detach(gen(0, g.size()));
+		g.pop(gen(0, g.size()));
 	}
 }
 
@@ -94,7 +94,7 @@ template <class T>
 void mutate_edges(graph<T>& g, double target_ratio) {
 	if (target_ratio < 0 || target_ratio > 1) throw std::invalid_argument("mutate_edges: target_ratio must be a ratio in [0, 1]");
 
-	size_t max_edges = g.get_nodes().size() * (g.get_nodes().size() - 1) / 2;
+	size_t max_edges = g.size() * (g.size() - 1) / 2;
 	size_t edges = g.count_edges();
 	size_t target_edges = static_cast<size_t>(round(target_ratio * max_edges));
 	

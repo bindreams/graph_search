@@ -7,28 +7,64 @@ using json = nlohmann::json;
 template <class T>
 class node {
 private:
+	T value;
+
 	size_t id = 0;
 	std::unordered_set<node*> edges;
 
 public:
-	T value;
-	
+	//Constructor
+	node(const T& value_, size_t id_ = 0);
+
+	constexpr node() = default;
+	node(const node& other) = delete;
+	node(node&& other) = default;
+	~node();
+
+	node& operator=(const node& rhs) = delete;
+	node& operator=(node&& rhs) = default;
+
+	//Member access
+	T& operator*();
+	const T& operator*() const;
+	T* operator->();
+	const T* operator->() const;
+
+	//Connecting
 	void fw_connect(node* n); //one-way connecting
 	void bi_connect(node* n); //two-way connecting
 
 	void fw_disconnect(node* n);
 	void bi_disconnect(node* n);
 
+	//Modification
 	const std::unordered_set<node*>& get_edges() const;
 	size_t get_id() const;
 
-	constexpr node() = default;
-	node(const T& value_, size_t id_ = 0);
-	~node();
-
+	//Json serialization
 	template <class T_>
 	friend void from_json(const json& j, node<T_>& obj);
 };
+
+template<class T>
+inline T & node<T>::operator*() {
+	return value;
+}
+
+template<class T>
+inline const T & node<T>::operator*() const {
+	return value;
+}
+
+template<class T>
+inline T * node<T>::operator->() {
+	return &value;
+}
+
+template<class T>
+inline const T * node<T>::operator->() const {
+	return &value;
+}
 
 template<class T>
 inline void node<T>::fw_connect(node * n) {
@@ -64,7 +100,7 @@ inline size_t node<T>::get_id() const {
 
 template<class T>
 inline node<T>::node(const T& value_, size_t id_) :
-	id (id_),
+	id(id_),
 	value(value_) {
 }
 
@@ -92,8 +128,8 @@ struct node_value_compare {
 template<class T>
 struct node_value_order {
 	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const {
-		return lhs->value < rhs->value ||
-			(lhs->value == rhs->value && lhs->get_id() < rhs->get_id());
+		return **lhs < **rhs ||
+			(**lhs == **rhs && lhs->get_id() < rhs->get_id());
 	}
 };
 
@@ -107,7 +143,7 @@ template <class T>
 void to_json(json& j, const node<T>& obj) {
 	j["value"] = obj.value;
 	j["id"] = obj.get_id();
-	
+
 	for (auto&& i : obj.get_edges()) {
 		j["edges"].push_back(i->get_id());
 	}

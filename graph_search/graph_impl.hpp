@@ -1,45 +1,183 @@
 #pragma once
-#include <unordered_map>
-#include <vector>
+#include <map>
+
+#include "id_manager.hpp"
+#include "node.hpp"
+#include "graph_iterator.hpp"
 
 #include "json.hpp"
 using json = nlohmann::json;
 
-#include "graph_match.hpp"
-#include "id_manager.hpp"
-#include "node.hpp"
-
 template <class T>
 class graph_impl {
 private:
-	std::unordered_map<size_t, node<T>> nodes;
+	std::map<size_t, node<T>> nodes;
 	id_manager ids;
 
 public:
+	//Member types
+	using iterator = graph_iterator<T, false, false>;
+	using const_iterator = graph_iterator<T, true, false>;
+	using reverse_iterator = graph_iterator<T, false, true>;
+	using const_reverse_iterator = graph_iterator<T, true, true>;
+
+	//Constructor
+	constexpr graph_impl() = default;
+	graph_impl(const graph_impl& other);
+	graph_impl(graph_impl&& other);
+	~graph_impl() = default;
+
+	graph_impl& operator=(graph_impl rhs);
+
+	template <class T_>
+	friend inline void swap(graph_impl<T_>& first, graph_impl<T_>& second);
+
+	//Member functions
+	iterator begin();
+	const_iterator begin() const;
+	const_iterator cbegin() const;
+
+	iterator end();
+	const_iterator end() const;
+	const_iterator cend() const;
+
+	reverse_iterator rbegin();
+	const_reverse_iterator rbegin() const;
+	const_reverse_iterator crbegin() const;
+
+	reverse_iterator rend();
+	const_reverse_iterator rend() const;
+	const_reverse_iterator crend() const;
+
 	void connect(size_t n1, size_t n2);
 	void disconnect(size_t n1, size_t n2);
 
-	size_t attach(const T& val, std::vector<size_t> connect_to = {});
-	void detach(size_t id);
+	template <class InputIt>
+	size_t push(const T& val, InputIt first, InputIt last);
+	size_t push(const T& val, std::initializer_list<size_t> connect_to = {});
+	void pop(size_t id);
 
-	const std::unordered_map<size_t, node<T>>& get_nodes() const;
+	bool empty() const;
+	void clear();
+
+	node<T>& operator[](size_t idx);
+	const node<T>& operator[](size_t idx) const;
 
 	size_t count_edges() const;
-	double ratio();
-	size_t size();
-
-	constexpr graph_impl() = default;
-	graph_impl(const graph_impl& other);
-	graph_impl(graph_impl&& other) = default;
-	~graph_impl() = default;
+	double ratio() const;
+	size_t size() const;
 
 	template <class T_>
 	friend void from_json(const json& j, graph_impl<T_>& obj);
 };
 
+// =============================================================================
+
+template<class T>
+inline graph_impl<T>::graph_impl(const graph_impl& other) :
+	ids(other.ids) {
+	//Clearing
+	clear();
+
+	//Adding all nodes
+	for (auto&& nd : other) {
+		nodes.emplace(nd.get_id(), node<T>(*nd, nd.get_id()));
+	}
+
+	//Connecting
+	for (auto&& nd : other) {
+		for (auto&& connected_nd : nd.get_edges()) {
+			connect(nd.get_id(), connected_nd->get_id());
+		}
+	}
+}
+
+template<class T>
+inline graph_impl<T>::graph_impl(graph_impl && other) :
+	graph_impl() {
+	swap(*this, other);
+}
+
+template<class T>
+inline graph_impl<T>& graph_impl<T>::operator=(graph_impl<T> other) {
+	swap(*this, other);
+	return *this;
+}
+
+template <class T_>
+inline void swap(graph_impl<T_>& lhs, graph_impl<T_>& rhs) {
+	// enable ADL
+	using std::swap;
+
+	swap(lhs.nodes, rhs.nodes);
+	swap(lhs.ids, rhs.ids);
+}
+
+// =============================================================================
+
+template<class T>
+inline typename graph_impl<T>::iterator graph_impl<T>::begin() {
+	return nodes.begin();
+}
+
+template<class T>
+inline typename graph_impl<T>::const_iterator graph_impl<T>::begin() const {
+	return nodes.begin();
+}
+
+template<class T>
+inline typename graph_impl<T>::const_iterator graph_impl<T>::cbegin() const {
+	return nodes.cbegin();
+}
+
+template<class T>
+inline typename graph_impl<T>::iterator graph_impl<T>::end() {
+	return nodes.end();
+}
+
+template<class T>
+inline typename graph_impl<T>::const_iterator graph_impl<T>::end() const {
+	return nodes.end();
+}
+
+template<class T>
+inline typename graph_impl<T>::const_iterator graph_impl<T>::cend() const {
+	return nodes.cend();
+}
+
+template<class T>
+inline typename graph_impl<T>::reverse_iterator graph_impl<T>::rbegin() {
+	return nodes.rbegin();
+}
+
+template<class T>
+inline typename graph_impl<T>::const_reverse_iterator graph_impl<T>::rbegin() const {
+	return nodes.rbegin();
+}
+
+template<class T>
+inline typename graph_impl<T>::const_reverse_iterator graph_impl<T>::crbegin() const {
+	return nodes.crbegin();
+}
+
+template<class T>
+inline typename graph_impl<T>::reverse_iterator graph_impl<T>::rend() {
+	return nodes.rend();
+}
+
+template<class T>
+inline typename graph_impl<T>::const_reverse_iterator graph_impl<T>::rend() const {
+	return nodes.rend();
+}
+
+template<class T>
+inline typename graph_impl<T>::const_reverse_iterator graph_impl<T>::crend() const {
+	return nodes.crend();
+}
+
 template<class T>
 inline void graph_impl<T>::connect(size_t n1, size_t n2) {
-	if (n1 == n2) throw std::invalid_argument("cannot connect node to itself");
+	if (n1 == n2) throw std::invalid_argument("graph_impl::connect: cannot connect node to itself");
 
 	nodes.at(n1).bi_connect(&nodes.at(n2));
 }
@@ -50,7 +188,21 @@ inline void graph_impl<T>::disconnect(size_t n1, size_t n2) {
 }
 
 template<class T>
-inline size_t graph_impl<T>::attach(const T& val, std::vector<size_t> connect_to) {
+template<class InputIt>
+inline size_t graph_impl<T>::push(const T& val, InputIt first, InputIt last) {
+	size_t id = ids.get();
+	node<T>& element = nodes.emplace(id, node<T>(val, id)).first->second;
+
+	//Establish connections (edges)
+	for (InputIt it = first; it != last; ++it) {
+		element.bi_connect(&nodes.at(*it));
+	}
+
+	return id;
+}
+
+template<class T>
+inline size_t graph_impl<T>::push(const T& val, std::initializer_list<size_t> connect_to) {
 	size_t id = ids.get();
 
 	node<T>& element = nodes.emplace(id, node<T>(val, id)).first->second;
@@ -64,13 +216,34 @@ inline size_t graph_impl<T>::attach(const T& val, std::vector<size_t> connect_to
 }
 
 template<class T>
-inline void graph_impl<T>::detach(size_t id) {
+inline void graph_impl<T>::pop(size_t id) {
 	nodes.erase(id);
 }
 
 template<class T>
-inline const std::unordered_map<size_t, node<T>>& graph_impl<T>::get_nodes() const {
-	return nodes;
+inline bool graph_impl<T>::empty() const {
+	return size() == 0;
+}
+
+template<class T>
+inline void graph_impl<T>::clear() {
+	nodes.clear();
+}
+
+template<class T>
+inline node<T>& graph_impl<T>::operator[](size_t idx) {
+	auto got = nodes.find(idx);
+	if (got == nodes.end()) throw std::invalid_argument("graph_impl::operator[]: node with this index does not exist");
+
+	return got->second;
+}
+
+template<class T>
+inline const node<T>& graph_impl<T>::operator[](size_t idx) const {
+	auto got = nodes.find(idx);
+	if (got == nodes.end()) throw std::invalid_argument("graph_impl::operator[]: node with this index does not exist");
+
+	return got->second;
 }
 
 template<class T>
@@ -86,7 +259,7 @@ inline size_t graph_impl<T>::count_edges() const {
 }
 
 template<class T>
-inline double graph_impl<T>::ratio() {
+inline double graph_impl<T>::ratio() const {
 	size_t max_edges = size() * (size() - 1) / 2;
 	size_t edges = g.count_edges();
 
@@ -94,34 +267,8 @@ inline double graph_impl<T>::ratio() {
 }
 
 template<class T>
-inline size_t graph_impl<T>::size() {
+inline size_t graph_impl<T>::size() const {
 	return nodes.size();
-}
-
-template<class T>
-inline graph_impl<T>::graph_impl(const graph_impl & other) :
-	nodes(other.nodes),
-	ids(other.ids) {
-	//Nodes connect using pointers. Pointers for this have to be reset
-	for (auto&& i : nodes) {
-		std::vector<node<T>*> new_edges;
-		//For every edge form other, find pointer to same edge in this
-		for (auto&& edge : i.second.get_edges()) {
-			//Insert into edges a node with the same id
-			new_edges.push_back(&nodes[edge->get_id()]);
-		}
-
-		//Disconnect all
-		while (!i.second.get_edges().empty()) {
-			i.second.fw_disconnect(
-				*i.second.get_edges().begin());
-		}
-
-		//Connect new
-		for (auto&& new_edge : new_edges) {
-			i.second.fw_connect(new_edge);
-		}
-	}
 }
 
 template <class T>
@@ -154,13 +301,13 @@ void to_json(json& j, const graph_impl<T>& obj) {
 template <class T>
 void from_json(const json& j, graph_impl<T>& obj) {
 	//Clearing
-	obj.nodes.clear();
+	obj.clear();
 
 	//Adding all nodes
 	size_t max_id = 0;
 	for (auto&& i : j["nodes"]) {
 		node<T> n = i;
-		
+
 		size_t id = n.get_id();
 		if (id > max_id) max_id = id;
 
@@ -171,10 +318,9 @@ void from_json(const json& j, graph_impl<T>& obj) {
 	obj.ids.set_next(max_id + 1);
 
 	//Connecting
-	for (auto&& i : j["nodes"]) {
-		for (auto&& connect_id : i["edges"]) {
-			obj.nodes[i["id"]].bi_connect(
-				&obj.nodes[connect_id]);
+	for (auto&& nd : j["nodes"]) {
+		for (auto&& connected_nd : nd["edges"]) {
+			connect(nd["id"], connected_nd);
 		}
 	}
 }

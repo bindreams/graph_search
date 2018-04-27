@@ -132,6 +132,7 @@
     <ClInclude Include="generator.hpp" />
     <ClInclude Include="graph.hpp" />
     <ClInclude Include="graph_impl.hpp" />
+    <ClInclude Include="graph_iterator.hpp" />
     <ClInclude Include="graph_match.hpp" />
     <ClInclude Include="id_manager.hpp" />
     <ClInclude Include="json.hpp" />
