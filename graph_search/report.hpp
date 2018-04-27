@@ -80,7 +80,7 @@ void report(const std::string& filename) {
 void report2(double graph_ratio, const std::string& filename = "report.json") {
 	const size_t sample_size = 100;
 	const size_t start_size = 1;
-	const size_t end_size = 19;
+	const size_t end_size = 100;
 	const size_t step = 1;
 
 	cout << "Building report for graph ratio " << graph_ratio << ":" << endl;
@@ -103,7 +103,7 @@ void report2(double graph_ratio, const std::string& filename = "report.json") {
 
 		for (int i = 0; i < sample_size; i++) {
 			mutate(graphs[i], size, graph_ratio);
-			puff<int> p(graphs[i], 11);
+			puff<int> p(graphs[i], 5);
 
 			avg_depth += p.depth();
 			avg_sectors += p.count_sectors();

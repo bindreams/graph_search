@@ -10,11 +10,7 @@ int main() {
 	
 	std::string f = "D:/report.json";
 
-	report2(0.01, f);
 	report2(0.05, f);
-	report2(0.1, f);
-	report2(0.15, f);
-	report2(0.2, f);
 
 	//auto x = random_graph(10, 0.2, 5);
 	//auto y = random_graph(3, 1, 5);

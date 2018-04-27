@@ -47,8 +47,8 @@ inline puff<T>::puff(const graph_impl<T>& gr, size_t max_depth) {
 	if (max_depth == 0) throw std::invalid_argument("max_depth must be at least 1");
 
 	sectors.push_back({});
-	for (auto&& i : gr.get_nodes()) {
-		sectors.front().emplace_back(&i.second);
+	for (auto&& i : gr) {
+		sectors.front().emplace_back(&i);
 	}
 
 	for (size_t level = 1; level < max_depth; level++) {
