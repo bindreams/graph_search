@@ -120,13 +120,6 @@ struct node_value_equal {
 };
 
 template<class T>
-struct node_value_compare {
-	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const {
-		return **lhs < **rhs;
-	}
-};
-
-template<class T>
 struct node_value_order {
 	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const {
 		return **lhs < **rhs ||
