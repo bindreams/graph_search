@@ -8,9 +8,9 @@ int main() {
 	std::cout << std::boolalpha;
 	std::cout << "Threads available: " << std::thread::hardware_concurrency() << std::endl;
 	
-	std::string f = "D:/report.json";
+	std::string f = "D:/report9.json";
 
-	report2(0.05, f);
+	report2(0.03, f);
 
 	//auto x = random_graph(10, 0.2, 5);
 	//auto y = random_graph(3, 1, 5);

@@ -203,16 +203,7 @@ inline size_t graph_impl<T>::push(const T& val, InputIt first, InputIt last) {
 
 template<class T>
 inline size_t graph_impl<T>::push(const T& val, std::initializer_list<size_t> connect_to) {
-	size_t id = ids.get();
-
-	node<T>& element = nodes.emplace(id, node<T>(val, id)).first->second;
-
-	//Establish connections (edges)
-	for (auto i : connect_to) {
-		element.bi_connect(&nodes.at(i));
-	}
-
-	return id;
+	return push(val, connect_to.begin(), connect_to.end());
 }
 
 template<class T>
