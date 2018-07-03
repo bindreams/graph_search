@@ -2,6 +2,7 @@
 #include <thread>
 
 #include "report.hpp"
+#include "tests.hpp"
 using namespace std;
 
 int main() {
@@ -10,14 +11,13 @@ int main() {
 	
 	std::string f = "D:/report9.json";
 
-	report2(0.03, f);
+	graph<int> x;
+	graph<int> y;
 
-	//auto x = random_graph(10, 0.2, 5);
-	//auto y = random_graph(3, 1, 5);
-	//full_test(x, y);
+	mutate<int, test_gen>(x, 30, 0.2);
+	mutate<int, test_gen>(y, 3, 1);
 
-	//short_test("test-20-3-true.json");
+	short_test(x, y);
 
-	//test1();
-	//test2();
+	cin.get();
 }
