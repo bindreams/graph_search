@@ -266,11 +266,11 @@ template <class T>
 std::ostream& operator<<(std::ostream& os, const graph_impl<T>& obj) {
 	os << "{" << std::endl;
 
-	for (auto&& i : obj.get_nodes()) {
-		os << "    " << i.second;
-		if (!i.second.get_edges().empty()) os << " -> ";
+	for (auto&& i : obj) {
+		os << "    " << i;
+		if (!i.get_edges().empty()) os << " -> ";
 
-		for (auto&& connection : i.second.get_edges()) {
+		for (auto&& connection : i.get_edges()) {
 			os << *connection << " ";
 		}
 
@@ -284,8 +284,8 @@ std::ostream& operator<<(std::ostream& os, const graph_impl<T>& obj) {
 
 template <class T>
 void to_json(json& j, const graph_impl<T>& obj) {
-	for (auto&& i : obj.get_nodes()) {
-		j["nodes"].push_back(i.second);
+	for (auto&& i : obj) {
+		j["nodes"].push_back(i);
 	}
 }
 
@@ -311,7 +311,7 @@ void from_json(const json& j, graph_impl<T>& obj) {
 	//Connecting
 	for (auto&& nd : j["nodes"]) {
 		for (auto&& connected_nd : nd["edges"]) {
-			connect(nd["id"], connected_nd);
+			obj.connect(nd["id"], connected_nd);
 		}
 	}
 }

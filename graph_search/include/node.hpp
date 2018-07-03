@@ -114,14 +114,14 @@ inline node<T>::~node() {
 template<class T>
 struct node_value_equal {
 	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const {
-		return lhs->value == rhs->value;
+		return **lhs == **rhs;
 	}
 };
 
 template<class T>
 struct node_value_compare {
 	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const {
-		return lhs->value < rhs->value;
+		return **lhs < **rhs;
 	}
 };
 
@@ -135,13 +135,13 @@ struct node_value_order {
 
 template <class T>
 std::ostream& operator<<(std::ostream& os, const node<T>& obj) {
-	os << "{#" << obj.get_id() << ": " << obj.value << "}";
+	os << "{#" << obj.get_id() << ": " << *obj << "}";
 	return os;
 }
 
 template <class T>
 void to_json(json& j, const node<T>& obj) {
-	j["value"] = obj.value;
+	j["value"] = *obj;
 	j["id"] = obj.get_id();
 
 	for (auto&& i : obj.get_edges()) {

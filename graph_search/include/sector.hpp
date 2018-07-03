@@ -55,8 +55,8 @@ inline graph_match sector<T>::contains(const sector& other) const {
 	if (nodes.size() != other.nodes.size()) return {}; //Exit 1: sectors are not of of one size
 
 	if (nodes.size() == 1) {
-		if ((*nodes.begin())->value !=
-			(*other.nodes.begin())->value) return {}; //Exit 2a: Values are different
+		if (***nodes.begin() !=
+			***other.nodes.begin()) return {}; //Exit 2a: Values are different
 
 		//std::cout << "Sectors " << *this << " and " << other << " conform" << std::endl;
 		//std::cin.get();
@@ -156,7 +156,7 @@ template<typename T> inline bool operator>=(const sector<T>& lhs, const sector<T
 template <class T>
 std::ostream& operator<<(std::ostream& os, const sector<T>& obj) {
 	os << "{";
-	for (auto&& i : obj.nodes) os << i->value;
+	for (auto&& i : obj.nodes) os << **i;
 
 	os << "}";
 
