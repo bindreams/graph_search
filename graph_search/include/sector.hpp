@@ -3,6 +3,7 @@
 #include <set>
 #include "node.hpp"
 #include "graph_match.hpp"
+#include "vecset.hpp"
 
 template <class T>
 class sector;
@@ -24,8 +25,8 @@ struct sector_lexicographical_order {
 template <class T>
 class sector {
 public:
-	std::set<const node<T>*, node_value_order<T>> nodes;
-	std::set<const sector<T>*, sector_lexicographical_order<T>> children;
+	vecset<const node<T>*, node_value_order<T>> nodes;
+	vecset<const sector<T>*, sector_lexicographical_order<T>> children;
 
 	graph_match contains(const sector& other) const;
 	sector& join_children(const sector& other);
@@ -114,7 +115,7 @@ template<class T>
 inline sector<T>::sector(const sector<T>* sec, const node<T>* nd) :
 	nodes(sec->nodes),
 	children({sec}) {
-	nodes.emplace(nd);
+	nodes.insert(nd);
 }
 
 template<class T>

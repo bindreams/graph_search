@@ -4,12 +4,19 @@
 #include <type_traits>
 
 template <
-	class T, 
+	class T,
+	bool is_multi = true,
 	class Compare = std::less<T>, 
 	class Allocator = std::allocator<T>>
 class sorted_vector : private std::vector<T, Allocator> {
 private:
 	using base = std::vector<T, Allocator>;
+
+	template <class U, class V>
+	bool equivalent(U&& x, V&& y);
+
+	template<class = std::enable_if_t<!is_multi>>
+	void remove_duplicates();
 
 public:
 	// Member types ============================================================
@@ -31,13 +38,24 @@ public:
 	// Constructors ------------------------------------------------------------
 	sorted_vector() noexcept(noexcept(Allocator()));
 	explicit sorted_vector(const Allocator& alloc) noexcept;
-	sorted_vector(size_type count,
+
+	template<class = std::enable_if_t<is_multi>>
+	sorted_vector(
+		size_type count,
 		const T& value,
 		const Allocator& alloc = Allocator());
-	explicit sorted_vector(size_type count, const Allocator& alloc = Allocator());
-	template<class InputIt>
-	sorted_vector(InputIt first, InputIt last,
+
+	template<class = std::enable_if_t<is_multi>>
+	explicit sorted_vector(
+		size_type count, 
 		const Allocator& alloc = Allocator());
+
+	template<class InputIt>
+	sorted_vector(
+		InputIt first, InputIt last,
+		const Allocator& alloc = Allocator());
+
+	sorted_vector(const sorted_vector& other);
 	sorted_vector(const sorted_vector& other, const Allocator& alloc);
 	sorted_vector(sorted_vector&& other) noexcept;
 	sorted_vector(sorted_vector&& other, const Allocator& alloc);
@@ -55,6 +73,7 @@ public:
 		|| std::allocator_traits<Allocator>::is_always_equal::value);
 	sorted_vector& operator=(std::initializer_list<T> ilist);
 
+	template <class = std::enable_if_t<is_multi>>
 	void assign(size_type count, const T& value);
 	template<class InputIt>
 	void assign(InputIt first, InputIt last);
@@ -113,44 +132,48 @@ public:
 	template<class K, class = typename Compare::is_transparent>
 	size_type count(const K& x) const;
 
-	iterator find(const value_type& key);
+	iterator find(const value_type& key) const;
 	template<class K, class = typename Compare::is_transparent> 
-	iterator find(const K& x);
+	iterator find(const K& x) const;
+
+	bool contains(const value_type& key) const;
+	template<class K, class = typename Compare::is_transparent>
+	bool contains(const K& x) const;
 };
 
-template<class T, class Comp, class Alloc>
+template<class T, bool is_multi, class Comp, class Alloc>
 inline bool operator==(
-	const sorted_vector<T, Comp, Alloc>& lhs,
-	const sorted_vector<T, Comp, Alloc>& rhs);
+	const sorted_vector<T, is_multi, Comp, Alloc>& lhs,
+	const sorted_vector<T, is_multi, Comp, Alloc>& rhs);
 
-template<class T, class Comp, class Alloc>
+template<class T, bool is_multi, class Comp, class Alloc>
 inline bool operator!=(
-	const sorted_vector<T, Comp, Alloc>& lhs,
-	const sorted_vector<T, Comp, Alloc>& rhs);
+	const sorted_vector<T, is_multi, Comp, Alloc>& lhs,
+	const sorted_vector<T, is_multi, Comp, Alloc>& rhs);
 
-template<class T, class Comp, class Alloc>
+template<class T, bool is_multi, class Comp, class Alloc>
 inline bool operator<(
-	const sorted_vector<T, Comp, Alloc>& lhs,
-	const sorted_vector<T, Comp, Alloc>& rhs);
+	const sorted_vector<T, is_multi, Comp, Alloc>& lhs,
+	const sorted_vector<T, is_multi, Comp, Alloc>& rhs);
 
-template<class T, class Comp, class Alloc>
+template<class T, bool is_multi, class Comp, class Alloc>
 inline bool operator<=(
-	const sorted_vector<T, Comp, Alloc>& lhs,
-	const sorted_vector<T, Comp, Alloc>& rhs);
+	const sorted_vector<T, is_multi, Comp, Alloc>& lhs,
+	const sorted_vector<T, is_multi, Comp, Alloc>& rhs);
 
-template<class T, class Comp, class Alloc>
+template<class T, bool is_multi, class Comp, class Alloc>
 inline bool operator>(
-	const sorted_vector<T, Comp, Alloc>& lhs,
-	const sorted_vector<T, Comp, Alloc>& rhs);
+	const sorted_vector<T, is_multi, Comp, Alloc>& lhs,
+	const sorted_vector<T, is_multi, Comp, Alloc>& rhs);
 
-template<class T, class Comp, class Alloc>
+template<class T, bool is_multi, class Comp, class Alloc>
 inline bool operator>=(
-	const sorted_vector<T, Comp, Alloc>& lhs,
-	const sorted_vector<T, Comp, Alloc>& rhs);
+	const sorted_vector<T, is_multi, Comp, Alloc>& lhs,
+	const sorted_vector<T, is_multi, Comp, Alloc>& rhs);
 
-template<class T, class Comp, class Alloc>
+template<class T, bool is_multi, class Comp, class Alloc>
 void swap(
-	sorted_vector<T, Comp, Alloc>& lhs,
-	sorted_vector<T, Comp, Alloc>& rhs) noexcept(noexcept(lhs.swap(rhs)));
+	sorted_vector<T, is_multi, Comp, Alloc>& lhs,
+	sorted_vector<T, is_multi, Comp, Alloc>& rhs) noexcept(noexcept(lhs.swap(rhs)));
 
 #include "inline/sorted_vector.inl"
