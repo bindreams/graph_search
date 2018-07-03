@@ -5,7 +5,7 @@
 #include "node.hpp"
 #include "graph_iterator.hpp"
 
-#include "json.hpp"
+#include "deps/json.hpp"
 using json = nlohmann::json;
 
 template <class T>

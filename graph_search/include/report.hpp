@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iomanip>
 
-#include "json.hpp"
+#include "deps/json.hpp"
 #include "graph.hpp"
 #include "graph_manip.hpp"
 
