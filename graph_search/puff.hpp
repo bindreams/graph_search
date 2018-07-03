@@ -30,17 +30,12 @@ public:
 	size_t count_sectors() const;
 	size_t size_in_bytes() const;
 
-	puff();
+	puff() = default;
 	puff(const graph_impl<T>& gr, size_t max_depth = std::numeric_limits<std::size_t>::max());
 
 	template <class T_>
 	friend std::ostream& operator<<(std::ostream& os, const puff<T_>& obj);
 };
-
-template<class T>
-inline puff<T>::puff() :
-	async_calls (0) {
-}
 
 template<class T>
 inline puff<T>::puff(const graph_impl<T>& gr, size_t max_depth) {
@@ -69,7 +64,7 @@ inline bool puff<T>::grow() {
 	std::vector<std::future<std::set<sector<T>>>> expanded_sectors;
 	for (auto&& i : sectors.back()) {
 		info.async_calls_ctor_++;
-		expanded_sectors.push_back(std::move(std::async(&sector<T>::expand, &i)));
+		expanded_sectors.push_back(std::move(std::async(std::launch::async, &sector<T>::expand, &i)));
 	}
 	
 	bool expanded = false;
@@ -117,7 +112,7 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 		std::vector<std::future<graph_match>> matches;
 		for (auto&& j : sectors[other.depth() - 1]) {
 			info.async_calls_contains_++;
-			matches.push_back(std::move(std::async(/*std::launch::deferred, */&sector<T>::contains, &j, std::cref(i))));
+			matches.push_back(std::move(std::async(std::launch::async, &sector<T>::contains, &j, std::cref(i))));
 		}
 
 		for (auto&& j : matches) {
