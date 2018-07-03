@@ -1,5 +1,6 @@
 #pragma once
 #include <unordered_set>
+#include <memory>
 
 #include "deps/json.hpp"
 using json = nlohmann::json;
@@ -7,7 +8,7 @@ using json = nlohmann::json;
 template <class T>
 class node {
 private:
-	T value;
+	std::unique_ptr<T> value;
 
 	size_t id = 0;
 	std::unordered_set<node*> edges;
@@ -47,23 +48,23 @@ public:
 };
 
 template<class T>
-inline T & node<T>::operator*() {
-	return value;
+inline T& node<T>::operator*() {
+	return *value;
 }
 
 template<class T>
 inline const T & node<T>::operator*() const {
-	return value;
+	return *value;
 }
 
 template<class T>
 inline T * node<T>::operator->() {
-	return &value;
+	return value.get();
 }
 
 template<class T>
 inline const T * node<T>::operator->() const {
-	return &value;
+	return value.get();
 }
 
 template<class T>
@@ -101,7 +102,7 @@ inline size_t node<T>::get_id() const {
 template<class T>
 inline node<T>::node(const T& value_, size_t id_) :
 	id(id_),
-	value(value_) {
+	value(std::make_unique<T>(value_)) {
 }
 
 template<class T>
@@ -151,7 +152,7 @@ void to_json(json& j, const node<T>& obj) {
 
 template <class T>
 void from_json(const json& j, node<T>& obj) {
-	obj.value = j["value"].get<T>();
+	obj.value = std::make_unique<T>(j["value"].get<T>());
 	obj.id = j["id"];
 
 	obj.edges.clear();
