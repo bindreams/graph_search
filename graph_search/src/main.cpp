@@ -14,8 +14,8 @@ int main() {
 	graph<int> x;
 	graph<int> y;
 
-	mutate<int, test_gen>(x, 30, 0.2);
-	mutate<int, test_gen>(y, 3, 1);
+	mutate(x, 30, 0.2, test_gen());
+	mutate(y, 3, 1, test_gen());
 
 	short_test(x, y);
 
