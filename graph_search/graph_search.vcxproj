@@ -138,6 +138,7 @@
     <ClInclude Include="include\graph_impl.hpp" />
     <ClInclude Include="include\graph_iterator.hpp" />
     <ClInclude Include="include\graph_match.hpp" />
+    <ClInclude Include="include\sorted_vector.hpp" />
     <ClInclude Include="include\id_manager.hpp" />
     <ClInclude Include="deps\json.hpp" />
     <ClInclude Include="include\node.hpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="include\sector.hpp" />
     <ClInclude Include="include\puff.hpp" />
     <ClInclude Include="include\tests.hpp" />
+    <ClInclude Include="inline\sorted_vector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
