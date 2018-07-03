@@ -1,121 +1,45 @@
 #pragma once
 #include <cstdlib>
-
+#include <set>
 #include "graph.hpp"
-#include "generator.hpp"
+#include "graph_match.hpp"
 
-template <class T, class Gen = generator<size_t>>
-void push_random_edge(graph<T>& g, Gen gen = Gen()) {
-	size_t max_edges = g.size() * (g.size() - 1) / 2;
-	if (g.count_edges() == max_edges) throw std::invalid_argument("push_random_edge: graph is complete");
+// Random permutations =========================================================
 
-	size_t id1 = gen(0, g.size());
-	size_t id2 = gen(0, g.size());
-	//cout << "Start with " << id1 << ", " << id2 << endl;
+template <class T>
+void push_random_edge(graph<T>& g);
 
-	//Select id1 that is not yet connected to all nodes
-	while (g[id1].get_edges().size() == g.size() - 1) {
-		id1++;
-		if (id1 >= g.size()) id1 = 0;
-	}
-	//cout << " id1 corrected to " << id1 << endl;
+template <class T>
+void pop_random_edge(graph<T>& g);
 
-	//Select id2 that is not connected to id1
-	while (true) {
-		//Ensure non-collision
-		if (id2 == id1) id2++;
-		if (id2 >= g.size()) id2 = 0;
-		if (id2 == id1) id2++;
-		//cout << " id2 corrected to " << id2 << endl;
+template <class T>
+void mutate_edges(graph<T>& g, double target_ratio);
 
-		bool flag = false;
+template <class T, class Gen>
+void push_random_node(graph<T>& g, Gen value_gen);
 
-		for (auto&& i : g[id1].get_edges()) {
-			if (i->get_id() == id2) {
-				flag = true;
-				break;
-			}
-		}
+template <class T>
+void push_random_node(graph<T>& g);
 
-		if (flag == false) break;
-		id2++;
-	}
-	//cout << "final: " << id1 << ", " << id2 << endl;
+template <class T>
+void pop_random_node(graph<T>& g);
 
-	g.connect(id1, id2);
-}
+template <class T, class Gen>
+void mutate_nodes(graph<T>& g, std::size_t target_size, Gen value_gen);
 
-template <class T, class Gen = generator<size_t>>
-void pop_random_edge(graph<T>& g, Gen gen = Gen()) {
-	if (g.count_edges() == 0) throw std::invalid_argument("pop_random_edge: graph is empty (no edges)");
+template <class T>
+void mutate_nodes(graph<T>& g, std::size_t target_size);
 
-	size_t id1 = gen(0, g.size());
-	//cout << "Start with " << id1 << ", " << id2 << endl;
+template <class T, class Gen>
+void mutate(
+	graph<T>& g, std::size_t target_size, double target_ratio, Gen value_gen);
 
-	//Select id1 that is connected to at least on node
-	while (g[id1].get_edges().size() == 0) {
-		id1++;
-		if (id1 >= g.size()) id1 = 0;
-	}
-	//cout << " id1 corrected to " << id1 << endl;
+template <class T>
+void mutate(graph<T>& g, std::size_t target_size, double target_ratio);
 
-	//Select a random connected node
-	size_t t = gen(0, g[id1].get_edges().size());
-	auto iter = g[id1].get_edges().begin();
-	std::advance(iter, t);
-	size_t id2 = (*iter)->get_id();
+// Subgraph lookup =============================================================
 
-	g.disconnect(id1, id2);
-}
+template <class T>
+std::set<graph_match> contains(const graph<T>& source, const graph<T>& target);
 
-template <class T, class Gen = generator<T>>
-void push_random_nodes(graph<T>& g, size_t count = 1, Gen gen = Gen()) {
-	for (size_t i = 0; i < count; i++) {
-		g.push(gen());
-	}
-}
-
-template <class T, class Gen = generator<T>>
-void pop_random_nodes(graph<T>& g, size_t count = 1, Gen gen = Gen()) {
-	if (count > g.size()) throw std::invalid_argument("pop_nodes: graph does not have enough nodes");
-
-	for (size_t i = 0; i < count; i++) {
-		g.pop(gen(0, g.size()));
-	}
-}
-
-template <class T, class Gen = generator<T>>
-void mutate_edges(graph<T>& g, double target_ratio, Gen gen = Gen()) {
-	if (target_ratio < 0 || target_ratio > 1) throw std::invalid_argument("mutate_edges: target_ratio must be a ratio in [0, 1]");
-
-	size_t max_edges = g.size() * (g.size() - 1) / 2;
-	size_t edges = g.count_edges();
-	size_t target_edges = static_cast<size_t>(round(target_ratio * max_edges));
-	
-	if (edges < target_edges) {
-		while (edges < target_edges) {
-			push_random_edge(g, gen);
-			edges++;
-		}
-	}
-	else {
-		while (edges > target_edges) {
-			pop_random_edge(g, gen);
-			edges--;
-		}
-	}
-}
-
-template <class T, class Gen = generator<T>>
-void mutate(graph<T>& g, size_t target_size, double target_ratio, Gen gen = Gen()) {
-	if (target_ratio < 0 || target_ratio > 1) throw std::invalid_argument("mutate: edges_ratio must be a ratio in [0, 1]");
-	
-	if (target_size > g.size()) {
-		push_random_nodes<T>(g, target_size - g.size(), gen);
-	}
-	else {
-		pop_random_nodes<T>(g, g.size() - target_size);
-	}
-
-	mutate_edges(g, target_ratio);
-}
+#include "inline/graph_manip.inl"

@@ -8,7 +8,7 @@
 #include <future>
 
 #include "sector.hpp"
-#include "graph_impl.hpp"
+#include "graph.hpp"
 #include "puff_info.hpp"
 
 template <class T>
@@ -31,14 +31,14 @@ public:
 	size_t size_in_bytes() const;
 
 	puff() = default;
-	puff(const graph_impl<T>& gr, size_t max_depth = std::numeric_limits<std::size_t>::max());
+	puff(const graph<T>& gr, size_t max_depth = std::numeric_limits<std::size_t>::max());
 
 	template <class T_>
 	friend std::ostream& operator<<(std::ostream& os, const puff<T_>& obj);
 };
 
 template<class T>
-inline puff<T>::puff(const graph_impl<T>& gr, size_t max_depth) {
+inline puff<T>::puff(const graph<T>& gr, size_t max_depth) {
 	if (max_depth == 0) throw std::invalid_argument("max_depth must be at least 1");
 
 	sectors.push_back({});
