@@ -16,7 +16,5 @@ inline std::set<graph_match> graph<T>::contains(const graph& other) const {
 	puff<T> other_puff(other);
 	puff<T> my_puff(*this, other_puff.depth());
 
-	//std::cout << other_puff.depth();
-
 	return my_puff.contains(other_puff);
 }

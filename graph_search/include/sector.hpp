@@ -21,17 +21,6 @@ struct sector_lexicographical_order {
 	}
 };
 
-template<class T>
-struct sector_nodes_equal {
-	inline bool operator() (sector<T> const& lhs, sector<T> const& rhs) const {
-		return lhs.nodes == rhs.nodes;
-	}
-
-	inline bool operator() (const sector<T>* const& lhs, const sector<T>* const& rhs) const {
-		return operator()(*lhs, *rhs);
-	}
-};
-
 template <class T>
 class sector {
 public:
