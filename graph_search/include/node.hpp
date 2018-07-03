@@ -18,11 +18,11 @@ public:
 	node(const T& value_, size_t id_ = 0);
 
 	constexpr node() = default;
-	node(const node& other) = delete;
+	node(const node&) = delete;
 	node(node&& other) = default;
 	~node();
 
-	node& operator=(const node& rhs) = delete;
+	node& operator=(const node&) = delete;
 	node& operator=(node&& rhs) = default;
 
 	//Member access

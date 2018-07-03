@@ -7,7 +7,7 @@ class node;
 template <class T, bool is_const, bool is_reversed>
 class graph_iterator {
 	template <class T>
-	friend class graph_impl;
+	friend class graph;
 private:
 	using base_iterator = std::conditional_t<is_const,
 		std::conditional_t<is_reversed,

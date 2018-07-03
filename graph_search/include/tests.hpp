@@ -20,7 +20,7 @@ void short_test(const graph<T>& graph1, const graph<T>& graph2) {
 	cout << "graph 2: " << graph2 << endl;
 
 	cout << endl << "= Results ======================================================================" << endl;
-	auto mapping = graph1.contains(graph2);
+	auto mapping = contains(graph1, graph2);
 	cout << "Answer: graph 1 " << (!mapping.empty() ? "contains" : "does not contain") << " graph 2" << endl;
 	if (!mapping.empty()) cout << "Results:" << endl;
 	for (auto&& i : mapping) {
@@ -35,7 +35,7 @@ void short_test(const graph<T>& graph1, const graph<T>& graph2) {
 	ofs << std::setw(4) << j;
 	ofs.close();
 
-	TIME(100, graph1.contains(graph2));
+	TIME(100, contains(graph1, graph2));
 }
 
 template<class T>
@@ -57,7 +57,7 @@ void full_test(const graph<T>& graph1, const graph<T>& graph2) {
 	cout << "Made " << puff2.info.async_calls_contains() << " asynchronous calls while checking puff2.contains(puff1)" << endl;
 
 	cout << endl << "= Results ======================================================================" << endl;
-	auto mapping = graph1.contains(graph2);
+	auto mapping = contains(graph1, graph2);
 	cout << "Answer: graph 1 " << (!mapping.empty() ? "contains" : "does not contain") << " graph 2" << endl;
 	if (!mapping.empty()) cout << "Results:" << endl;
 	for (auto&& i : mapping) {
@@ -78,7 +78,7 @@ void full_test(const graph<T>& graph1, const graph<T>& graph2) {
 	TIME(100, puff<int> pf(graph1));
 	TIME(100, puff<int> pf(graph2));
 	TIME(100, puff1.contains(puff2));
-	TIME(100, graph1.contains(graph2));
+	TIME(100, contains(graph1, graph2));
 }
 
 void full_test(const std::string& file) {

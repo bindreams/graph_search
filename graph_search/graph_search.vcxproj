@@ -135,7 +135,6 @@
     <ClInclude Include="include\benchmark.hpp" />
     <ClInclude Include="include\generator.hpp" />
     <ClInclude Include="include\graph.hpp" />
-    <ClInclude Include="include\graph_impl.hpp" />
     <ClInclude Include="include\graph_iterator.hpp" />
     <ClInclude Include="include\graph_match.hpp" />
     <ClInclude Include="include\sorted_vector.hpp" />
@@ -150,6 +149,9 @@
     <ClInclude Include="include\tests.hpp" />
     <ClInclude Include="include\vecset.hpp" />
     <ClInclude Include="inline\sorted_vector.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="inline\graph_manip.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
