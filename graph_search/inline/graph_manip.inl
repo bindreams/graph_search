@@ -79,7 +79,7 @@ void mutate_edges(graph<T>& g, double target_ratio) {
 
 template <class T, class Gen>
 void push_random_node(graph<T>& g, Gen value_gen) {
-	g.push(value_gen());
+	g.insert(value_gen());
 }
 
 template <class T>
@@ -93,7 +93,7 @@ void pop_random_node(graph<T>& g) {
 
 	auto it = g.begin();
 	std::advance(it, generator<std::size_t>()(0, g.size()));
-	g.pop(it);
+	g.erase(it);
 }
 
 template <class T, class Gen>
