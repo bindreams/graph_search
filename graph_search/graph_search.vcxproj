@@ -77,7 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,7 +105,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -121,7 +121,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -135,9 +135,8 @@
     <ClInclude Include="include\benchmark.hpp" />
     <ClInclude Include="include\generator.hpp" />
     <ClInclude Include="include\graph.hpp" />
-    <ClInclude Include="include\graph_iterator.hpp" />
     <ClInclude Include="include\graph_match.hpp" />
-    <ClInclude Include="include\sorted_vector.hpp" />
+    <ClInclude Include="include\proxy_iterator.hpp" />
     <ClInclude Include="include\id_manager.hpp" />
     <ClInclude Include="deps\json.hpp" />
     <ClInclude Include="include\node.hpp" />
@@ -147,8 +146,6 @@
     <ClInclude Include="include\sector.hpp" />
     <ClInclude Include="include\puff.hpp" />
     <ClInclude Include="include\tests.hpp" />
-    <ClInclude Include="include\vecset.hpp" />
-    <ClInclude Include="inline\sorted_vector.inl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="inline\graph_manip.inl" />
