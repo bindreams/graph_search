@@ -28,11 +28,23 @@ inline bool operator==(const graph_match& lhs, const graph_match& rhs) {
 }
 
 inline bool operator!=(const graph_match& lhs, const graph_match& rhs) {
-	return !operator==(lhs, rhs);
+	return !(lhs == rhs);
 }
 
 inline bool operator< (const graph_match& lhs, const graph_match& rhs) {
 	return lhs.matches < rhs.matches;
+}
+
+inline bool operator> (const graph_match& lhs, const graph_match& rhs) {
+	return rhs < lhs;
+}
+
+inline bool operator<=(const graph_match& lhs, const graph_match& rhs) {
+	return !(rhs < lhs);
+}
+
+inline bool operator>=(const graph_match& lhs, const graph_match& rhs) {
+	return !(lhs < rhs);
 }
 
 inline void graph_match::add(size_t first, size_t second) {
