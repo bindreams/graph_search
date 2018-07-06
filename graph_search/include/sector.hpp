@@ -48,14 +48,14 @@ inline graph_match sector<T>::contains(const sector& other) const {
 	if (nodes.size() != other.nodes.size()) return {}; //Exit 1: sectors are not of of one size
 
 	if (nodes.size() == 1) {
-		if (***nodes.begin() !=
-			***other.nodes.begin()) return {}; //Exit 2a: Values are different
+		if ((*nodes.begin())->value() !=
+			(*other.nodes.begin())->value()) return {}; //Exit 2a: Values are different
 
 		//std::cout << "Sectors " << *this << " and " << other << " conform" << std::endl;
 		//std::cin.get();
 
 		graph_match rslt;
-		rslt.add((*nodes.begin())->get_id(), (*other.nodes.begin())->get_id());
+		rslt.add((*nodes.begin())->id(), (*other.nodes.begin())->id());
 		//std::cout << "And return this: " << rslt << std::endl;
 		return rslt;
 	}
@@ -128,7 +128,7 @@ inline std::set<sector<T>> sector<T>::expand() const {
 	//For every node in current sector...
 	for (auto&& i : nodes) {
 		//...check its connected nodes...
-		for (auto&& j : i->get_edges()) {
+		for (auto&& j : i->edges()) {
 			//...if this node is not in the sector, add
 			if (nodes.find(j) == nodes.end()) {
 				rslt.emplace(this, j);
@@ -149,7 +149,7 @@ template<typename T> inline bool operator>=(const sector<T>& lhs, const sector<T
 template <class T>
 std::ostream& operator<<(std::ostream& os, const sector<T>& obj) {
 	os << "{";
-	for (auto&& i : obj.nodes) os << **i;
+	for (auto&& i : obj.nodes) os << i->value();
 
 	os << "}";
 

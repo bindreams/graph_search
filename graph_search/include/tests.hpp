@@ -102,34 +102,3 @@ void short_test(const std::string& file) {
 
 	short_test(graph1, graph2);
 }
-
-void test1() {
-	graph<int> graph1;
-	auto n11 = graph1.push(1);
-	auto n12 = graph1.push(2, {n11});
-	auto n13 = graph1.push(3, {n11, n12});
-	auto n14 = graph1.push(4, {n12});
-	auto n15 = graph1.push(5, {n13});
-
-	graph<int> graph2;
-	auto n21 = graph2.push(1);
-	auto n22 = graph2.push(2, {n21});
-	auto n23 = graph2.push(3, {n21, n22});
-
-	full_test(graph1, graph2);
-}
-
-void test2() {
-	graph<int> graph1;
-	auto n11 = graph1.push(2);
-	auto n12 = graph1.push(1, {n11});
-	auto n13 = graph1.push(1, {n11, n12});
-	auto n14 = graph1.push(2, {n12});
-	auto n15 = graph1.push(2, {n13});
-
-	graph<int> graph2;
-	auto n21 = graph2.push(1);
-	auto n22 = graph2.push(2, {n21});
-
-	full_test(graph1, graph2);
-}

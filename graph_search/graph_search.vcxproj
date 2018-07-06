@@ -78,6 +78,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -91,6 +92,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -106,6 +108,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -122,6 +125,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -137,17 +141,16 @@
     <ClInclude Include="include\graph.hpp" />
     <ClInclude Include="include\graph_match.hpp" />
     <ClInclude Include="include\proxy_iterator.hpp" />
-    <ClInclude Include="include\id_manager.hpp" />
     <ClInclude Include="deps\json.hpp" />
     <ClInclude Include="include\node.hpp" />
     <ClInclude Include="include\puff_info.hpp" />
     <ClInclude Include="include\graph_manip.hpp" />
-    <ClInclude Include="include\report.hpp" />
     <ClInclude Include="include\sector.hpp" />
     <ClInclude Include="include\puff.hpp" />
     <ClInclude Include="include\tests.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="inline\graph.inl" />
     <None Include="inline\graph_manip.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

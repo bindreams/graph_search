@@ -1,4 +1,6 @@
 #pragma once
+#include <iterator>
+
 #include "graph_manip.hpp"
 #include "generator.hpp"
 #include "puff.hpp"
@@ -10,40 +12,25 @@ void push_random_edge(graph<T>& g) {
 
 	generator<std::size_t> gen;
 
-	std::size_t id1 = gen(0, g.size());
-	std::size_t id2 = gen(0, g.size());
-	//cout << "Start with " << id1 << ", " << id2 << endl;
+	// Select it1 that is not yet connected to all nodes
+	auto it1 = g.begin();
+	std::advance(it1, gen(0, g.size()));
 
-	//Select id1 that is not yet connected to all nodes
-	while (g[id1].get_edges().size() == g.size() - 1) {
-		id1++;
-		if (id1 >= g.size()) id1 = 0;
+	while (it1->edges().size() == g.size() - 1) {
+		it1++;
+		if (it1 == g.end()) it1 = g.begin();
 	}
-	//cout << " id1 corrected to " << id1 << endl;
 
-	//Select id2 that is not connected to id1
-	while (true) {
-		//Ensure non-collision
-		if (id2 == id1) id2++;
-		if (id2 >= g.size()) id2 = 0;
-		if (id2 == id1) id2++;
-		//cout << " id2 corrected to " << id2 << endl;
+	// Select id2 that is not connected to id1
+	auto it2 = g.begin();
+	std::advance(it2, gen(0, g.size()));
 
-		bool flag = false;
-
-		for (auto&& i : g[id1].get_edges()) {
-			if (i->get_id() == id2) {
-				flag = true;
-				break;
-			}
-		}
-
-		if (flag == false) break;
-		id2++;
+	while (it2 == it1 || it2->edges().find(&*it1) != it2->edges().end()) {
+		it2++;
+		if (it2 == g.end()) it2 = g.begin();
 	}
-	//cout << "final: " << id1 << ", " << id2 << endl;
 
-	g.connect(id1, id2);
+	g.connect(it1, it2);
 }
 
 template <class T>
@@ -52,23 +39,20 @@ void pop_random_edge(graph<T>& g) {
 
 	generator<std::size_t> gen;
 
-	std::size_t id1 = gen(0, g.size());
-	//cout << "Start with " << id1 << ", " << id2 << endl;
+	auto it1 = g.begin();
+	std::advance(it1, gen(0, g.size()));
 
-	//Select id1 that is connected to at least on node
-	while (g[id1].get_edges().size() == 0) {
-		id1++;
-		if (id1 >= g.size()) id1 = 0;
+	// Select id1 that is connected to at least on node
+	while (it1->edges().size() == 0) {
+		it1++;
+		if (it1 == g.end()) it1 = g.begin();
 	}
-	//cout << " id1 corrected to " << id1 << endl;
 
-	//Select a random connected node
-	std::size_t t = gen(0, g[id1].get_edges().size());
-	auto iter = g[id1].get_edges().begin();
-	std::advance(iter, t);
-	std::size_t id2 = (*iter)->get_id();
+	// Select a random connected node
+	auto it2 = it1->edges().begin();
+	std::advance(it2, gen(0, it1->edges().size()));
 
-	g.disconnect(id1, id2);
+	g.disconnect(*it1, **it2);
 }
 
 template <class T>
@@ -77,16 +61,16 @@ void mutate_edges(graph<T>& g, double target_ratio) {
 
 	std::size_t max_edges = g.size() * (g.size() - 1) / 2;
 	std::size_t edges = g.count_edges();
-	std::size_t target_edges = static_cast<std::size_t>(round(target_ratio * max_edges));
+	std::size_t taredges = static_cast<std::size_t>(round(target_ratio * max_edges));
 
-	if (edges < target_edges) {
-		while (edges < target_edges) {
+	if (edges < taredges) {
+		while (edges < taredges) {
 			push_random_edge(g);
 			edges++;
 		}
 	}
 	else {
-		while (edges > target_edges) {
+		while (edges > taredges) {
 			pop_random_edge(g);
 			edges--;
 		}
@@ -107,7 +91,9 @@ template <class T>
 void pop_random_node(graph<T>& g) {
 	if (g.empty()) throw std::invalid_argument("pop_random_node: graph has no nodes");
 
-	g.pop(generator<std::size_t>()(0, g.size()));
+	auto it = g.begin();
+	std::advance(it, generator<std::size_t>()(0, g.size()));
+	g.pop(it);
 }
 
 template <class T, class Gen>
