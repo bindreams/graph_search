@@ -33,6 +33,7 @@ private:
 
 public:
 	// Member types ============================================================
+	using value_type      = T;
 	using node_type       = node<T>;
 	using size_type       = typename container::size_type;
 	using difference_type = typename container::difference_type;
@@ -87,9 +88,18 @@ public:
 	void disconnect(node_type& n1, node_type& n2);
 	void disconnect(iterator it1, iterator it2);
 
-	iterator push(const T& val);
-	size_type pop(node_type& nd);
-	iterator pop(iterator it);
+	// Modifiers ---------------------------------------------------------------
+	iterator insert(const T& val);
+	iterator insert(T&& val);
+
+	template <class InputIt>
+	void insert(InputIt first, InputIt last);
+	void insert(std::initializer_list<value_type> ilist);
+
+	template <class... Args>
+	iterator emplace(Args&&... args);
+
+	iterator erase(iterator it);
 
 	bool empty() const noexcept;
 	void clear() noexcept;

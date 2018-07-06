@@ -132,7 +132,7 @@ inline void graph<T>::disconnect(iterator it1, iterator it2) {
 }
 
 template<class T>
-inline typename graph<T>::iterator graph<T>::push(const T& val) {
+inline typename graph<T>::iterator graph<T>::insert(const T& val) {
 	node<T> temp(val);
 	size_t id = temp.id();
 	auto x = nodes.emplace(id, std::move(temp));
@@ -141,12 +141,39 @@ inline typename graph<T>::iterator graph<T>::push(const T& val) {
 }
 
 template<class T>
-inline typename graph<T>::size_type graph<T>::pop(node_type& nd) {
-	return nodes.erase(nd.id());
+inline typename graph<T>::iterator graph<T>::insert(T&& val) {
+	node<T> temp(std::move(val));
+	size_t id = temp.id();
+	auto x = nodes.emplace(id, std::move(temp));
+
+	return x.first;
 }
 
 template<class T>
-inline typename graph<T>::iterator graph<T>::pop(iterator it) {
+template<class InputIt>
+void graph<T>::insert(InputIt first, InputIt last) {
+	for (InputIt it = first; it != last; ++it) {
+		insert(*it);
+	}
+}
+
+template<class T>
+inline void graph<T>::insert(std::initializer_list<value_type> ilist) {
+	insert(ilist.begin(), ilist.end());
+}
+
+template<class T>
+template<class... Args>
+inline typename graph<T>::iterator graph<T>::emplace(Args&&... args) {
+	node<T> temp(std::forward<Args>(args)...);
+	size_t id = temp.id();
+	auto x = nodes.emplace(id, std::move(temp));
+
+	return x.first;
+}
+
+template<class T>
+inline typename graph<T>::iterator graph<T>::erase(iterator it) {
 	return nodes.erase(it);
 }
 
@@ -244,7 +271,7 @@ void from_json(const json& j, graph<T>& obj) {
 	std::map<size_t, size_t> match_id;
 	// Adding all nodes
 	for (auto&& i : j) {
-		size_t id = obj.push(i["value"].get<T>())->id();
+		size_t id = obj.insert(i["value"].get<T>())->id();
 
 		match_id[i["id"]] = id;
 	}

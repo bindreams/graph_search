@@ -64,5 +64,8 @@
     <None Include="inline\graph.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="inline\node.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
