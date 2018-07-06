@@ -3,7 +3,6 @@
 
 #include "report.hpp"
 #include "tests.hpp"
-#include "sorted_vector.hpp"
 using namespace std;
 
 int main() {

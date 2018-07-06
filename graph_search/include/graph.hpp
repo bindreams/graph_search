@@ -3,25 +3,59 @@
 
 #include "id_manager.hpp"
 #include "node.hpp"
-#include "graph_iterator.hpp"
+#include "proxy_iterator.hpp"
 
 #include "deps/json.hpp"
 using json = nlohmann::json;
 
+namespace detail {
+
+struct get_second {
+	template <class PairType>
+	const typename PairType::second_type& 
+		operator()(const PairType& p) const {
+		return p.second;
+	}
+
+	template <class PairType>
+	typename PairType::second_type& 
+		operator()(PairType& p) const {
+		return p.second;
+	}
+};
+
+}
+
 template <class T>
 class graph {
 private:
-	std::map<size_t, node<T>> nodes;
+	using container = std::map<size_t, node<T>>;
+	container nodes;
 	id_manager ids;
 
 public:
-	//Member types
-	using iterator = graph_iterator<T, false, false>;
-	using const_iterator = graph_iterator<T, true, false>;
-	using reverse_iterator = graph_iterator<T, false, true>;
-	using const_reverse_iterator = graph_iterator<T, true, true>;
+	// Member types ============================================================
+	using value_type      = node<T>;
+	using size_type       = typename container::size_type;
+	using difference_type = typename container::difference_type;
+	using value_compare   = typename container::value_compare;
+	using allocator_type  = typename container::value_compare;
+	using reference       = typename container::reference;
+	using const_reference = typename container::const_reference;
+	using pointer         = typename container::pointer;
+	using const_pointer   = typename container::const_pointer;
 
-	//Constructor
+	using iterator = proxy_iterator<
+		typename container::iterator, detail::get_second>;
+	using const_iterator = proxy_iterator<
+		typename container::const_iterator, detail::get_second>;
+	using reverse_iterator = proxy_iterator<
+		typename container::reverse_iterator, detail::get_second>;
+	using const_reverse_iterator = proxy_iterator<
+		typename container::const_reverse_iterator, detail::get_second>;
+
+	// Member functions ========================================================
+	// Constructors ------------------------------------------------------------
 	constexpr graph() = default;
 	graph(const graph& other);
 	graph(graph&& other);

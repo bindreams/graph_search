@@ -1,9 +1,12 @@
 #pragma once
 #include <algorithm>
 #include <set>
+
+#include <boost/container/flat_set.hpp>
+using boost::container::flat_set;
+
 #include "node.hpp"
 #include "graph_match.hpp"
-#include "vecset.hpp"
 
 template <class T>
 class sector;
@@ -25,8 +28,8 @@ struct sector_lexicographical_order {
 template <class T>
 class sector {
 public:
-	vecset<const node<T>*, node_value_order<T>> nodes;
-	vecset<const sector<T>*, sector_lexicographical_order<T>> children;
+	flat_set<const node<T>*, node_value_order<T>> nodes;
+	flat_set<const sector<T>*, sector_lexicographical_order<T>> children;
 
 	graph_match contains(const sector& other) const;
 	sector& join_children(const sector& other);
