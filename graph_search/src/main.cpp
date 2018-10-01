@@ -1,9 +1,13 @@
 #include <iostream>
 #include <thread>
+#include <limits>
 
 #include "graph_manip.hpp"
 #include "tests.hpp"
-using namespace std;
+
+using std::cin;
+using std::cout;
+using std::endl;
 
 struct test_gen {
 	generator<int> gen;
@@ -14,8 +18,8 @@ struct test_gen {
 };
 
 int main() {
-	std::cout << std::boolalpha;
-	std::cout << "Threads available: " << std::thread::hardware_concurrency() << std::endl;
+	cout << std::boolalpha;
+	cout << "Threads available: " << std::thread::hardware_concurrency() << endl;
 
 	graph<int> x;
 	graph<int> y;
@@ -25,5 +29,10 @@ int main() {
 
 	short_test("last_test.json");
 
-	cin.get();
+	puff<int> pf(x, 3);
+	cout << "puff " << pf << endl;
+
+	cout << "Done." << endl;
+	cin.clear();
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }

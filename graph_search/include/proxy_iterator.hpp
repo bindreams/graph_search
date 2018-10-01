@@ -1,5 +1,6 @@
 #pragma once
 #include <iterator>
+#include <type_traits>
 
 #define ITER_DECL(...) \
 	template< \
@@ -15,22 +16,32 @@ private:
 	BaseIterator iter;
 
 public:
+	BaseIterator& get_iterator() {
+		return iter;
+	}
+
+	const BaseIterator& get_iterator() const {
+		return iter;
+	}
+
 	// Member types ============================================================
 	using value_type 
-		= typename std::iterator_traits<BaseIterator>::value_type;
+		= typename std::remove_reference<decltype(FunctorType()(*iter))>::type;
 	using difference_type   
 		= typename std::iterator_traits<BaseIterator>::difference_type;
 	using pointer           
-		= typename std::iterator_traits<BaseIterator>::pointer;
+		= value_type*;
 	using reference         
-		= typename std::iterator_traits<BaseIterator>::reference;
+		= value_type&;
 	using iterator_category 
 		= typename std::iterator_traits<BaseIterator>::iterator_category;
 
+private:
 	template <class... Types>
-	using enable_for = std::enable_if_t<std::conjunction_v<
-		std::is_base_of<Types, iterator_category>...>>;
+	using enable_for = typename std::enable_if<std::conjunction<
+		std::is_base_of<Types, iterator_category>...>::value>::type;
 
+public:
 	// Member functions ========================================================
 	// Required by RandomAccessIterator ----------------------------------------
 	template <class = enable_for<std::random_access_iterator_tag>>
@@ -94,13 +105,16 @@ public:
 
 	proxy_iterator(const proxy_iterator&) = default;
 	proxy_iterator(proxy_iterator&&) = default;
-	
-	proxy_iterator(const BaseIterator& other) :
+
+	explicit proxy_iterator(const BaseIterator& other) :
 		iter(other) {
 	}
 
-	operator BaseIterator() const {
-		return iter;
+	// Convert from related proxy iterators
+	// Example: proxy_iterator<iterator, ...> to proxy_iterator<const_iterator, ...>
+	template<class Iter, class = std::enable_if<std::is_convertible<Iter, BaseIterator>::value>::type>
+	proxy_iterator(const proxy_iterator<Iter, FunctorType>& other) :
+		iter(other.iter) {
 	}
 
 	proxy_iterator& operator=(const proxy_iterator&) = default;
@@ -110,6 +124,9 @@ public:
 	}
 
 	// Friends -----------------------------------------------------------------
+	template <class BaseIterator_, class FunctorType_>
+	friend class proxy_iterator;
+
 	// Required by RandomAccessIterator ----------------------------------------
 	ITER_DECL(std::random_access_iterator_tag)
 		friend inline ITER operator+(ITER iter, typename ITER::difference_type offset);
