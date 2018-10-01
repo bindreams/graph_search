@@ -13,8 +13,7 @@
 
 template <class T>
 class puff {
-	//Inner vector contains all sectors of the same size
-	//Outer vector contains all sectors
+	//Deque contains lists of sectors of the same size
 	std::deque<
 		std::list<sector<T>>> sectors;
 
