@@ -166,16 +166,17 @@ template <class T>
 std::ostream& operator<<(std::ostream& os, const puff<T>& obj) {
 	os << "{" << std::endl;
 
-	size_t level = obj.depth();
-	do {
-		level--;
-		std::cout << "    level " << level << ":" << std::endl;
+	for (size_t level = obj.depth()-1; level != 0; level--) {
+		std::cout << "    level " << level << " {" << std::endl;
+
 		for (auto&& i : obj.sectors[level]) {
 			os << "        " << i << " -> ";
 			for (auto&& j : i.children) os << *j << " ";
 			os << std::endl;
 		}
-	} while (level != 0);
+
+		std::cout << "    }" << std::endl;
+	}
 
 	os << "}";
 

@@ -52,62 +52,62 @@ inline void swap(graph<T_>& lhs, graph<T_>& rhs) {
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::begin() noexcept {
-	return nodes.begin();
+	return iterator(nodes.begin());
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::begin() const noexcept {
-	return nodes.begin();
+	return const_iterator(nodes.begin());
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::cbegin() const noexcept {
-	return nodes.cbegin();
+	return const_iterator(nodes.cbegin());
 }
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::end() noexcept {
-	return nodes.end();
+	return iterator(nodes.end());
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::end() const noexcept {
-	return nodes.end();
+	return const_iterator(nodes.end());
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::cend() const noexcept {
-	return nodes.cend();
+	return const_iterator(nodes.cend());
 }
 
 template<class T>
 inline typename graph<T>::reverse_iterator graph<T>::rbegin() noexcept {
-	return nodes.rbegin();
+	return reverse_iterator(nodes.rbegin());
 }
 
 template<class T>
 inline typename graph<T>::const_reverse_iterator graph<T>::rbegin() const noexcept {
-	return nodes.rbegin();
+	return const_reverse_iterator(nodes.rbegin());
 }
 
 template<class T>
 inline typename graph<T>::const_reverse_iterator graph<T>::crbegin() const noexcept {
-	return nodes.crbegin();
+	return const_reverse_iterator(nodes.crbegin());
 }
 
 template<class T>
 inline typename graph<T>::reverse_iterator graph<T>::rend() noexcept {
-	return nodes.rend();
+	return reverse_iterator(nodes.rend());
 }
 
 template<class T>
 inline typename graph<T>::const_reverse_iterator graph<T>::rend() const noexcept {
-	return nodes.rend();
+	return const_reverse_iterator(nodes.rend());
 }
 
 template<class T>
 inline typename graph<T>::const_reverse_iterator graph<T>::crend() const noexcept {
-	return nodes.crend();
+	return const_reverse_iterator(nodes.crend());
 }
 
 template<class T>
@@ -137,7 +137,7 @@ inline typename graph<T>::iterator graph<T>::insert(const T& val) {
 	size_t id = temp.id();
 	auto x = nodes.emplace(id, std::move(temp));
 
-	return x.first;
+	return iterator(x.first);
 }
 
 template<class T>
@@ -146,7 +146,7 @@ inline typename graph<T>::iterator graph<T>::insert(T&& val) {
 	size_t id = temp.id();
 	auto x = nodes.emplace(id, std::move(temp));
 
-	return x.first;
+	return iterator(x.first);
 }
 
 template<class T>
@@ -174,7 +174,7 @@ inline typename graph<T>::iterator graph<T>::emplace(Args&&... args) {
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::erase(iterator it) {
-	return nodes.erase(it);
+	return iterator(nodes.erase(it.get_iterator()));
 }
 
 template<class T>
@@ -218,7 +218,7 @@ inline size_t graph<T>::count_edges() const noexcept {
 template<class T>
 inline double graph<T>::ratio() const noexcept {
 	size_t max_edges = size() * (size() - 1) / 2;
-	size_t edges = g.count_edges();
+	size_t edges = count_edges();
 
 	return static_cast<double>(edges) / max_edges;
 }

@@ -149,7 +149,10 @@ template<typename T> inline bool operator>=(const sector<T>& lhs, const sector<T
 template <class T>
 std::ostream& operator<<(std::ostream& os, const sector<T>& obj) {
 	os << "{";
-	for (auto&& i : obj.nodes) os << i->value();
+
+	for (auto&& i : obj.nodes) {
+		os << *i;
+	}
 
 	os << "}";
 
