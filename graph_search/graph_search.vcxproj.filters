@@ -51,6 +51,9 @@
     <ClInclude Include="include\benchmark.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\report.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

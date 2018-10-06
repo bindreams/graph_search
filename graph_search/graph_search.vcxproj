@@ -145,6 +145,7 @@
     <ClInclude Include="include\node.hpp" />
     <ClInclude Include="include\puff_info.hpp" />
     <ClInclude Include="include\graph_manip.hpp" />
+    <ClInclude Include="include\report.hpp" />
     <ClInclude Include="include\sector.hpp" />
     <ClInclude Include="include\puff.hpp" />
     <ClInclude Include="include\tests.hpp" />
