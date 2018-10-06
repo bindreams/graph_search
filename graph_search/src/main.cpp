@@ -4,23 +4,17 @@
 
 #include "graph_manip.hpp"
 #include "tests.hpp"
+#include "report.hpp"
 
 using std::cin;
 using std::cout;
 using std::endl;
 
-struct test_gen {
-	generator<int> gen;
-
-	int operator()() {
-		return gen(0, 6);
-	}
-};
-
 int main() {
 	cout << std::boolalpha;
 	cout << "Threads available: " << std::thread::hardware_concurrency() << endl;
-
+	
+	/*
 	graph<int> x;
 	graph<int> y;
 
@@ -31,6 +25,9 @@ int main() {
 
 	puff<int> pf(x, 3);
 	cout << "puff " << pf << endl;
+	*/
+
+	report1("report.json");
 
 	cout << "Done." << endl;
 	cin.clear();

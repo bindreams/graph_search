@@ -21,3 +21,11 @@ inline T generator<T>::operator()(const T& min, const T& max) {
 	if constexpr(std::is_floating_point_v<T>)
 		return std::uniform_real_distribution<T>(min, max)(device);
 }
+
+struct test_gen {
+	generator<int> gen;
+
+	int operator()() {
+		return gen(0, 6);
+	}
+};
