@@ -62,7 +62,7 @@ inline graph_match operator+(graph_match lhs, const graph_match& rhs) {
 	return lhs;
 }
 
-std::ostream& operator<<(std::ostream& os, const graph_match& obj) {
+inline std::ostream& operator<<(std::ostream& os, const graph_match& obj) {
 	os << "{" << std::endl;
 
 	for (auto i : obj.matches) {

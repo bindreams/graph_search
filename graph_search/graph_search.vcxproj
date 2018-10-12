@@ -133,10 +133,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\data_pack.cpp" />
+    <ClCompile Include="src\data_unit.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\benchmark.hpp" />
+    <ClInclude Include="include\data_pack.hpp" />
+    <ClInclude Include="include\data_unit.hpp" />
+    <ClInclude Include="include\data_unit_lex_order.hpp" />
     <ClInclude Include="include\generator.hpp" />
     <ClInclude Include="include\graph.hpp" />
     <ClInclude Include="include\graph_match.hpp" />
@@ -149,6 +154,7 @@
     <ClInclude Include="include\sector.hpp" />
     <ClInclude Include="include\puff.hpp" />
     <ClInclude Include="include\tests.hpp" />
+    <ClInclude Include="include\utility.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="inline\graph.inl" />

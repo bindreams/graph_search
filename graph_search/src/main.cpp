@@ -5,6 +5,7 @@
 #include "graph_manip.hpp"
 #include "tests.hpp"
 #include "report.hpp"
+#include "utility.hpp"
 
 using std::cin;
 using std::cout;
@@ -27,7 +28,11 @@ int main() {
 	cout << "puff " << pf << endl;
 	*/
 
-	report1("report.json");
+	report("report.json",
+		range(3, 25 + 1, 2), 
+		range(3, 9 + 1, 2), 
+		{0.2},
+		5);
 
 	cout << "Done." << endl;
 	cin.clear();
