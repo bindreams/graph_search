@@ -133,15 +133,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\data_unit_lex_order.cpp" />
     <ClCompile Include="src\data_pack.cpp" />
     <ClCompile Include="src\data_unit.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\benchmark.hpp" />
-    <ClInclude Include="include\data_pack.hpp" />
-    <ClInclude Include="include\data_unit.hpp" />
-    <ClInclude Include="include\data_unit_lex_order.hpp" />
+    <ClInclude Include="include\report\data_pack.hpp" />
+    <ClInclude Include="include\report\data_unit.hpp" />
+    <ClInclude Include="include\report\data_unit_lex_order.hpp" />
     <ClInclude Include="include\generator.hpp" />
     <ClInclude Include="include\graph.hpp" />
     <ClInclude Include="include\graph_match.hpp" />
@@ -150,16 +151,19 @@
     <ClInclude Include="include\node.hpp" />
     <ClInclude Include="include\puff_info.hpp" />
     <ClInclude Include="include\graph_manip.hpp" />
-    <ClInclude Include="include\report.hpp" />
+    <ClInclude Include="include\report\report.hpp" />
     <ClInclude Include="include\sector.hpp" />
     <ClInclude Include="include\puff.hpp" />
     <ClInclude Include="include\tests.hpp" />
-    <ClInclude Include="include\utility.hpp" />
+    <ClInclude Include="include\range.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="inline\data_pack.inl" />
+    <None Include="inline\data_unit.inl" />
     <None Include="inline\graph.inl" />
     <None Include="inline\graph_manip.inl" />
     <None Include="inline\node.inl" />
+    <None Include="inline\report.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

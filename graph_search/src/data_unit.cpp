@@ -1,4 +1,4 @@
-#include "data_unit.hpp"
+#include "report/data_unit.hpp"
 
 void data_unit::merge(const data_unit & du) {
 	assert(graph_size == du.graph_size);

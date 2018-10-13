@@ -51,19 +51,19 @@
     <ClInclude Include="include\benchmark.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\report.hpp">
+    <ClInclude Include="include\report\data_unit_lex_order.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility.hpp">
+    <ClInclude Include="include\report\data_pack.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\data_unit.hpp">
+    <ClInclude Include="include\report\data_unit.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\data_pack.hpp">
+    <ClInclude Include="include\report\report.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\data_unit_lex_order.hpp">
+    <ClInclude Include="include\range.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,6 +77,9 @@
     <ClCompile Include="src\data_pack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\data_unit_lex_order.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="inline\graph_manip.inl">
@@ -86,6 +89,15 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="inline\node.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\data_unit.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\data_pack.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\report.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

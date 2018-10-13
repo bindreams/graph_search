@@ -4,8 +4,8 @@
 
 #include "graph_manip.hpp"
 #include "tests.hpp"
-#include "report.hpp"
-#include "utility.hpp"
+#include "report/report.hpp"
+#include "range.hpp"
 
 using std::cin;
 using std::cout;
