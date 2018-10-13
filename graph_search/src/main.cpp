@@ -28,11 +28,12 @@ int main() {
 	cout << "puff " << pf << endl;
 	*/
 
-	report("report.json",
-		range(3, 25 + 1, 2), 
-		range(3, 9 + 1, 2), 
-		{0.2},
-		5);
+	auto sizes = range(3, 25 + 1, 2);
+	auto depths = range(3, 9 + 1, 2);
+	auto ratios = {0.2};
+	int attempts = 5;
+
+	report("report.json", sizes, depths, ratios, attempts);
 
 	cout << "Done." << endl;
 	cin.clear();
