@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <fstream>
-#include "data_pack.hpp"
+#include "report/data_pack.hpp"
 
 data_unit& data_pack::at(std::size_t graph_size, std::size_t max_puff_depth, double graph_ratio) {
 	auto key = std::make_tuple(graph_size, max_puff_depth, graph_ratio);
