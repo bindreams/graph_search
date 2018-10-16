@@ -35,7 +35,10 @@ void short_test(const graph<T>& graph1, const graph<T>& graph2) {
 	ofs << std::setw(4) << j;
 	ofs.close();
 
-	TIME(100, contains(graph1, graph2));
+	cout << "Timing once:" << endl;
+	TIME(1, contains(graph1, graph2));
+	cout << "Timing 100 times:" << endl;
+	TIME(1000, contains(graph1, graph2));
 }
 
 template<class T>

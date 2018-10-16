@@ -121,6 +121,8 @@ inline sector<T>::sector(const sector<T>* sec, const node<T>* nd) :
 	nodes.insert(nd);
 }
 
+// Searches for all possible expansions by 1 node,
+// and returns a vector of them.
 template<class T>
 inline std::set<sector<T>> sector<T>::expand() const {
 	std::set<sector<T>> rslt;
