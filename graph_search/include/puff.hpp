@@ -169,7 +169,7 @@ std::ostream& operator<<(std::ostream& os, const puff<T>& obj) {
 		std::cout << "    level " << level << " {" << std::endl;
 
 		for (auto&& i : obj.sectors[level]) {
-			os << "        " << i << " -> ";
+			os << "        " << i << " <= ";
 			for (auto&& j : i.children) os << *j << " ";
 			os << std::endl;
 		}
