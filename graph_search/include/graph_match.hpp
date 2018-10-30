@@ -2,6 +2,7 @@
 #include <map>
 #include <set>
 #include <utility>
+#include "util/pretty_print.hpp"
 
 class graph_match {
 private:
@@ -66,7 +67,7 @@ inline std::ostream& operator<<(std::ostream& os, const graph_match& obj) {
 	os << "{" << std::endl;
 
 	for (auto i : obj.matches) {
-		os << "    {#" << i.first << " - #" << i.second << "}" << std::endl;
+		os << "    {#" << pretty(i.first) << " - #" << pretty(i.second) << "}" << std::endl;
 	}
 
 	os << "}";
