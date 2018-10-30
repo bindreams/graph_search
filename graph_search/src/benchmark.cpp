@@ -1,9 +1,13 @@
 #include <benchmark/benchmark.h>
-#pragma comment(lib, "shlwapi.lib")
+#include <fstream>
+#include "deps/json.hpp"
+using json = nlohmann::json;
+
+#pragma comment(lib, "shlwapi.lib") // MSVC++ does not work without this
+
 #include "benchmark.hpp"
 #include "deps/zh/extra_traits.hpp"
 #include "util/generator.hpp"
-
 #include "puff.hpp"
 #include "graph_manip.hpp"
 
@@ -50,6 +54,20 @@ void puff_creation(benchmark::State& state) {
 	for (auto _ : state) {
 		graph<int> g;
 		mutate(g, graph_size, graph_ratio, test_gen());
+		puff<int> pf(g, max_depth);
+	}
+}
+
+// Load a graph from file, then create a puff with specified max_depth
+// Default depth is maximum possible depth
+template <size_t max_depth = -1>
+void puff_creation(benchmark::State& state) {
+	std::ifstream ifs("graph-20-0.2.json");
+	json j;
+	ifs >> j;
+	graph<int> g = j;
+
+	for (auto _ : state) {
 		puff<int> pf(g, max_depth);
 	}
 }

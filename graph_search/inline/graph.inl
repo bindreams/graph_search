@@ -4,9 +4,6 @@
 
 template<class T>
 inline graph<T>::graph(const graph& other) {
-	// Clearing
-	clear();
-
 	std::map<size_t, size_t> match_id;
 
 	// Adding all nodes
