@@ -77,7 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -91,7 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -107,7 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -124,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);include;%userprofile%\Documents\Visual Studio 2017\Libraries\boost\boost_1_67_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -133,17 +133,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\benchmark.cpp" />
     <ClCompile Include="src\data_unit_lex_order.cpp" />
     <ClCompile Include="src\data_pack.cpp" />
     <ClCompile Include="src\data_unit.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="deps\zh\extra_traits.hpp" />
     <ClInclude Include="include\benchmark.hpp" />
     <ClInclude Include="include\report\data_pack.hpp" />
     <ClInclude Include="include\report\data_unit.hpp" />
     <ClInclude Include="include\report\data_unit_lex_order.hpp" />
-    <ClInclude Include="include\generator.hpp" />
+    <ClInclude Include="include\util\generator.hpp" />
     <ClInclude Include="include\graph.hpp" />
     <ClInclude Include="include\graph_match.hpp" />
     <ClInclude Include="include\proxy_iterator.hpp" />
@@ -155,7 +157,8 @@
     <ClInclude Include="include\sector.hpp" />
     <ClInclude Include="include\puff.hpp" />
     <ClInclude Include="include\tests.hpp" />
-    <ClInclude Include="include\range.hpp" />
+    <ClInclude Include="include\util\pretty_print.hpp" />
+    <ClInclude Include="include\util\range.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="inline\data_pack.inl" />

@@ -1,5 +1,6 @@
 #pragma once
 #include "node.hpp"
+#include "util/pretty_print.hpp"
 
 template<class T>
 inline T& node<T>::value() {
@@ -73,6 +74,6 @@ struct node_value_order {
 
 template <class T>
 std::ostream& operator<<(std::ostream& os, const node<T>& obj) {
-	os << "{#" << std::hex << std::setfill('0') << std::setw(2) << obj.id() % 0x1000 << ": " << obj.value() << "}";
+	os << "{#" << pretty(obj.id()) << ": " << obj.value() << "}";
 	return os;
 }

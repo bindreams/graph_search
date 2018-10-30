@@ -2,7 +2,7 @@
 #include <iterator>
 
 #include "graph_manip.hpp"
-#include "generator.hpp"
+#include "util/generator.hpp"
 #include "puff.hpp"
 
 template <class T>
