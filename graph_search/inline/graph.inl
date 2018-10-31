@@ -171,7 +171,7 @@ inline typename graph<T>::iterator graph<T>::emplace(Args&&... args) {
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::erase(iterator it) {
-	return iterator(nodes.erase(it.get_iterator()));
+	return iterator(nodes.erase(it));
 }
 
 template<class T>
@@ -252,6 +252,7 @@ void to_json(json& j, const graph<T>& obj) {
 		temp["value"] = nd.value();
 		temp["id"] = nd.id();
 		
+		temp["edges"] = json::array();
 		for (auto&& edge : nd.edges()) {
 			temp["edges"].push_back(edge->id());
 		}
