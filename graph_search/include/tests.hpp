@@ -2,9 +2,11 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <filesystem>
 #include <iomanip>
 #include "deps/json.hpp"
 #include "graph_manip.hpp"
+namespace fs = std::filesystem;
 using json = nlohmann::json;
 
 template<class T>
@@ -34,7 +36,7 @@ inline void test_search(const graph<T>& graph1, const graph<T>& graph2) {
 	ofs.close();
 }
 
-inline void test_search(const std::string& file) {
+inline void test_search(const fs::path& file) {
 	std::ifstream ifs(file);
 	json j;
 	ifs >> j;

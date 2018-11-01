@@ -179,6 +179,7 @@
     <None Include="inline\graph_manip.inl" />
     <None Include="inline\node.inl" />
     <None Include="inline\report.inl" />
+    <None Include="inline\sector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
