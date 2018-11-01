@@ -2,26 +2,11 @@
 #include <algorithm>
 #include <set>
 #include <boost/container/flat_set.hpp>
+
+#include "functors/sector_functors.hpp"
 #include "node_group.hpp"
 #include "graph_match.hpp"
 using boost::container::flat_set;
-
-template <class T>
-class sector;
-
-template<class T>
-struct sector_lexicographical_order {
-	inline bool operator() (sector<T> const& lhs, sector<T> const& rhs) const {
-		return std::lexicographical_compare(
-			lhs.nodes.begin(), lhs.nodes.end(),
-			rhs.nodes.begin(), rhs.nodes.end(),
-			node_value_order<T>());
-	}
-
-	inline bool operator() (const sector<T>* const& lhs, const sector<T>* const& rhs) const {
-		return operator()(*lhs, *rhs);
-	}
-};
 
 template <class T>
 class sector {
