@@ -158,6 +158,8 @@
   <ItemGroup>
     <ClInclude Include="deps\zh\extra_traits.hpp" />
     <ClInclude Include="include\benchmark.hpp" />
+    <ClInclude Include="include\functors\node_functors.hpp" />
+    <ClInclude Include="include\functors\sector_functors.hpp" />
     <ClInclude Include="include\node_group.hpp" />
     <ClInclude Include="include\level_builder.hpp" />
     <ClInclude Include="include\report\data_pack.hpp" />
@@ -183,6 +185,7 @@
     <None Include="inline\data_unit.inl" />
     <None Include="inline\graph.inl" />
     <None Include="inline\graph_manip.inl" />
+    <None Include="inline\level_builder.inl" />
     <None Include="inline\node.inl" />
     <None Include="inline\report.inl" />
     <None Include="inline\sector.inl" />

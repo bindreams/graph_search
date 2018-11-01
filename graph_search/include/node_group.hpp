@@ -2,6 +2,7 @@
 #include <set>
 #include <boost/container/flat_set.hpp>
 #include "node.hpp"
+#include "functors/node_functors.hpp"
 using boost::container::flat_set;
 
 template <class T>

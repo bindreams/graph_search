@@ -47,4 +47,7 @@ private:
 	std::unordered_set<node*> m_edges;
 };
 
+template <class T>
+std::ostream& operator<<(std::ostream& os, const node<T>& obj);
+
 #include "inline/node.inl"
