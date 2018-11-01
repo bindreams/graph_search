@@ -6,10 +6,13 @@
 #include <list>
 #include <deque>
 #include <future>
+#include <boost/container/flat_set.hpp>
 
 #include "sector.hpp"
 #include "graph.hpp"
 #include "puff_info.hpp"
+#include "level_builder.hpp"
+using boost::container::flat_set;
 
 template <class T>
 class puff {
@@ -40,14 +43,56 @@ template<class T>
 inline puff<T>::puff(const graph<T>& gr, size_t max_depth) {
 	if (max_depth == 0) throw std::invalid_argument("max_depth must be at least 1");
 
-	sectors.push_back({});
-	for (auto&& i : gr) {
+	// Build level 1
+	sectors.emplace_back();
+	for (auto& i : gr) {
 		sectors.front().emplace_back(&i);
 	}
 
-	for (size_t level = 1; level < max_depth; level++) {
+	// Build level 2, if needed
+	if (max_depth > 1) {
+		// Create 2 vectors, each holding same sectors but produced from
+		// different children. In the end, two vectors will be merged.
+		std::vector<sector<T>> new_level1;
+		std::vector<sector<T>> new_level2;
+
+		// For each sector in first level
+		for (auto& i : sectors.front()) {
+			// Check edges
+			const node<T>& only_node = (**i.nodes.begin());
+			for (auto& edge : only_node.edges()) {
+				// Based on edges id emplace in one of vectors
+				if (edge->id() > only_node.id())
+					new_level1.emplace_back(&i, edge);
+				else
+					new_level2.emplace_back(&i, edge);
+			}
+		}
+
+		// If vectors are empty, no level to build
+		if (new_level1.empty()) return;
+
+		// Sort and merge sectors
+		std::sort(new_level1.begin(), new_level1.end());
+		std::sort(new_level2.begin(), new_level2.end());
+		
+		for (std::size_t i = 0; i < new_level1.size(); i++) {
+			new_level1[i].join_children(new_level2[i]);
+		}
+
+		sectors.emplace_back(new_level1.begin(), new_level1.end());
+	}
+
+	// Build remaining levels using already built ones
+	for (size_t level = 2; level < max_depth; level++) {
 		//std::cout << "level " << level << " growth" << std::endl;
-		if (!grow()) break;
+		level_builder<T> lb;
+		if (!lb.build(sectors.back())) break;
+
+		// Insert new level in the end
+		sectors.emplace(sectors.end(),
+			lb.result().begin(), 
+			lb.result().end());
 	}
 
 	//std::cout << "Built a puff (max_depth: " << max_depth << ", levels: " << sectors.size() << ", depth at back(): " << sectors.back().size() << "): " << *this;
@@ -55,39 +100,7 @@ inline puff<T>::puff(const graph<T>& gr, size_t max_depth) {
 
 template<class T>
 inline bool puff<T>::grow() {
-	if (sectors.empty()) throw std::runtime_error("attemted to grow an empty puff");
 
-	//Expand all elements of previous level by 1 and insert
-	std::list<sector<T>> new_level;
-
-	std::vector<std::future<std::set<sector<T>>>> expanded_sectors;
-	for (auto&& i : sectors.back()) {
-		info.async_calls_ctor_++;
-		expanded_sectors.push_back(std::move(std::async(std::launch::async, &sector<T>::expand, &i)));
-	}
-	
-	bool expanded = false;
-	
-	for (auto&& i : expanded_sectors) {
-		auto temp = std::move(i.get());
-		if (!temp.empty()) expanded = true;
-		new_level.insert(
-			new_level.end(), temp.begin(), temp.end());
-	}
-	
-	if (!expanded) return false;
-	new_level.sort(sector_lexicographical_order<T>());
-
-	//Trim: join identical sectors' children
-	for (auto control = new_level.begin(); control != new_level.end(); control++) {
-		for (auto check = std::next(control); check != new_level.end() && control->nodes == check->nodes;) {
-			control->join_children(*check);
-			check = new_level.erase(check);
-		}
-	}
-
-	sectors.emplace_back(std::move(new_level));
-	return true;
 }
 
 template<class T>

@@ -80,6 +80,15 @@ inline sector<T>::sector(const sector<T>* sec, const node<T>* nd) :
 }
 
 template<class T>
+inline sector<T>::sector(const sector& child1, const sector& child2) {
+	nodes.insert(child1.nodes.begin(), child1.nodes.end());
+	nodes.insert(child2.nodes.begin(), child2.nodes.end());
+
+	children.insert(&child1);
+	children.insert(&child2);
+}
+
+template<class T>
 inline std::set<sector<T>> sector<T>::expand() const {
 	std::set<sector<T>> rslt;
 
