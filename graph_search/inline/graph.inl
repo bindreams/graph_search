@@ -26,7 +26,7 @@ inline graph<T>::graph(const graph& other) {
 }
 
 template<class T>
-inline graph<T>::graph(graph && other) :
+inline graph<T>::graph(graph&& other) noexcept :
 	graph() {
 	swap(*this, other);
 }
@@ -38,7 +38,7 @@ inline graph<T>& graph<T>::operator=(graph<T> other) {
 }
 
 template <class T_>
-inline void swap(graph<T_>& lhs, graph<T_>& rhs) {
+inline void swap(graph<T_>& lhs, graph<T_>& rhs) noexcept {
 	// enable ADL
 	using std::swap;
 

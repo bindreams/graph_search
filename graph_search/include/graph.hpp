@@ -57,13 +57,13 @@ public:
 	// Constructors ------------------------------------------------------------
 	constexpr graph() = default;
 	graph(const graph& other);
-	graph(graph&& other);
+	graph(graph&& other) noexcept;
 	~graph() = default;
 
 	graph& operator=(graph rhs);
 
 	template <class T_>
-	friend inline void swap(graph<T_>& first, graph<T_>& second);
+	friend inline void swap(graph<T_>& first, graph<T_>& second) noexcept;
 
 	// Iterators ---------------------------------------------------------------
 	iterator begin() noexcept;

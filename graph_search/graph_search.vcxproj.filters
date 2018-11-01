@@ -109,5 +109,8 @@
     <None Include="inline\report.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="inline\sector.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
