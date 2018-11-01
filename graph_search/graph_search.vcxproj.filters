@@ -72,6 +72,12 @@
     <ClInclude Include="include\util\pretty_print.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\level_builder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\node_group.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

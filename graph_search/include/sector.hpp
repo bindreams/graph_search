@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <set>
 #include <boost/container/flat_set.hpp>
-#include "node.hpp"
+#include "node_group.hpp"
 #include "graph_match.hpp"
 using boost::container::flat_set;
 
@@ -26,21 +26,22 @@ struct sector_lexicographical_order {
 template <class T>
 class sector {
 public:
-	flat_set<const node<T>*, node_value_order<T>> nodes;
-	flat_set<const sector<T>*, sector_lexicographical_order<T>> children;
+	node_group<T> nodes;
+	flat_set<const sector*, sector_lexicographical_order<T>> children;
 
 	graph_match contains(const sector& other) const;
 	sector& join_children(const sector& other);
 	size_t size_in_bytes() const;
 
 	constexpr sector() = default;
-	sector(const sector<T>& other) = default;
+	sector(const sector& other) = default;
 	sector(const node<T>* nd);
-	sector(const sector<T>* sec, const node<T>* nd);
+	sector(const sector* sec, const node<T>* nd);
+	sector(const sector& child1, const sector& child2);
 
 	// Searches for all possible expansions by 1 node,
 	// and returns a set of them.
-	std::set<sector<T>> expand() const;
+	std::set<sector> expand() const;
 };
 
 template<class T> inline bool operator==(const sector<T>& lhs, const sector<T>& rhs);

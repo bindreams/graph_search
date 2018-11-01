@@ -4,7 +4,8 @@
 #include "tests.hpp"
 
 int main(int argc, char** argv) {
-	run_benchmark(argc, argv);
+	//run_benchmark(argc, argv);
+	test_search("last_test.json");
 
 	std::cout << "Done." << std::endl;
 	std::cin.clear();
