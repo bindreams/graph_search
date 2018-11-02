@@ -7,28 +7,18 @@ class sector;
 
 template<class T>
 struct sector_lexicographical_order {
-	inline bool operator() (sector<T> const& lhs, sector<T> const& rhs) const {
-		return std::lexicographical_compare(
-			lhs.nodes.begin(), lhs.nodes.end(),
-			rhs.nodes.begin(), rhs.nodes.end(),
-			node_value_order<T>());
-	}
-
-	inline bool operator() (const sector<T>* const& lhs, const sector<T>* const& rhs) const {
-		return operator()(*lhs, *rhs);
-	}
+	bool operator() (sector<T> const& lhs, sector<T> const& rhs) const;
+	bool operator() (const sector<T>* const& lhs, const sector<T>* const& rhs) const;
 };
 
 template<class T>
 struct sector_nodes_hash {
-	std::size_t operator()(const sector<T>& obj) const {
-		return std::hash<node_group<T>>()(obj.nodes);
-	}
+	std::size_t operator()(const sector<T>& obj) const;
 };
 
 template<class T>
 struct sector_nodes_equal {
-	std::size_t operator()(const sector<T>& lhs, const sector<T>& rhs) const {
-		return lhs.nodes == rhs.nodes;
-	}
+	std::size_t operator()(const sector<T>& lhs, const sector<T>& rhs) const;
 };
+
+#include "inline/sector_functors.inl"
