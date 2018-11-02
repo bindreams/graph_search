@@ -114,6 +114,9 @@ ZH_BENCHMARK_BIND(puff_creation(state, "graph-15-0.2.json"))
 ZH_BENCHMARK_BIND(puff_creation(state, "graph-15-0.4.json"))
 ->Unit(benchmark::kMillisecond)
 ->MinTime(60);
+ZH_BENCHMARK_BIND(puff_creation(state, "graph-15-0.6.json"))
+->Unit(benchmark::kMillisecond)
+->MinTime(60);
 
 // ============================================================================
 int run_benchmark(int argc, char** argv) {

@@ -84,6 +84,9 @@
     <ClInclude Include="include\functors\node_functors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\util\advance.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -125,6 +128,12 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="inline\level_builder.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\sector_functors.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\node_functors.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

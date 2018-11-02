@@ -5,15 +5,12 @@ class node;
 
 template<class T>
 struct node_value_equal {
-	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const {
-		return lhs->value() == rhs->value();
-	}
+	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const;
 };
 
 template<class T>
 struct node_value_order {
-	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const {
-		return lhs->value() < rhs->value() ||
-			(lhs->value() == rhs->value() && lhs->id() < rhs->id());
-	}
+	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const;
 };
+
+#include "inline/node_functors.inl"

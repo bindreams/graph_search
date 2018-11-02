@@ -5,7 +5,8 @@
 #include <vector>
 #include <list>
 #include <deque>
-#include <future>
+#include <thread>
+#include <cmath>
 #include <boost/container/flat_set.hpp>
 
 #include "sector.hpp"
@@ -87,7 +88,11 @@ inline puff<T>::puff(const graph<T>& gr, size_t max_depth) {
 	for (size_t level = 2; level < max_depth; level++) {
 		//std::cout << "level " << level << " growth" << std::endl;
 		level_builder<T> lb;
-		if (!lb.build(sectors.back())) break;
+		std::size_t block_size = std::ceil(
+			static_cast<double>(sectors.back().size()) /
+			std::thread::hardware_concurrency());
+		//std::cout << "Size: " << sectors.back().size() << "; block: " << block_size << std::endl;
+		if (!lb.build(sectors.back(), block_size)) break;
 
 		// Insert new level in the end
 		sectors.emplace(sectors.end(),

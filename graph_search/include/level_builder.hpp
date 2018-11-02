@@ -1,4 +1,5 @@
 #pragma once
+#include <shared_mutex>
 #include "deps/ska/bytell_hash_map.hpp"
 #include "deps/zh/extra_traits.hpp"
 #include "node_group.hpp"
@@ -6,23 +7,26 @@
 #include "functors/sector_functors.hpp"
 #include "node.hpp"
 
+template <class T>
+class build_results : public ska::bytell_hash_set<sector<T>, sector_nodes_hash<T>, sector_nodes_equal<T>> {
+public:
+	void add(const sector<T>& rslt);
+	void join(const build_results& other);
+};
+
 // Builds one level of a puff
-template <class T, bool is_multithreaded = false>
+template <class T, bool is_multithreaded = true>
 class level_builder;
 
 template <class T>
 class level_builder<T, false> {
 private:
 	using sources_t = ska::bytell_hash_map<node_group<T>, std::vector<const sector<T>*>>;
-
-public:
-	using results_t = ska::bytell_hash_set<sector<T>, sector_nodes_hash<T>, sector_nodes_equal<T>>;
 	
 private:
 	sources_t sources;
-	results_t results;
+	build_results<T> results;
 
-	void add_result(const sector<T>& rslt);
 public:
 	// Build a level from a container
 	template <class Container, class = std::enable_if_t<
@@ -30,7 +34,61 @@ public:
 		std::is_same_v<typename Container::value_type, sector<T>>>>
 	bool build(const Container& last_level);
 
-	const results_t& result() const noexcept;
+	template <class InputIt>
+	bool build(InputIt first, InputIt last);
+
+	const build_results<T>& result() const noexcept;
+};
+
+template <class T>
+struct safe_sectors_view {
+	mutable std::mutex rwmutex;
+	std::vector<const sector<T>*> sectors;
+
+	constexpr safe_sectors_view() = default;
+
+	safe_sectors_view(const safe_sectors_view& other) {
+		std::unique_lock lk(other.rwmutex);
+		sectors = other.sectors;
+	}
+
+	safe_sectors_view& operator=(const safe_sectors_view& other) {
+		std::unique_lock lk(other.rwmutex);
+		sectors = other.sectors;
+		return *this;
+	}
+};
+
+template <class T>
+class level_builder<T, true> {
+private:
+	using sources_t = ska::bytell_hash_map<node_group<T>, safe_sectors_view<T>>;
+
+private:
+	sources_t sources;
+	build_results<T> results;
+
+	// Populate sources with default values so that no call to operator[]
+	// invalidates iterators or modifies keys. Required before calling build_safe
+	template <class InputIt>
+	void populate(InputIt first, InputIt last);
+
+	// Build a solution (thread-safe)
+	// results member is not used. Instead, a variable is returned from this function
+	// [warn] Call populate on all elements before calling this
+	template <class InputIt>
+	build_results<T> build_safe(InputIt first, InputIt last);
+public:
+	// Build a level from a container
+	template <class Container, class = std::enable_if_t<
+		zh::is_range_v<Container> &&
+		std::is_same_v<typename Container::value_type, sector<T>>>>
+		bool build(const Container& last_level, std::size_t block_size = 25);
+
+	template <class InputIt>
+	bool build(InputIt first, InputIt last, std::size_t block_size = 25);
+
+	const build_results<T>& result() const noexcept;
 };
 
 #include "inline/level_builder.inl"
