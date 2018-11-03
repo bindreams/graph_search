@@ -123,7 +123,9 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 		std::vector<std::future<graph_match>> matches;
 		for (auto&& j : sectors[other.depth() - 1]) {
 			matches.push_back(std::move(std::async(std::launch::async, &sector<T>::contains, &j, std::cref(i))));
+#ifdef GS_COLLECT_STATS
 			stats.add_async_call_contains();
+#endif
 		}
 
 		for (auto&& j : matches) {
