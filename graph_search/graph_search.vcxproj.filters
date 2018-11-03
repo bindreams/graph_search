@@ -30,9 +30,6 @@
     <ClInclude Include="include\puff.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\puff_info.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\sector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -88,6 +85,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\util\enviroment.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\puff_statistics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

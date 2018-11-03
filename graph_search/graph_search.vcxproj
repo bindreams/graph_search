@@ -173,7 +173,7 @@
     <ClInclude Include="include\proxy_iterator.hpp" />
     <ClInclude Include="deps\json.hpp" />
     <ClInclude Include="include\node.hpp" />
-    <ClInclude Include="include\puff_info.hpp" />
+    <ClInclude Include="include\puff_statistics.hpp" />
     <ClInclude Include="include\graph_manip.hpp" />
     <ClInclude Include="include\report\report.hpp" />
     <ClInclude Include="include\sector.hpp" />
