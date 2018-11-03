@@ -69,7 +69,8 @@ private:
 	build_results<T> results;
 
 	// Populate sources with default values so that no call to operator[]
-	// invalidates iterators or modifies keys. Required before calling build_safe
+	// invalidates iterators or modifies the container.
+	// Required before calling build_safe
 	template <class InputIt>
 	void populate(InputIt first, InputIt last);
 

@@ -166,6 +166,7 @@
     <ClInclude Include="include\report\data_unit.hpp" />
     <ClInclude Include="include\report\data_unit_lex_order.hpp" />
     <ClInclude Include="include\util\advance.hpp" />
+    <ClInclude Include="include\util\enviroment.hpp" />
     <ClInclude Include="include\util\generator.hpp" />
     <ClInclude Include="include\graph.hpp" />
     <ClInclude Include="include\graph_match.hpp" />

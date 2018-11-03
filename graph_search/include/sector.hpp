@@ -24,9 +24,8 @@ public:
 	explicit sector(const node<T>& nd);
 	// Construct a sector by expanding a sector by one node
 	sector(const sector<T>& sec, const node<T>& nd);
-	// Construct a sector from children
-	// [warn] for perfomance reasons, this constructor does not check if
-	// sectors are valid children.
+	// Construct a sector by merging two sectors and setting them as children.
+	// This assumes that children have identical node_groups except for one node.
 	sector(const sector& child1, const sector& child2);
 };
 

@@ -1,9 +1,11 @@
 #pragma once
 #include "sector.hpp"
+#include "util/enviroment.hpp"
 
 template<class T>
 inline graph_match sector<T>::contains(const sector& other) const {
-	if (nodes.size() != other.nodes.size()) return {}; //Exit 1: sectors are not of of one size
+	//Sectors must be of one size
+	GS_ASSERT(nodes.size() == other.nodes.size());
 
 	if (nodes.size() == 1) {
 		if ((*nodes.begin())->value() !=
@@ -53,7 +55,7 @@ inline graph_match sector<T>::contains(const sector& other) const {
 
 template<class T>
 inline sector<T>& sector<T>::join_children(const sector<T>& other) {
-	if (nodes != other.nodes) throw std::runtime_error("attempting to join different sectors");
+	GS_ASSERT(nodes == other.nodes);
 
 	children.insert(other.children.begin(), other.children.end());
 
@@ -77,12 +79,20 @@ inline sector<T>::sector(const sector<T>& sec, const node<T>& nd) :
 	nodes(sec.nodes),
 	children({&sec}) {
 	nodes.insert(&nd);
+	// Assert that this node was not already in the sector
+	GS_ASSERT(nodes.size() == sec.nodes.size() + 1);
 }
 
 template<class T>
 inline sector<T>::sector(const sector& child1, const sector& child2) {
+	// Children must have identical node_groups except for one node.
+	GS_ASSERT(child1.nodes.size() == child2.nodes.size());
+
 	nodes.insert(child1.nodes.begin(), child1.nodes.end());
 	nodes.insert(child2.nodes.begin(), child2.nodes.end());
+
+	// Children must have identical node_groups except for one node.
+	GS_ASSERT(nodes.size() == child1.nodes.size() + 1);
 
 	children.insert(&child1);
 	children.insert(&child2);
