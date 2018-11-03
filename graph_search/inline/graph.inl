@@ -4,12 +4,12 @@
 
 template<class T>
 inline graph<T>::graph(const graph& other) {
-	std::map<size_t, size_t> match_id;
+	std::map<std::size_t, std::size_t> match_id;
 
 	// Adding all nodes
 	for (auto&& nd : other) {
 		node<T> temp(nd.value());
-		size_t id = temp.id();
+		std::size_t id = temp.id();
 		nodes.emplace(id, std::move(temp));
 
 		match_id[nd.id()] = id;
@@ -131,7 +131,7 @@ inline void graph<T>::disconnect(iterator it1, iterator it2) {
 template<class T>
 inline typename graph<T>::iterator graph<T>::insert(const T& val) {
 	node<T> temp(val);
-	size_t id = temp.id();
+	std::size_t id = temp.id();
 	auto x = nodes.emplace(id, std::move(temp));
 
 	return iterator(x.first);
@@ -140,7 +140,7 @@ inline typename graph<T>::iterator graph<T>::insert(const T& val) {
 template<class T>
 inline typename graph<T>::iterator graph<T>::insert(T&& val) {
 	node<T> temp(std::move(val));
-	size_t id = temp.id();
+	std::size_t id = temp.id();
 	auto x = nodes.emplace(id, std::move(temp));
 
 	return iterator(x.first);
@@ -163,7 +163,7 @@ template<class T>
 template<class... Args>
 inline typename graph<T>::iterator graph<T>::emplace(Args&&... args) {
 	node<T> temp(std::forward<Args>(args)...);
-	size_t id = temp.id();
+	std::size_t id = temp.id();
 	auto x = nodes.emplace(id, std::move(temp));
 
 	return x.first;
@@ -185,7 +185,7 @@ inline void graph<T>::clear() noexcept {
 }
 
 template<class T>
-inline node<T>& graph<T>::operator[](size_t idx) {
+inline node<T>& graph<T>::operator[](std::size_t idx) {
 	auto got = nodes.find(idx);
 	if (got == nodes.end()) throw std::invalid_argument("graph::operator[]: node with this index does not exist");
 
@@ -193,7 +193,7 @@ inline node<T>& graph<T>::operator[](size_t idx) {
 }
 
 template<class T>
-inline const node<T>& graph<T>::operator[](size_t idx) const {
+inline const node<T>& graph<T>::operator[](std::size_t idx) const {
 	auto got = nodes.find(idx);
 	if (got == nodes.end()) throw std::invalid_argument("graph::operator[]: node with this index does not exist");
 
@@ -201,8 +201,8 @@ inline const node<T>& graph<T>::operator[](size_t idx) const {
 }
 
 template<class T>
-inline size_t graph<T>::count_edges() const noexcept {
-	size_t rslt = 0;
+inline std::size_t graph<T>::count_edges() const noexcept {
+	std::size_t rslt = 0;
 
 	for (auto&& i : nodes) {
 		rslt += i.second.edges().size();
@@ -214,14 +214,14 @@ inline size_t graph<T>::count_edges() const noexcept {
 
 template<class T>
 inline double graph<T>::ratio() const noexcept {
-	size_t max_edges = size() * (size() - 1) / 2;
-	size_t edges = count_edges();
+	std::size_t max_edges = size() * (size() - 1) / 2;
+	std::size_t edges = count_edges();
 
 	return static_cast<double>(edges) / max_edges;
 }
 
 template<class T>
-inline size_t graph<T>::size() const noexcept {
+inline std::size_t graph<T>::size() const noexcept {
 	return nodes.size();
 }
 
@@ -266,10 +266,10 @@ void from_json(const json& j, graph<T>& obj) {
 	// Clearing
 	obj.clear();
 
-	std::map<size_t, size_t> match_id;
+	std::map<std::size_t, std::size_t> match_id;
 	// Adding all nodes
 	for (auto&& i : j) {
-		size_t id = obj.insert(i["value"].get<T>())->id();
+		std::size_t id = obj.insert(i["value"].get<T>())->id();
 
 		match_id[i["id"]] = id;
 	}

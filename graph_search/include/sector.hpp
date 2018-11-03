@@ -16,17 +16,18 @@ public:
 
 	graph_match contains(const sector& other) const;
 	sector& join_children(const sector& other);
-	size_t size_in_bytes() const;
+	std::size_t size_in_bytes() const;
 
 	constexpr sector() = default;
 	sector(const sector& other) = default;
-	sector(const node<T>* nd);
-	sector(const sector* sec, const node<T>* nd);
+	// Create a sector from one node
+	explicit sector(const node<T>& nd);
+	// Construct a sector by expanding a sector by one node
+	sector(const sector<T>& sec, const node<T>& nd);
+	// Construct a sector from children
+	// [warn] for perfomance reasons, this constructor does not check if
+	// sectors are valid children.
 	sector(const sector& child1, const sector& child2);
-
-	// Searches for all possible expansions by 1 node,
-	// and returns a set of them.
-	std::set<sector> expand() const;
 };
 
 template<class T> inline bool operator==(const sector<T>& lhs, const sector<T>& rhs);

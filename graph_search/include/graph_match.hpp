@@ -6,9 +6,9 @@
 
 class graph_match {
 private:
-	std::map<size_t, size_t> matches;
+	std::map<std::size_t, std::size_t> matches;
 public:
-	void add(size_t first, size_t second);
+	void add(std::size_t first, std::size_t second);
 
 	graph_match& operator+=(const graph_match& rhs);
 
@@ -48,7 +48,7 @@ inline bool operator>=(const graph_match& lhs, const graph_match& rhs) {
 	return !(lhs < rhs);
 }
 
-inline void graph_match::add(size_t first, size_t second) {
+inline void graph_match::add(std::size_t first, std::size_t second) {
 	matches[first] = second;
 }
 

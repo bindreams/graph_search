@@ -20,34 +20,32 @@ class puff {
 	//Deque contains lists of sectors of the same size
 	std::deque<
 		std::list<sector<T>>> sectors;
-
-	bool grow();
 public:
 	mutable puff_info info;
 
-	size_t depth() const;
+	std::size_t depth() const;
 
 	std::set<graph_match> contains(const puff<T>& other) const;
 
-	size_t count_edges() const;
-	size_t count_sectors() const;
-	size_t size_in_bytes() const;
+	std::size_t count_edges() const;
+	std::size_t count_sectors() const;
+	std::size_t size_in_bytes() const;
 
 	puff() = default;
-	puff(const graph<T>& gr, size_t max_depth = std::numeric_limits<std::size_t>::max());
+	puff(const graph<T>& gr, std::size_t max_depth = std::numeric_limits<std::size_t>::max());
 
 	template <class T_>
 	friend std::ostream& operator<<(std::ostream& os, const puff<T_>& obj);
 };
 
 template<class T>
-inline puff<T>::puff(const graph<T>& gr, size_t max_depth) {
+inline puff<T>::puff(const graph<T>& gr, std::size_t max_depth) {
 	if (max_depth == 0) throw std::invalid_argument("max_depth must be at least 1");
 
 	// Build level 1
 	sectors.emplace_back();
 	for (auto& i : gr) {
-		sectors.front().emplace_back(&i);
+		sectors.front().emplace_back(i);
 	}
 
 	// Build level 2, if needed
@@ -58,15 +56,15 @@ inline puff<T>::puff(const graph<T>& gr, size_t max_depth) {
 		std::vector<sector<T>> new_level2;
 
 		// For each sector in first level
-		for (auto& i : sectors.front()) {
+		for (auto& sector : sectors.front()) {
 			// Check edges
-			const node<T>& only_node = (**i.nodes.begin());
+			const node<T>& only_node = (**sector.nodes.begin());
 			for (auto& edge : only_node.edges()) {
 				// Based on edges id emplace in one of vectors
 				if (edge->id() > only_node.id())
-					new_level1.emplace_back(&i, edge);
+					new_level1.emplace_back(sector, *edge);
 				else
-					new_level2.emplace_back(&i, edge);
+					new_level2.emplace_back(sector, *edge);
 			}
 		}
 
@@ -85,7 +83,7 @@ inline puff<T>::puff(const graph<T>& gr, size_t max_depth) {
 	}
 
 	// Build remaining levels using already built ones
-	for (size_t level = 2; level < max_depth; level++) {
+	for (std::size_t level = 2; level < max_depth; level++) {
 		//std::cout << "level " << level << " growth" << std::endl;
 		level_builder<T> lb;
 		std::size_t block_size = static_cast<std::size_t>(std::ceil(
@@ -104,19 +102,12 @@ inline puff<T>::puff(const graph<T>& gr, size_t max_depth) {
 }
 
 template<class T>
-inline bool puff<T>::grow() {
-
-}
-
-template<class T>
-inline size_t puff<T>::depth() const {
+inline std::size_t puff<T>::depth() const {
 	return sectors.size();
 }
 
 template<class T>
 inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
-	info.async_calls_contains_ = 0;
-
 	if (other.depth() > depth()) {
 		return {};
 	}
@@ -128,7 +119,6 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 
 		std::vector<std::future<graph_match>> matches;
 		for (auto&& j : sectors[other.depth() - 1]) {
-			info.async_calls_contains_++;
 			matches.push_back(std::move(std::async(std::launch::async, &sector<T>::contains, &j, std::cref(i))));
 		}
 
@@ -145,8 +135,8 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 }
 
 template<class T>
-inline size_t puff<T>::count_edges() const {
-	size_t rslt = 0;
+inline std::size_t puff<T>::count_edges() const {
+	std::size_t rslt = 0;
 
 	for (auto i : sectors) {
 		for (auto j : i) {
@@ -158,8 +148,8 @@ inline size_t puff<T>::count_edges() const {
 }
 
 template<class T>
-inline size_t puff<T>::count_sectors() const {
-	size_t rslt = 0;
+inline std::size_t puff<T>::count_sectors() const {
+	std::size_t rslt = 0;
 	
 	for (auto i : sectors) rslt += i.size();
 
@@ -167,8 +157,8 @@ inline size_t puff<T>::count_sectors() const {
 }
 
 template<class T>
-inline size_t puff<T>::size_in_bytes() const {
-	size_t rslt = 0;
+inline std::size_t puff<T>::size_in_bytes() const {
+	std::size_t rslt = 0;
 
 	for (auto&& i : sectors) {
 		for (auto&& j : i) {
@@ -183,7 +173,7 @@ template <class T>
 std::ostream& operator<<(std::ostream& os, const puff<T>& obj) {
 	os << "{" << std::endl;
 
-	for (size_t level = obj.depth()-1; level != 0; level--) {
+	for (std::size_t level = obj.depth()-1; level != 0; level--) {
 		std::cout << "    level " << level << " {" << std::endl;
 
 		for (auto&& i : obj.sectors[level]) {
