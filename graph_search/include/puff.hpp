@@ -11,8 +11,9 @@
 
 #include "sector.hpp"
 #include "graph.hpp"
-#include "puff_info.hpp"
+#include "puff_statistics.hpp"
 #include "level_builder.hpp"
+#include "util/enviroment.hpp"
 using boost::container::flat_set;
 
 template <class T>
@@ -21,7 +22,9 @@ class puff {
 	std::deque<
 		std::list<sector<T>>> sectors;
 public:
-	mutable puff_info info;
+#ifdef GS_COLLECT_STATS
+	mutable puff_statistics stats;
+#endif
 
 	std::size_t depth() const;
 
@@ -120,6 +123,7 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 		std::vector<std::future<graph_match>> matches;
 		for (auto&& j : sectors[other.depth() - 1]) {
 			matches.push_back(std::move(std::async(std::launch::async, &sector<T>::contains, &j, std::cref(i))));
+			stats.add_async_call_contains();
 		}
 
 		for (auto&& j : matches) {
