@@ -72,6 +72,15 @@
     <ClInclude Include="include\util\pretty_print.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\functors\node_functors.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\functors\sector_functors.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\node_group.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -110,6 +119,15 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="inline\sector.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\generator.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\node_functors.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\sector_functors.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

@@ -154,6 +154,9 @@
   <ItemGroup>
     <ClInclude Include="deps\zh\extra_traits.hpp" />
     <ClInclude Include="include\benchmark.hpp" />
+    <ClInclude Include="include\functors\node_functors.hpp" />
+    <ClInclude Include="include\functors\sector_functors.hpp" />
+    <ClInclude Include="include\node_group.hpp" />
     <ClInclude Include="include\report\data_pack.hpp" />
     <ClInclude Include="include\report\data_unit.hpp" />
     <ClInclude Include="include\report\data_unit_lex_order.hpp" />
@@ -175,11 +178,14 @@
   <ItemGroup>
     <None Include="inline\data_pack.inl" />
     <None Include="inline\data_unit.inl" />
+    <None Include="inline\generator.inl" />
     <None Include="inline\graph.inl" />
     <None Include="inline\graph_manip.inl" />
     <None Include="inline\node.inl" />
+    <None Include="inline\node_functors.inl" />
     <None Include="inline\report.inl" />
     <None Include="inline\sector.inl" />
+    <None Include="inline\sector_functors.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
