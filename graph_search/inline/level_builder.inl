@@ -61,6 +61,9 @@ inline const build_results<T>& level_builder<T, false>::result() const noexcept 
 }
 
 template<class T>
+const unsigned int level_builder<T, true>::worker_count = std::thread::hardware_concurrency() - 1;
+
+template<class T>
 template<class InputIt>
 inline void level_builder<T, true>::populate(InputIt first, InputIt last) {
 	// For each sector in last level
@@ -132,6 +135,7 @@ inline bool level_builder<T, true>::build(InputIt first, InputIt last, std::size
 	populate(first, last);
 
 	std::vector<std::future<build_results<T>>> async_results;
+	async_results.reserve(worker_count);
 
 	// Concurrently compute parts of solution in increments of block_size
 	auto block_first = first;
@@ -144,9 +148,11 @@ inline bool level_builder<T, true>::build(InputIt first, InputIt last, std::size
 		zh::advance(block_last, last, block_size);
 
 		// Asunc call
-		async_results.push_back(std::async(std::launch::async,
-			&level_builder<T, true>::template build_safe<InputIt>, this,
-			block_first, block_last));
+		async_results.push_back(pool.push([this, block_first, block_last](int) {
+			return this->build_safe(block_first, block_last);
+		}));
+		//	&level_builder<T, true>::template build_safe<InputIt>, this,
+		//	block_first, block_last));
 	}
 
 	// Unpack results and join them
@@ -158,6 +164,11 @@ inline bool level_builder<T, true>::build(InputIt first, InputIt last, std::size
 
 	if (results.empty()) return false;
 	return true;
+}
+
+template<class T>
+inline level_builder<T, true>::level_builder() :
+	pool(worker_count) {
 }
 
 template<class T>

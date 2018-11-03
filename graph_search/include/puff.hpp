@@ -18,6 +18,7 @@ using boost::container::flat_set;
 
 template <class T>
 class puff {
+public:
 	//Deque contains lists of sectors of the same size
 	std::deque<
 		std::list<sector<T>>> sectors;
@@ -86,9 +87,9 @@ inline puff<T>::puff(const graph<T>& gr, std::size_t max_depth) {
 	}
 
 	// Build remaining levels using already built ones
+	level_builder<T> lb;
 	for (std::size_t level = 2; level < max_depth; level++) {
 		//std::cout << "level " << level << " growth" << std::endl;
-		level_builder<T> lb;
 		std::size_t block_size = static_cast<std::size_t>(std::ceil(
 			static_cast<double>(sectors.back().size()) /
 			std::thread::hardware_concurrency()));

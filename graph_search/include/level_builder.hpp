@@ -2,6 +2,7 @@
 #include <shared_mutex>
 #include "deps/ska/bytell_hash_map.hpp"
 #include "deps/zh/extra_traits.hpp"
+#include "deps/ctpl_stl.h"
 #include "node_group.hpp"
 #include "sector.hpp"
 #include "functors/sector_functors.hpp"
@@ -23,7 +24,6 @@ class level_builder<T, false> {
 private:
 	using sources_t = ska::bytell_hash_map<node_group<T>, std::vector<const sector<T>*>>;
 	
-private:
 	sources_t sources;
 	build_results<T> results;
 
@@ -64,9 +64,11 @@ class level_builder<T, true> {
 private:
 	using sources_t = ska::bytell_hash_map<node_group<T>, safe_sectors_view<T>>;
 
-private:
 	sources_t sources;
 	build_results<T> results;
+	ctpl::thread_pool pool;
+
+	static const unsigned int worker_count;
 
 	// Populate sources with default values so that no call to operator[]
 	// invalidates iterators or modifies the container.
@@ -80,14 +82,20 @@ private:
 	template <class InputIt>
 	build_results<T> build_safe(InputIt first, InputIt last);
 public:
+	// Constructors ===========================================================
+	level_builder();
+
+	level_builder(const level_builder& other) = delete;
+	level_builder(level_builder&& other) = delete;
+
 	// Build a level from a container
 	template <class Container, class = std::enable_if_t<
 		zh::is_range_v<Container> &&
 		std::is_same_v<typename Container::value_type, sector<T>>>>
-		bool build(const Container& last_level, std::size_t block_size = 25);
+		bool build(const Container& last_level, std::size_t block_size);
 
 	template <class InputIt>
-	bool build(InputIt first, InputIt last, std::size_t block_size = 25);
+	bool build(InputIt first, InputIt last, std::size_t block_size);
 
 	const build_results<T>& result() const noexcept;
 };

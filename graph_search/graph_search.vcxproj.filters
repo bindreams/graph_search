@@ -90,6 +90,18 @@
     <ClInclude Include="include\puff_statistics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="deps\ctpl_stl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\ska\unordered_map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\ska\bytell_hash_map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\ska\flat_hash_map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
