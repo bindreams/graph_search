@@ -2,6 +2,7 @@
 #include <future>
 #include "level_builder.hpp"
 #include "util/advance.hpp"
+#include "util/enviroment.hpp"
 
 template<class T>
 inline void build_results<T>::add(const sector<T>& rslt) {
@@ -29,8 +30,7 @@ inline bool level_builder<T, false>::build(const Container& last_level) {
 template<class T>
 template<class InputIt>
 inline bool level_builder<T, false>::build(InputIt first, InputIt last) {
-	if (first->nodes.size() < 2)
-		throw std::runtime_error("level_builder: builder needs last_level to have sectors of size 2 or more");
+	GS_ASSERT(first->nodes.size() >= 2);
 	sources.clear();
 	results.clear();
 
@@ -92,10 +92,12 @@ inline build_results<T> level_builder<T, true>::build_safe(InputIt first, InputI
 		for (const auto& part : sector.nodes.except_1()) {
 			// Example: sector is abc, part is ac
 			// In sources[part], go over all values, build a new sector with
-			// each of them, and insert each one into results
-			// [warn] This assumes that call to sources[part] will not create
-			// a new element.
+			// each of them, and insert each one into results.
 			//auto s = ch::steady_clock::now();
+
+			// Call to sources[part] must not create a new element.
+			// Otherwise container will be modified, which is not safe.
+			GS_ASSERT(sources.count(part) != 0);
 			std::unique_lock lk(sources[part].rwmutex);
 			//auto dur = ch::steady_clock::now() - s;
 			//std::stringstream msg;
@@ -122,8 +124,7 @@ inline bool level_builder<T, true>::build(const Container& last_level, std::size
 template<class T>
 template<class InputIt>
 inline bool level_builder<T, true>::build(InputIt first, InputIt last, std::size_t block_size) {
-	if (first->nodes.size() < 2) throw std::runtime_error(
-		"level_builder: builder needs last_level to have sectors of size 2 or more");
+	GS_ASSERT(first->nodes.size() >= 2);
 	sources.clear();
 	results.clear();
 

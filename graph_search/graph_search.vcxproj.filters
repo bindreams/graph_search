@@ -87,6 +87,9 @@
     <ClInclude Include="include\util\advance.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\util\enviroment.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
