@@ -5,7 +5,7 @@ void data_unit::merge(const data_unit & du) {
 	assert(max_puff_depth == du.max_puff_depth);
 	assert(target_graph_ratio == du.target_graph_ratio);
 
-	int new_avg = averaged_over + du.averaged_over;
+	std::size_t new_avg = averaged_over + du.averaged_over;
 
 	graph_ratio =
 		   graph_ratio * (   averaged_over / static_cast<double>(new_avg)) +

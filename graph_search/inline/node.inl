@@ -57,21 +57,6 @@ inline node<T>::~node() {
 	}
 }
 
-template<class T>
-struct node_value_equal {
-	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const {
-		return lhs->value() == rhs->value();
-	}
-};
-
-template<class T>
-struct node_value_order {
-	inline bool operator() (const node<T>* const& lhs, const node<T>* const& rhs) const {
-		return lhs->value() < rhs->value() ||
-			(lhs->value() == rhs->value() && lhs->id() < rhs->id());
-	}
-};
-
 template <class T>
 std::ostream& operator<<(std::ostream& os, const node<T>& obj) {
 	os << "{#" << pretty(obj.id()) << ": " << obj.value() << "}";
