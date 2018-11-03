@@ -136,5 +136,8 @@
     <None Include="inline\node_functors.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="inline\generator.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,31 +1,48 @@
 #pragma once
 #include <random>
+#include <type_traits>
 #include <limits>
-#include <ctime>
+#include <cstdint>
 
-template <class T>
-struct generator {
-	static std::mt19937 device;
+// Generator that makes any numeric type using get<type>
+class multigenerator {
+private:
+	static inline std::random_device rd;
+	std::mt19937 mt;
 
-	T operator()(const T& min = std::numeric_limits<T>::lowest(), const T& max = std::numeric_limits<T>::max());
+public:
+	multigenerator() :
+		mt(rd()) {
+	}
+
+	multigenerator(const multigenerator& other) = default;
+	multigenerator(multigenerator&& other) = default;
+
+	multigenerator& operator=(const multigenerator& other) = default;
+	multigenerator& operator=(multigenerator&& other) = default;
+
+	void seed(unsigned int s);
+	void seed();
+
+	template <class T>
+	T get();
+
+	template <class T>
+	T get(T min, T max);
 };
 
+// Generator that makes pre-defined types using operator()
 template <class T>
-std::mt19937 generator<T>::device(static_cast<unsigned int>(std::time(nullptr)));
-
-template <class T>
-inline T generator<T>::operator()(const T& min, const T& max) {
-	if constexpr(std::is_integral_v<T>)
-		return std::uniform_int_distribution<T>(min, max-1)(device);
-
-	if constexpr(std::is_floating_point_v<T>)
-		return std::uniform_real_distribution<T>(min, max)(device);
-}
+struct generator : private multigenerator {
+	T operator()(const T& min = std::numeric_limits<T>::lowest(), const T& max = std::numeric_limits<T>::max());
+};
 
 struct test_gen {
 	generator<int> gen;
 
 	int operator()() {
-		return gen(0, 6);
+		return gen(0, 5);
 	}
 };
+
+#include "inline/generator.inl"
