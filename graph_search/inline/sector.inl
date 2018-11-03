@@ -53,6 +53,8 @@ inline graph_match sector<T>::contains(const sector& other) const {
 	}
 }
 
+#include <iostream>
+
 template<class T>
 inline sector<T>& sector<T>::join_children(const sector<T>& other) {
 	GS_ASSERT(nodes == other.nodes);

@@ -4,6 +4,17 @@
 #include "tests.hpp"
 
 int main(int argc, char** argv) {
+	/*std::ifstream ifs("graph-20-0.2.json");
+	json j;
+	ifs >> j;
+	graph<int> g = j;
+
+	puff pf(g);
+
+	for (auto& i : pf.sectors) {
+		std::cout << i.size() << std::endl;
+	}*/
+
 	run_benchmark(argc, argv);
 	//test_search("last_test.json");
 
