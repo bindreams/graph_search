@@ -2,15 +2,15 @@
 
 class puff_info {
 private:
-	size_t async_calls_ctor_;
-	size_t async_calls_contains_;
+	std::size_t async_calls_ctor_;
+	std::size_t async_calls_contains_;
 
 public:
-	size_t async_calls_ctor() {
+	std::size_t async_calls_ctor() {
 		return async_calls_ctor_;
 	}
 
-	size_t async_calls_contains() {
+	std::size_t async_calls_contains() {
 		return async_calls_contains_;
 	}
 

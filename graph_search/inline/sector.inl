@@ -61,22 +61,22 @@ inline sector<T>& sector<T>::join_children(const sector<T>& other) {
 }
 
 template<class T>
-inline size_t sector<T>::size_in_bytes() const {
+inline std::size_t sector<T>::size_in_bytes() const {
 	return
 		nodes.size() * sizeof(node<T>*) +
 		children.size() * sizeof(sector<T>*);
 }
 
 template<class T>
-inline sector<T>::sector(const node<T>* nd) :
-	nodes({nd}) {
+inline sector<T>::sector(const node<T>& nd) :
+	nodes({&nd}) {
 }
 
 template<class T>
-inline sector<T>::sector(const sector<T>* sec, const node<T>* nd) :
-	nodes(sec->nodes),
-	children({sec}) {
-	nodes.insert(nd);
+inline sector<T>::sector(const sector<T>& sec, const node<T>& nd) :
+	nodes(sec.nodes),
+	children({&sec}) {
+	nodes.insert(&nd);
 }
 
 template<class T>
@@ -86,24 +86,6 @@ inline sector<T>::sector(const sector& child1, const sector& child2) {
 
 	children.insert(&child1);
 	children.insert(&child2);
-}
-
-template<class T>
-inline std::set<sector<T>> sector<T>::expand() const {
-	std::set<sector<T>> rslt;
-
-	//For every node in current sector...
-	for (auto&& i : nodes) {
-		//...check its connected nodes...
-		for (auto&& j : i->edges()) {
-			//...if this node is not in the sector, add
-			if (nodes.find(j) == nodes.end()) {
-				rslt.emplace(this, j);
-			}
-		}
-	}
-
-	return rslt;
 }
 
 template<class T> inline bool operator==(const sector<T>& lhs, const sector<T>& rhs) { return lhs.nodes == rhs.nodes && lhs.children == rhs.children; }

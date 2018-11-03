@@ -28,7 +28,7 @@ struct get_second {
 template <class T>
 class graph {
 private:
-	using container = std::map<size_t, node<T>>;
+	using container = std::map<std::size_t, node<T>>;
 	container nodes;
 
 public:
@@ -104,12 +104,12 @@ public:
 	bool empty() const noexcept;
 	void clear() noexcept;
 
-	node<T>& operator[](size_t idx);
-	const node<T>& operator[](size_t idx) const;
+	node<T>& operator[](std::size_t idx);
+	const node<T>& operator[](std::size_t idx) const;
 
-	size_t count_edges() const noexcept;
+	std::size_t count_edges() const noexcept;
 	double ratio() const noexcept;
-	size_t size() const noexcept;
+	std::size_t size() const noexcept;
 
 	template <class T_>
 	friend void from_json(const json& j, graph<T_>& obj);

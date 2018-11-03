@@ -37,7 +37,7 @@ using json = nlohmann::json;
 namespace { // internal linkage
 
 // Generate a random graph
-template <size_t graph_size, class GraphRatio>
+template <std::size_t graph_size, class GraphRatio>
 void graph_creation(benchmark::State& state) {
 	static_assert(zh::is_ratio_v<GraphRatio>, "benchmark: GraphRatio is not a valid ratio");
 	double graph_ratio = static_cast<double>(GraphRatio::type::num) / GraphRatio::type::den;
@@ -51,8 +51,8 @@ void graph_creation(benchmark::State& state) {
 // Generate a random graph, then create a puff with specified max_depth
 // Default depth is maximum possible depth
 template <
-	size_t graph_size, class GraphRatio,
-	size_t max_depth = static_cast<size_t>(-1)>
+	std::size_t graph_size, class GraphRatio,
+	std::size_t max_depth = static_cast<std::size_t>(-1)>
 void puff_creation(benchmark::State& state) {
 	static_assert(zh::is_ratio_v<GraphRatio>, "benchmark: GraphRatio is not a valid ratio");
 	double graph_ratio = static_cast<double>(GraphRatio::type::num) / GraphRatio::type::den;
@@ -66,7 +66,7 @@ void puff_creation(benchmark::State& state) {
 
 // Load a graph from file, then create a puff with specified max_depth
 // Default depth is maximum possible depth
-template <size_t max_depth = static_cast<size_t>(-1)>
+template <std::size_t max_depth = static_cast<std::size_t>(-1)>
 void puff_creation(benchmark::State& state, const fs::path& file) {
 	std::ifstream ifs(file);
 	json j;
@@ -80,8 +80,8 @@ void puff_creation(benchmark::State& state, const fs::path& file) {
 
 // Search for a subgraph in a graph
 template <
-	size_t graph_size, class GraphRatio,
-	size_t subgraph_size, class SubgraphRatio>
+	std::size_t graph_size, class GraphRatio,
+	std::size_t subgraph_size, class SubgraphRatio>
 void graph_search(benchmark::State& state) {
 	static_assert(zh::is_ratio_v<GraphRatio>, "benchmark: GraphRatio is not a valid ratio");
 	static_assert(zh::is_ratio_v<SubgraphRatio>, "benchmark: SubgraphRatio is not a valid ratio");
