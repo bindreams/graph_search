@@ -184,6 +184,7 @@
   <ItemGroup>
     <None Include="inline\data_pack.inl" />
     <None Include="inline\data_unit.inl" />
+    <None Include="inline\generator.inl" />
     <None Include="inline\graph.inl" />
     <None Include="inline\graph_manip.inl" />
     <None Include="inline\level_builder.inl" />
