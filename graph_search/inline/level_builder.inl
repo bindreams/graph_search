@@ -1,4 +1,5 @@
 #pragma once
+#include <iterator>
 #include <future>
 #include "level_builder.hpp"
 #include "util/advance.hpp"
@@ -81,10 +82,6 @@ inline void level_builder<T, true>::populate(InputIt first, InputIt last) {
 template<class T>
 template<class InputIt>
 inline build_results<T> level_builder<T, true>::build_safe(InputIt first, InputIt last) {
-	//auto dur = ch::steady_clock::now() - times[std::this_thread::get_id()];
-	//std::stringstream msg;
-	//msg << "Thread " << std::this_thread::get_id() << " waited " << dur.count() << "ns" << std::endl;
-	//std::cout << msg.str();
 	build_results<T> rslt;
 
 	// For each sector in last level
@@ -96,16 +93,11 @@ inline build_results<T> level_builder<T, true>::build_safe(InputIt first, InputI
 			// Example: sector is abc, part is ac
 			// In sources[part], go over all values, build a new sector with
 			// each of them, and insert each one into results.
-			//auto s = ch::steady_clock::now();
 
 			// Call to sources[part] must not create a new element.
 			// Otherwise container will be modified, which is not safe.
 			GS_ASSERT(sources.count(part) != 0);
 			std::unique_lock lk(sources[part].rwmutex);
-			//auto dur = ch::steady_clock::now() - s;
-			//std::stringstream msg;
-			//msg << "Thread " << std::this_thread::get_id() << " waited " << dur.count() << "ns" << std::endl;
-			//std::cout << msg.str();
 			for (auto& source : sources[part].sectors) {
 				rslt.add({sector, *source});
 			}
@@ -114,19 +106,25 @@ inline build_results<T> level_builder<T, true>::build_safe(InputIt first, InputI
 		}
 	}
 
-	//times[std::this_thread::get_id()] = ch::steady_clock::now();
 	return rslt;
 }
 
 template<class T>
 template<class Container, class>
-inline bool level_builder<T, true>::build(const Container& last_level, std::size_t block_size) {
-	return build(std::begin(last_level), std::end(last_level), block_size);
+inline bool level_builder<T, true>::build(const Container& last_level) {
+	return build(std::begin(last_level), std::end(last_level), std::size(last_level));
 }
 
 template<class T>
 template<class InputIt>
-inline bool level_builder<T, true>::build(InputIt first, InputIt last, std::size_t block_size) {
+inline bool level_builder<T, true>::build(InputIt first, InputIt last) {
+	return build(first, last, std::distance(first, last));
+}
+
+template<class T>
+template<class InputIt>
+inline bool level_builder<T, true>::build(InputIt first, InputIt last, std::size_t size) {
+	// For this algorithm to work, sectors must be at least of size 2
 	GS_ASSERT(first->nodes.size() >= 2);
 	sources.clear();
 	results.clear();
@@ -140,6 +138,8 @@ inline bool level_builder<T, true>::build(InputIt first, InputIt last, std::size
 	// Concurrently compute parts of solution in increments of block_size
 	auto block_first = first;
 	auto block_last = first;
+	std::size_t block_size = static_cast<std::size_t>(std::ceil(
+		static_cast<double>(size) / worker_count));
 
 	while (block_last != last) {
 		// Move block_first to previous block's block_last
@@ -151,8 +151,6 @@ inline bool level_builder<T, true>::build(InputIt first, InputIt last, std::size
 		async_results.push_back(pool.push([this, block_first, block_last](int) {
 			return this->build_safe(block_first, block_last);
 		}));
-		//	&level_builder<T, true>::template build_safe<InputIt>, this,
-		//	block_first, block_last));
 	}
 
 	// Unpack results and join them
