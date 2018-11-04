@@ -86,11 +86,12 @@ inline sector<T>::sector(const sector<T>& sec, const node<T>& nd) :
 }
 
 template<class T>
-inline sector<T>::sector(const sector& child1, const sector& child2) {
+inline sector<T>::sector(const sector& child1, const sector& child2) :
+	nodes(child1.nodes) {
 	// Children must have identical node_groups except for one node.
 	GS_ASSERT(child1.nodes.size() == child2.nodes.size());
 
-	nodes.insert(child1.nodes.begin(), child1.nodes.end());
+	//nodes.insert(child1.nodes.begin(), child1.nodes.end());
 	nodes.insert(child2.nodes.begin(), child2.nodes.end());
 
 	// Children must have identical node_groups except for one node.

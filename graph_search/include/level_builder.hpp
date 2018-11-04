@@ -92,10 +92,15 @@ public:
 	template <class Container, class = std::enable_if_t<
 		zh::is_range_v<Container> &&
 		std::is_same_v<typename Container::value_type, sector<T>>>>
-		bool build(const Container& last_level, std::size_t block_size);
+		bool build(const Container& last_level);
 
+	// Build a level from two iterators.
+	// Optional parameter accepts container size, if using
+	// std::distance is undesireable
 	template <class InputIt>
-	bool build(InputIt first, InputIt last, std::size_t block_size);
+	bool build(InputIt first, InputIt last, std::size_t size);
+	template <class InputIt>
+	bool build(InputIt first, InputIt last);
 
 	const build_results<T>& result() const noexcept;
 };

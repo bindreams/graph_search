@@ -4,7 +4,7 @@
 #if defined(_DEBUG) or not defined(NDEBUG)
 #define GS_ASSERT(...) assert((__VA_ARGS__))
 #else
-#define GS_ASSERT(...) ((void)0)
+#define GS_ASSERT(...) do {} while (0)
 #endif
 
 #ifdef STATISTICS
