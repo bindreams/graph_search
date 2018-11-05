@@ -1,31 +1,26 @@
 #pragma once
-#include <algorithm>
-#include <limits>
+#include <cstdint>
+#include <limits> 
 #include <set>
 #include <vector>
-#include <list>
-#include <deque>
-#include <thread>
-#include <cmath>
-#include <boost/container/flat_set.hpp>
 
 #include "sector.hpp"
 #include "graph.hpp"
+
+#ifdef GS_COLLECT_STATS
 #include "puff_statistics.hpp"
-#include "level_builder.hpp"
-#include "util/enviroment.hpp"
-using boost::container::flat_set;
+#endif
 
 template <class T>
 class puff {
 public:
-	// level_container has sectors of one size
-	using level_container = std::vector<sector<T>>;
+	// level_type has sectors of one size
+	using level_type = std::vector<sector<T>>;
 	// container holds all the levels
-	using container = std::vector<level_container>;
+	using container_type = std::vector<level_type>;
 
 private:
-	container sectors;
+	container_type sectors;
 
 public:
 #ifdef GS_COLLECT_STATS
@@ -53,7 +48,7 @@ public:
 	// Checks if this puff contains other puff
 	std::set<graph_match> contains(const puff<T>& other) const;
 
-	const level_container& operator[](std::size_t idx) const;
+	const level_type& operator[](std::size_t idx) const;
 };
 
 template <class T>
