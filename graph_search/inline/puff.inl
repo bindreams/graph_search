@@ -1,5 +1,12 @@
 #pragma once
+#include <stdexcept>
+#include <future>
+#include <iostream>
+
 #include "puff.hpp"
+#include "puff_statistics.hpp"
+#include "level_builder.hpp"
+#include "util/enviroment.hpp"
 
 template<class T>
 inline puff<T>::puff(const graph<T>& gr, std::size_t max_depth) {
@@ -14,10 +21,10 @@ inline puff<T>::puff(const graph<T>& gr, std::size_t max_depth) {
 
 	// Build level 2, if needed
 	if (max_depth > 1) {
-		// Create 2 vectors, each holding same sectors but produced from
-		// different children. In the end, two vectors will be merged.
-		std::vector<sector<T>> new_level1;
-		std::vector<sector<T>> new_level2;
+		// Create 2 levels, each holding same sectors but produced from
+		// different children. In the end, two levels will be merged.
+		level_type new_level1;
+		level_type new_level2;
 
 		// For each sector in first level
 		for (auto& sector : sectors.front()) {
@@ -39,11 +46,15 @@ inline puff<T>::puff(const graph<T>& gr, std::size_t max_depth) {
 		std::sort(new_level1.begin(), new_level1.end());
 		std::sort(new_level2.begin(), new_level2.end());
 
-		for (std::size_t i = 0; i < new_level1.size(); i++) {
-			new_level1[i].join_children(new_level2[i]);
+		GS_ASSERT(new_level1.size() == new_level2.size());
+		for (typename level_type::iterator
+			it1 = new_level1.begin(),
+			it2 = new_level2.begin();
+			it1 != new_level1.end(); ++it1, ++it2) {
+			it1->join_children(*it2);
 		}
 
-		sectors.emplace_back(new_level1.begin(), new_level1.end());
+		sectors.emplace_back(std::move(new_level1));
 	}
 
 	// Build remaining levels using already built ones
@@ -133,7 +144,7 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 }
 
 template<class T>
-inline const typename puff<T>::level_container&
+inline const typename puff<T>::level_type&
 puff<T>::operator[](std::size_t idx) const {
 	return sectors[idx];
 }
