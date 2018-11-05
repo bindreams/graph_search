@@ -62,12 +62,12 @@ inline puff<T>::puff(const graph<T>& gr, std::size_t max_depth) {
 }
 
 template<class T>
-inline std::size_t puff<T>::depth() const {
+inline std::size_t puff<T>::depth() const noexcept {
 	return sectors.size();
 }
 
 template<class T>
-inline std::size_t puff<T>::count_edges() const {
+inline std::size_t puff<T>::count_edges() const noexcept {
 	std::size_t rslt = 0;
 
 	for (auto i : sectors) {
@@ -80,7 +80,7 @@ inline std::size_t puff<T>::count_edges() const {
 }
 
 template<class T>
-inline std::size_t puff<T>::count_sectors() const {
+inline std::size_t puff<T>::count_sectors() const noexcept {
 	std::size_t rslt = 0;
 
 	for (auto i : sectors) rslt += i.size();
@@ -89,7 +89,7 @@ inline std::size_t puff<T>::count_sectors() const {
 }
 
 template<class T>
-inline std::size_t puff<T>::size_in_bytes() const {
+inline std::size_t puff<T>::size_in_bytes() const noexcept {
 	std::size_t rslt = 0;
 
 	for (auto&& i : sectors) {
@@ -134,7 +134,7 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 
 template<class T>
 inline const typename puff<T>::level_container&
-puff<T>::operator[](std::size_t idx) const noexcept {
+puff<T>::operator[](std::size_t idx) const {
 	return sectors[idx];
 }
 

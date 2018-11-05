@@ -53,7 +53,7 @@ public:
 	// Checks if this puff contains other puff
 	std::set<graph_match> contains(const puff<T>& other) const;
 
-	const level_container& operator[](std::size_t idx) const noexcept;
+	const level_container& operator[](std::size_t idx) const;
 };
 
 template <class T>
