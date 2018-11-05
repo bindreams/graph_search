@@ -65,8 +65,8 @@ inline puff<T>::puff(const graph<T>& gr, std::size_t max_depth) {
 
 		// Insert new level in the end
 		sectors.emplace(sectors.end(),
-			lb.result().begin(),
-			lb.result().end());
+			std::move_iterator(lb.result().begin()),
+			std::move_iterator(lb.result().end()));
 	}
 
 	//std::cout << "Built a puff (max_depth: " << max_depth << ", levels: " << sectors.size() << ", depth at back(): " << sectors.back().size() << "): " << *this;

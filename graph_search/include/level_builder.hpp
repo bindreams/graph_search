@@ -37,6 +37,7 @@ public:
 	template <class InputIt>
 	bool build(InputIt first, InputIt last);
 
+	build_results<T>& result() noexcept;
 	const build_results<T>& result() const noexcept;
 };
 
@@ -102,6 +103,7 @@ public:
 	template <class InputIt>
 	bool build(InputIt first, InputIt last);
 
+	build_results<T>& result() noexcept;
 	const build_results<T>& result() const noexcept;
 };
 

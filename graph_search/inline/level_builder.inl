@@ -57,6 +57,11 @@ inline bool level_builder<T, false>::build(InputIt first, InputIt last) {
 }
 
 template<class T>
+inline build_results<T>& level_builder<T, false>::result() noexcept {
+	return results;
+}
+
+template<class T>
 inline const build_results<T>& level_builder<T, false>::result() const noexcept {
 	return results;
 }
@@ -167,6 +172,11 @@ inline bool level_builder<T, true>::build(InputIt first, InputIt last, std::size
 template<class T>
 inline level_builder<T, true>::level_builder() :
 	pool(worker_count) {
+}
+
+template<class T>
+inline build_results<T>& level_builder<T, true>::result() noexcept {
+	return results;
 }
 
 template<class T>
