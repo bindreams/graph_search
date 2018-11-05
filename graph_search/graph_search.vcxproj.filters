@@ -154,5 +154,8 @@
     <None Include="inline\generator.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="inline\puff.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

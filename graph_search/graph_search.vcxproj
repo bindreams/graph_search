@@ -195,6 +195,7 @@
     <None Include="inline\level_builder.inl" />
     <None Include="inline\node.inl" />
     <None Include="inline\node_functors.inl" />
+    <None Include="inline\puff.inl" />
     <None Include="inline\report.inl" />
     <None Include="inline\sector.inl" />
     <None Include="inline\sector_functors.inl" />

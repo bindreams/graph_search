@@ -11,8 +11,8 @@ int main(int argc, char** argv) {
 
 	puff pf(g);
 
-	for (auto& i : pf.sectors) {
-		std::cout << i.size() << std::endl;
+	for (std::size_t i = 0; i < pf.depth(); i++) {
+		std::cout << pf[i].size() << std::endl;
 	}*/
 
 	run_benchmark(argc, argv);
