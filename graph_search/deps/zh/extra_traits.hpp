@@ -27,7 +27,7 @@ struct defines_type<T,
 template <class T>
 constexpr bool defines_type_v = defines_type<T>::value;
 
-// is_range ------------------------------------------------------------------
+// is_range -------------------------------------------------------------------
 template <class T, class Enable1 = void, class Enable2 = void>
 struct is_range : std::false_type {
 };
@@ -41,7 +41,20 @@ struct is_range<T,
 template <class T>
 constexpr bool is_range_v = is_range<T>::value;
 
-// is_ratio ------------------------------------------------------------------
+// has_size -------------------------------------------------------------------
+template <class T, class Enable1 = void>
+struct has_size : std::false_type {
+};
+
+template <class T>
+struct has_size<T,
+	enable_if_defined_t<decltype(std::size(std::declval<T>()))>> : std::true_type {
+};
+
+template <class T>
+constexpr bool has_size_v = has_size<T>::value;
+
+// is_ratio -------------------------------------------------------------------
 template <class T, class Enable1 = void, class Enable2 = void>
 struct is_ratio : std::false_type {
 };

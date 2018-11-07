@@ -4,7 +4,8 @@
 #include "tests.hpp"
 
 int main(int argc, char** argv) {
-	/*std::ifstream ifs("graph-20-0.2.json");
+	/*
+	std::ifstream ifs("graph-20-0.2.json");
 	json j;
 	ifs >> j;
 	graph<int> g = j;
@@ -15,15 +16,15 @@ int main(int argc, char** argv) {
 		std::cout << pf[i].size() << std::endl;
 	}*/
 
-	run_benchmark(argc, argv);
+	//run_benchmark(argc, argv);
 	//test_search("last_test.json");
 
-	/*graph<int> g;
-	mutate(g, 15, 0.6);
+	graph<int> g;
+	mutate(g, 25, 0.2);
 
-	std::ofstream ofs("graph-15-0.6.json");
+	std::ofstream ofs("graph-25-0.2.json");
 	json j = g;
-	ofs << j;*/
+	ofs << j;
 
 	std::cout << "Done." << std::endl;
 	std::cin.clear();

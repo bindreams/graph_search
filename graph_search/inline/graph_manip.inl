@@ -3,6 +3,7 @@
 
 #include "graph_manip.hpp"
 #include "util/generator.hpp"
+#include "util/iterator.hpp"
 #include "puff.hpp"
 
 template <class T>
@@ -10,11 +11,8 @@ void push_random_edge(graph<T>& g) {
 	std::size_t max_edges = g.size() * (g.size() - 1) / 2;
 	if (g.count_edges() == max_edges) throw std::invalid_argument("push_random_edge: graph is complete");
 
-	generator<std::size_t> gen;
-
 	// Select it1 that is not yet connected to all nodes
-	auto it1 = g.begin();
-	std::advance(it1, gen(0, g.size()));
+	auto it1 = zh::select(g);
 
 	while (it1->edges().size() == g.size() - 1) {
 		it1++;
@@ -22,8 +20,7 @@ void push_random_edge(graph<T>& g) {
 	}
 
 	// Select id2 that is not connected to id1
-	auto it2 = g.begin();
-	std::advance(it2, gen(0, g.size()));
+	auto it2 = zh::select(g);
 
 	while (it2 == it1 || it2->edges().find(&*it1) != it2->edges().end()) {
 		it2++;
@@ -37,20 +34,16 @@ template <class T>
 void pop_random_edge(graph<T>& g) {
 	if (g.count_edges() == 0) throw std::invalid_argument("pop_random_edge: graph is empty (no edges)");
 
-	generator<std::size_t> gen;
+	auto it1 = zh::select(g);
 
-	auto it1 = g.begin();
-	std::advance(it1, gen(0, g.size()));
-
-	// Select id1 that is connected to at least on node
+	// Select id1 that is connected to at least one node
 	while (it1->edges().size() == 0) {
 		it1++;
 		if (it1 == g.end()) it1 = g.begin();
 	}
 
 	// Select a random connected node
-	auto it2 = it1->edges().begin();
-	std::advance(it2, gen(0, it1->edges().size()));
+	auto it2 = zh::select(it1->edges());
 
 	g.disconnect(*it1, **it2);
 }
@@ -79,7 +72,7 @@ void mutate_edges(graph<T>& g, double target_ratio) {
 
 template <class T, class Gen>
 void push_random_node(graph<T>& g, Gen value_gen) {
-	g.insert(value_gen());
+	g.emplace(value_gen());
 }
 
 template <class T>
@@ -91,8 +84,7 @@ template <class T>
 void pop_random_node(graph<T>& g) {
 	if (g.empty()) throw std::invalid_argument("pop_random_node: graph has no nodes");
 
-	auto it = g.begin();
-	std::advance(it, generator<std::size_t>()(0, g.size()));
+	auto it = zh::select(g);
 	g.erase(it);
 }
 
