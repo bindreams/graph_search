@@ -15,7 +15,6 @@ constexpr void advance(InputIt& it, Distance n) {
 	std::advance(it, n);
 }
 
-
 // Advance iterator for distance n or until limit
 template <class InputIt, class Distance>
 constexpr bool advance(InputIt& it, InputIt limit, Distance n) {
@@ -24,7 +23,7 @@ constexpr bool advance(InputIt& it, InputIt limit, Distance n) {
 		std::random_access_iterator_tag,
 		typename std::iterator_traits<InputIt>::iterator_category>) {
 		
-		if ((limit - it) <= n) {
+		if (static_cast<std::size_t>(limit - it) <= n) {
 			it = limit;
 			return true;
 		}
@@ -66,7 +65,7 @@ InputIt select(InputIt first, InputIt last, Gen&& gen) {
 	assert(first != last);
 
 	std::uniform_int_distribution<std::size_t> dist(0, std::distance(first, last) - 1);
-	std::advance(first, dist(gen()));
+	std::advance(first, dist(gen));
 
 	return first;
 }
@@ -92,7 +91,7 @@ auto select(Container&& cont, Gen&& gen) {
 	assert(std::size(std::forward<Container>(cont)) > 0);
 
 	std::uniform_int_distribution<std::size_t> dist(0, std::size(std::forward<Container>(cont)) - 1);
-	return std::next(std::begin(std::forward<Container>(cont)), dist(gen()));
+	return std::next(std::begin(std::forward<Container>(cont)), dist(gen));
 }
 
 }

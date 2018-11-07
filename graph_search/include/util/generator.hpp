@@ -4,16 +4,20 @@
 #include <limits>
 #include <cstdint>
 
+constexpr bool is_64bit() {
+	return sizeof(size_t) == 8;
+}
+
 // Generator that makes any numeric type using get<type>
 class multigenerator {
 private:
 	static inline std::random_device rd;
-	std::mt19937 mt;
+	std::conditional_t<is_64bit(),
+		std::mt19937_64,
+		std::mt19937> mt;
 
 public:
-	multigenerator() :
-		mt(rd()) {
-	}
+	multigenerator();
 
 	multigenerator(const multigenerator& other) = default;
 	multigenerator(multigenerator&& other) = default;
