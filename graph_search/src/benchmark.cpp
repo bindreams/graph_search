@@ -105,9 +105,6 @@ void graph_search(benchmark::State& state) {
 // Active benchmarks ==========================================================
 //ZH_BENCHMARK(graph_creation<10, std::ratio<2, 10>>);
 //ZH_BENCHMARK(puff_creation<10, std::ratio<2, 10>, 3>);
-ZH_BENCHMARK_BIND(puff_creation(state, "graph-20-0.2.json"))
-->Unit(benchmark::kMillisecond)
-->MinTime(60);
 ZH_BENCHMARK_BIND(puff_creation(state, "graph-15-0.2.json"))
 ->Unit(benchmark::kMillisecond)
 ->MinTime(60);
@@ -115,6 +112,9 @@ ZH_BENCHMARK_BIND(puff_creation(state, "graph-15-0.4.json"))
 ->Unit(benchmark::kMillisecond)
 ->MinTime(60);
 ZH_BENCHMARK_BIND(puff_creation(state, "graph-15-0.6.json"))
+->Unit(benchmark::kMillisecond)
+->MinTime(60);
+ZH_BENCHMARK_BIND(puff_creation(state, "graph-20-0.2.json"))
 ->Unit(benchmark::kMillisecond)
 ->MinTime(60);
 
