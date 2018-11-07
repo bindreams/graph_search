@@ -81,9 +81,6 @@
     <ClInclude Include="include\functors\node_functors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\util\advance.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\util\enviroment.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -100,6 +97,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="deps\ska\flat_hash_map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\util\iterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

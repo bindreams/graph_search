@@ -166,7 +166,7 @@ inline typename graph<T>::iterator graph<T>::emplace(Args&&... args) {
 	std::size_t id = temp.id();
 	auto x = nodes.emplace(id, std::move(temp));
 
-	return x.first;
+	return iterator(x.first);
 }
 
 template<class T>
