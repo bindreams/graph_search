@@ -71,7 +71,7 @@ void mutate_edges(graph<T>& g, double target_ratio) {
 }
 
 template <class T, class Gen>
-void push_random_node(graph<T>& g, Gen value_gen) {
+void push_random_node(graph<T>& g, Gen&& value_gen) {
 	g.emplace(value_gen());
 }
 
@@ -89,7 +89,7 @@ void pop_random_node(graph<T>& g) {
 }
 
 template <class T, class Gen>
-void mutate_nodes(graph<T>& g, std::size_t target_size, Gen value_gen) {
+void mutate_nodes(graph<T>& g, std::size_t target_size, Gen&& value_gen) {
 	if (target_size > g.size()) {
 		for (std::size_t i = g.size(); i < target_size; i++) {
 			push_random_node<T>(g, value_gen);
@@ -108,7 +108,7 @@ void mutate_nodes(graph<T>& g, std::size_t target_size) {
 }
 
 template <class T, class Gen>
-void mutate(graph<T>& g, std::size_t target_size, double target_ratio, Gen value_gen) {
+void mutate(graph<T>& g, std::size_t target_size, double target_ratio, Gen&& value_gen) {
 	if (target_ratio < 0 || target_ratio > 1) throw std::invalid_argument("mutate: edges_ratio must be a ratio in [0, 1]");
 
 	mutate_nodes(g, target_size, value_gen);

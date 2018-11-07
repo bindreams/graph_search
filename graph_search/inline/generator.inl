@@ -1,6 +1,10 @@
 #pragma once
 #include "util/generator.hpp"
 
+inline multigenerator::multigenerator() :
+	mt(rd()) {
+}
+
 inline void multigenerator::seed(unsigned int s) {
 	mt.seed(s);
 }
@@ -47,6 +51,9 @@ inline T multigenerator::get(T min, T max) {
 
 		std::uniform_real_distribution<T> dist(min, max);
 		return dist(mt);
+	}
+	else {
+		static_assert("multigenerator::get: unknown type");
 	}
 }
 
