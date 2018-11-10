@@ -1,10 +1,6 @@
 #pragma once
 #include <cstdlib>
-#include <set>
 #include "graph.hpp"
-#include "graph_match.hpp"
-
-// Random permutations =========================================================
 
 template <class T>
 void push_random_edge(graph<T>& g);
@@ -37,9 +33,4 @@ void mutate(
 template <class T>
 void mutate(graph<T>& g, std::size_t target_size, double target_ratio);
 
-// Subgraph lookup =============================================================
-
-template <class T>
-std::set<graph_match> contains(const graph<T>& source, const graph<T>& target);
-
-#include "inline/graph_manip.inl"
+#include "inline/graph_random.inl"

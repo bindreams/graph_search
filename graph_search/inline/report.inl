@@ -3,8 +3,9 @@
 #include <fstream>
 #include <filesystem>
 #include "report/report.hpp"
-#include "graph_manip.hpp"
-#include "generator.hpp"
+#include "graph_random.hpp"
+#include "graph_search.hpp"
+#include "util/generator.hpp"
 #include "report/data_pack.hpp"
 namespace fs = std::filesystem;
 

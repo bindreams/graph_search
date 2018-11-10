@@ -164,6 +164,8 @@
     <ClInclude Include="include\benchmark.hpp" />
     <ClInclude Include="include\functors\node_functors.hpp" />
     <ClInclude Include="include\functors\sector_functors.hpp" />
+    <ClInclude Include="include\graph_random.hpp" />
+    <ClInclude Include="include\graph_search.hpp" />
     <ClInclude Include="include\node_group.hpp" />
     <ClInclude Include="include\level_builder.hpp" />
     <ClInclude Include="include\report\data_pack.hpp" />
@@ -177,21 +179,20 @@
     <ClInclude Include="include\proxy_iterator.hpp" />
     <ClInclude Include="deps\json.hpp" />
     <ClInclude Include="include\node.hpp" />
-    <ClInclude Include="include\puff_statistics.hpp" />
-    <ClInclude Include="include\graph_manip.hpp" />
     <ClInclude Include="include\report\report.hpp" />
     <ClInclude Include="include\sector.hpp" />
     <ClInclude Include="include\puff.hpp" />
     <ClInclude Include="include\tests.hpp" />
     <ClInclude Include="include\util\pretty_print.hpp" />
     <ClInclude Include="include\util\range.hpp" />
+    <ClInclude Include="inline\graph_random.inl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="inline\data_pack.inl" />
     <None Include="inline\data_unit.inl" />
     <None Include="inline\generator.inl" />
     <None Include="inline\graph.inl" />
-    <None Include="inline\graph_manip.inl" />
+    <None Include="inline\graph_search.inl" />
     <None Include="inline\level_builder.inl" />
     <None Include="inline\node.inl" />
     <None Include="inline\node_functors.inl" />

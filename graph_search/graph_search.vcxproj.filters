@@ -18,9 +18,6 @@
     <ClInclude Include="include\tests.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\graph_manip.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\graph_match.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -81,9 +78,6 @@
     <ClInclude Include="include\functors\node_functors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\puff_statistics.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="deps\ctpl_stl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -100,6 +94,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\util\assert.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graph_random.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graph_search.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inline\graph_random.inl">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -121,9 +124,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="inline\graph_manip.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="inline\graph.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -155,6 +155,9 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="inline\puff.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\graph_search.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

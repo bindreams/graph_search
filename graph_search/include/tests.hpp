@@ -5,13 +5,13 @@
 #include <filesystem>
 #include <iomanip>
 #include "deps/json.hpp"
-#include "graph_manip.hpp"
+#include "graph_search.hpp"
 namespace fs = std::filesystem;
 using json = nlohmann::json;
 
 template<class T>
 inline void test_search(const graph<T>& graph1, const graph<T>& graph2) {
-	auto mapping = contains(graph1, graph2);
+	auto mapping = search(graph1, graph2);
 
 	std::cout
 		<< "= Graph info ===================================================================" << std::endl
