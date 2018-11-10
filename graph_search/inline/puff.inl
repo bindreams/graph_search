@@ -6,7 +6,7 @@
 #include "puff.hpp"
 #include "puff_statistics.hpp"
 #include "level_builder.hpp"
-#include "util/enviroment.hpp"
+#include "util/assert.hpp"
 
 template<class T>
 inline puff<T>::puff(const graph<T>& gr, std::size_t max_depth) {
@@ -126,9 +126,6 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 		std::vector<std::future<graph_match>> matches;
 		for (auto&& j : sectors[other.depth() - 1]) {
 			matches.push_back(std::move(std::async(std::launch::async, &sector<T>::contains, &j, std::cref(i))));
-#ifdef GS_COLLECT_STATS
-			stats.add_async_call_contains();
-#endif
 		}
 
 		for (auto&& j : matches) {

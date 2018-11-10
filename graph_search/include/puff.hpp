@@ -7,10 +7,6 @@
 #include "sector.hpp"
 #include "graph.hpp"
 
-#ifdef GS_COLLECT_STATS
-#include "puff_statistics.hpp"
-#endif
-
 template <class T>
 class puff {
 public:
@@ -23,9 +19,6 @@ private:
 	container_type sectors;
 
 public:
-#ifdef GS_COLLECT_STATS
-	mutable puff_statistics stats;
-#endif
 	// Constructors ===========================================================
 	puff() = default;
 	puff(const graph<T>& gr, std::size_t max_depth = std::numeric_limits<std::size_t>::max());
