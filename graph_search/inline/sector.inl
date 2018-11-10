@@ -1,6 +1,6 @@
 #pragma once
 #include "sector.hpp"
-#include "util/enviroment.hpp"
+#include "util/assert.hpp"
 
 template<class T>
 inline graph_match sector<T>::contains(const sector& other) const {

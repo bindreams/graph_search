@@ -6,7 +6,3 @@
 #else
 #define GS_ASSERT(...) do {} while (0)
 #endif
-
-#ifdef STATISTICS
-#define GS_COLLECT_STATS
-#endif
