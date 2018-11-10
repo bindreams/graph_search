@@ -14,7 +14,7 @@ public:
 	node_group<T> nodes;
 	flat_set<const sector*, sector_lexicographical_order<T>> children;
 
-	graph_match contains(const sector& other) const;
+	graph_match search(const sector& other) const;
 	sector& join_children(const sector& other);
 	std::size_t size_in_bytes() const;
 

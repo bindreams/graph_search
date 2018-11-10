@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include "puff.hpp"
-#include "puff_statistics.hpp"
 #include "level_builder.hpp"
 #include "util/assert.hpp"
 
@@ -113,7 +112,7 @@ inline std::size_t puff<T>::size_in_bytes() const noexcept {
 }
 
 template<class T>
-inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
+inline std::set<graph_match> puff<T>::search(const puff<T>& other) const {
 	if (other.depth() > depth()) {
 		return {};
 	}
@@ -125,7 +124,7 @@ inline std::set<graph_match> puff<T>::contains(const puff<T>& other) const {
 
 		std::vector<std::future<graph_match>> matches;
 		for (auto&& j : sectors[other.depth() - 1]) {
-			matches.push_back(std::move(std::async(std::launch::async, &sector<T>::contains, &j, std::cref(i))));
+			matches.push_back(std::move(std::async(std::launch::async, &sector<T>::search, &j, std::cref(i))));
 		}
 
 		for (auto&& j : matches) {
@@ -144,6 +143,18 @@ template<class T>
 inline const typename puff<T>::level_type&
 puff<T>::operator[](std::size_t idx) const {
 	return sectors[idx];
+}
+
+template<class T>
+inline bool operator==(const puff<T>& lhs, const puff<T>& rhs) {
+	return
+		!lhs.search(rhs).empty() &&
+		!rhs.search(lhs).empty();
+}
+
+template<class T>
+inline bool operator!=(const puff<T>& lhs, const puff<T>& rhs) {
+	return !(lhs == rhs);
 }
 
 template <class T>

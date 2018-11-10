@@ -1,26 +1,28 @@
 #pragma once
-#include <map>
+#include "deps/ska/unordered_map.hpp"
 #include "graph.hpp"
 
 template<class T>
 inline graph<T>::graph(const graph& other) {
-	std::map<std::size_t, std::size_t> match_id;
+	// Reserve size for perfomance and to prevent iterator/pointer invalidation
+	nodes.reserve(other.nodes.size());
 
-	// Adding all nodes
-	for (auto&& nd : other) {
-		node<T> temp(nd.value());
-		std::size_t id = temp.id();
-		nodes.emplace(id, std::move(temp));
+	// Match other's ptr to node to equivalent ptr in this
+	ska::unordered_map<const node<T>*, node<T>*> ptr_match;
 
-		match_id[nd.id()] = id;
+	// Emplacing all nodes (not connecting)
+	for (auto& nd : other) {
+		nodes.emplace_back(nd.value());
+		ptr_match[&nd] = &nodes.back();
 	}
 
-	// Connecting
-	for (auto&& nd : other) {
-		for (auto&& connected_nd : nd.edges()) {
+	// Connect all nodes by looking at other's edges and transforming pointers
+	for (auto& nd : other) {
+		for (auto& edge_ptr : nd.edges()) {
 			connect(
-				match_id[nd.id()], 
-				match_id[connected_nd->id()]);
+				*ptr_match[&nd],
+				*ptr_match[edge_ptr]
+			);
 		}
 	}
 }
@@ -49,62 +51,32 @@ inline void swap(graph<T_>& lhs, graph<T_>& rhs) noexcept {
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::begin() noexcept {
-	return iterator(nodes.begin());
+	return nodes.begin();
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::begin() const noexcept {
-	return const_iterator(nodes.begin());
+	return nodes.begin();
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::cbegin() const noexcept {
-	return const_iterator(nodes.cbegin());
+	return nodes.cbegin();
 }
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::end() noexcept {
-	return iterator(nodes.end());
+	return nodes.end();
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::end() const noexcept {
-	return const_iterator(nodes.end());
+	return nodes.end();
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::cend() const noexcept {
-	return const_iterator(nodes.cend());
-}
-
-template<class T>
-inline typename graph<T>::reverse_iterator graph<T>::rbegin() noexcept {
-	return reverse_iterator(nodes.rbegin());
-}
-
-template<class T>
-inline typename graph<T>::const_reverse_iterator graph<T>::rbegin() const noexcept {
-	return const_reverse_iterator(nodes.rbegin());
-}
-
-template<class T>
-inline typename graph<T>::const_reverse_iterator graph<T>::crbegin() const noexcept {
-	return const_reverse_iterator(nodes.crbegin());
-}
-
-template<class T>
-inline typename graph<T>::reverse_iterator graph<T>::rend() noexcept {
-	return reverse_iterator(nodes.rend());
-}
-
-template<class T>
-inline typename graph<T>::const_reverse_iterator graph<T>::rend() const noexcept {
-	return const_reverse_iterator(nodes.rend());
-}
-
-template<class T>
-inline typename graph<T>::const_reverse_iterator graph<T>::crend() const noexcept {
-	return const_reverse_iterator(nodes.crend());
+	return nodes.cend();
 }
 
 template<class T>
@@ -130,20 +102,12 @@ inline void graph<T>::disconnect(iterator it1, iterator it2) {
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::insert(const T& val) {
-	node<T> temp(val);
-	std::size_t id = temp.id();
-	auto x = nodes.emplace(id, std::move(temp));
-
-	return iterator(x.first);
+	return nodes.emplace_back(val);
 }
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::insert(T&& val) {
-	node<T> temp(std::move(val));
-	std::size_t id = temp.id();
-	auto x = nodes.emplace(id, std::move(temp));
-
-	return iterator(x.first);
+	return nodes.emplace_back(std::move(val));
 }
 
 template<class T>
@@ -162,21 +126,18 @@ inline void graph<T>::insert(std::initializer_list<value_type> ilist) {
 template<class T>
 template<class... Args>
 inline typename graph<T>::iterator graph<T>::emplace(Args&&... args) {
-	node<T> temp(std::forward<Args>(args)...);
-	std::size_t id = temp.id();
-	auto x = nodes.emplace(id, std::move(temp));
-
-	return iterator(x.first);
+	nodes.emplace_back(std::forward<Args>(args)...);
+	return std::prev(nodes.end());
 }
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::erase(iterator it) {
-	return iterator(nodes.erase(it));
+	return nodes.erase(it);
 }
 
 template<class T>
 inline bool graph<T>::empty() const noexcept {
-	return size() == 0;
+	return nodes.empty();
 }
 
 template<class T>
@@ -185,19 +146,8 @@ inline void graph<T>::clear() noexcept {
 }
 
 template<class T>
-inline node<T>& graph<T>::operator[](std::size_t idx) {
-	auto got = nodes.find(idx);
-	if (got == nodes.end()) throw std::invalid_argument("graph::operator[]: node with this index does not exist");
-
-	return got->second;
-}
-
-template<class T>
-inline const node<T>& graph<T>::operator[](std::size_t idx) const {
-	auto got = nodes.find(idx);
-	if (got == nodes.end()) throw std::invalid_argument("graph::operator[]: node with this index does not exist");
-
-	return got->second;
+inline void graph<T>::reserve(size_type new_size) {
+	nodes.reserve(new_size);
 }
 
 template<class T>
@@ -229,11 +179,11 @@ template <class T>
 std::ostream& operator<<(std::ostream& os, const graph<T>& obj) {
 	os << "{" << std::endl;
 
-	for (auto&& i : obj) {
+	for (auto& i : obj) {
 		os << "    " << i;
 		if (!i.edges().empty()) os << " -> ";
 
-		for (auto&& connection : i.edges()) {
+		for (auto& connection : i.edges()) {
 			os << *connection << " ";
 		}
 
@@ -265,21 +215,25 @@ template <class T>
 void from_json(const json& j, graph<T>& obj) {
 	// Clearing
 	obj.clear();
+	// Reserve size for perfomance and to prevent iterator/pointer invalidation
+	obj.reserve(j.size());
 
-	std::map<std::size_t, std::size_t> match_id;
-	// Adding all nodes
-	for (auto&& i : j) {
-		std::size_t id = obj.insert(i["value"].get<T>())->id();
+	// Match other's id to node to equivalent ptr in this
+	ska::unordered_map<std::size_t, node<T>*> ptr_match;
 
-		match_id[i["id"]] = id;
+	// Emplacing all nodes (not connecting)
+	for (auto& nd : j) {
+		auto it = obj.emplace(nd["value"].get<T>());
+		ptr_match[nd["id"]] = &*it;
 	}
 
-	// Connecting
-	for (auto&& nd : j) {
-		for (auto&& connected_id : nd["edges"]) {
+	// Connect all nodes by looking at j's ids and transforming pointers
+	for (auto& nd : j) {
+		for (auto& edge_id : nd["edges"]) {
 			obj.connect(
-				obj[match_id[nd["id"]]],
-				obj[match_id[connected_id]]);
+				*ptr_match[nd["id"]],
+				*ptr_match[edge_id]
+			);
 		}
 	}
 }

@@ -1,34 +1,14 @@
 #pragma once
-#include <map>
-
+#include <vector>
 #include "node.hpp"
-#include "proxy_iterator.hpp"
 
 #include "deps/json.hpp"
 using json = nlohmann::json;
 
-namespace detail {
-
-struct get_second {
-	template <class PairType>
-	const typename PairType::second_type& 
-		operator()(const PairType& p) const {
-		return p.second;
-	}
-
-	template <class PairType>
-	typename PairType::second_type& 
-		operator()(PairType& p) const {
-		return p.second;
-	}
-};
-
-}
-
 template <class T>
 class graph {
 private:
-	using container = std::map<std::size_t, node<T>>;
+	using container = std::vector<node<T>>;
 	container nodes;
 
 public:
@@ -37,21 +17,14 @@ public:
 	using node_type       = node<T>;
 	using size_type       = typename container::size_type;
 	using difference_type = typename container::difference_type;
-	using value_compare   = typename container::value_compare;
-	using allocator_type  = typename container::value_compare;
+	using allocator_type  = typename container::allocator_type;
 	using reference       = typename container::reference;
 	using const_reference = typename container::const_reference;
 	using pointer         = typename container::pointer;
 	using const_pointer   = typename container::const_pointer;
 
-	using iterator = proxy_iterator<
-		typename container::iterator, detail::get_second>;
-	using const_iterator = proxy_iterator<
-		typename container::const_iterator, detail::get_second>;
-	using reverse_iterator = proxy_iterator<
-		typename container::reverse_iterator, detail::get_second>;
-	using const_reverse_iterator = proxy_iterator<
-		typename container::const_reverse_iterator, detail::get_second>;
+	using iterator        = typename container::iterator;
+	using const_iterator  = typename container::const_iterator;
 
 	// Member functions ========================================================
 	// Constructors ------------------------------------------------------------
@@ -74,14 +47,6 @@ public:
 	const_iterator end() const noexcept;
 	const_iterator cend() const noexcept;
 
-	reverse_iterator rbegin() noexcept;
-	const_reverse_iterator rbegin() const noexcept;
-	const_reverse_iterator crbegin() const noexcept;
-
-	reverse_iterator rend() noexcept;
-	const_reverse_iterator rend() const noexcept;
-	const_reverse_iterator crend() const noexcept;
-
 	// Connecting --------------------------------------------------------------
 	void connect(node_type& n1, node_type& n2);
 	void connect(iterator it1, iterator it2);
@@ -100,19 +65,25 @@ public:
 	iterator emplace(Args&&... args);
 
 	iterator erase(iterator it);
-
-	bool empty() const noexcept;
 	void clear() noexcept;
 
-	node<T>& operator[](std::size_t idx);
-	const node<T>& operator[](std::size_t idx) const;
+	void reserve(size_type new_size);
+
+	// Observers --------------------------------------------------------------
+	bool empty() const noexcept;
+	std::size_t size() const noexcept;
 
 	std::size_t count_edges() const noexcept;
 	double ratio() const noexcept;
-	std::size_t size() const noexcept;
-
-	template <class T_>
-	friend void from_json(const json& j, graph<T_>& obj);
 };
+
+template <class T>
+std::ostream& operator<<(std::ostream& os, const graph<T>& obj);
+
+template <class T>
+void to_json(json& j, const graph<T>& obj);
+
+template <class T>
+void from_json(const json& j, graph<T>& obj);
 
 #include "inline/graph.inl"

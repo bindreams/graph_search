@@ -9,7 +9,7 @@
 #include "deps/zh/extra_traits.hpp"
 #include "util/generator.hpp"
 #include "puff.hpp"
-#include "graph_manip.hpp"
+#include "graph_search.hpp"
 
 namespace fs = std::filesystem;
 using json = nlohmann::json;
@@ -96,7 +96,7 @@ void graph_search(benchmark::State& state) {
 		graph<int> y;
 		mutate(y, subgraph_size, subgraph_ratio, test_gen());
 
-		benchmark::DoNotOptimize(contains(x, y));
+		benchmark::DoNotOptimize(search(x, y));
 	}
 }
 

@@ -1,10 +1,9 @@
 #pragma once
 #include <iterator>
 
-#include "graph_manip.hpp"
+#include "graph_random.hpp"
 #include "util/generator.hpp"
 #include "util/iterator.hpp"
-#include "puff.hpp"
 
 template <class T>
 void push_random_edge(graph<T>& g) {
@@ -118,12 +117,4 @@ void mutate(graph<T>& g, std::size_t target_size, double target_ratio, Gen&& val
 template <class T>
 void mutate(graph<T>& g, std::size_t target_size, double target_ratio) {
 	mutate(g, target_size, target_ratio, generator<T>());
-}
-
-template<class T>
-inline std::set<graph_match> contains(const graph<T>& source, const graph<T>& target) {
-	puff<T> target_puff(target);
-	puff<T> source_puff(source, target_puff.depth());
-
-	return source_puff.contains(target_puff);
 }

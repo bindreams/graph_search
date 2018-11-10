@@ -38,11 +38,17 @@ public:
 	std::size_t count_sectors() const noexcept;
 	std::size_t size_in_bytes() const noexcept;
 
-	// Checks if this puff contains other puff
-	std::set<graph_match> contains(const puff<T>& other) const;
+	// Search for another puff in this puff
+	std::set<graph_match> search(const puff<T>& other) const;
 
 	const level_type& operator[](std::size_t idx) const;
 };
+
+template <class T>
+bool operator==(const puff<T>& lhs, const puff<T>& rhs);
+
+template <class T>
+bool operator!=(const puff<T>& lhs, const puff<T>& rhs);
 
 template <class T>
 std::ostream& operator<<(std::ostream& os, const puff<T>& obj);

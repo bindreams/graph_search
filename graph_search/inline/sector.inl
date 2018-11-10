@@ -3,7 +3,7 @@
 #include "util/assert.hpp"
 
 template<class T>
-inline graph_match sector<T>::contains(const sector& other) const {
+inline graph_match sector<T>::search(const sector& other) const {
 	//Sectors must be of one size
 	GS_ASSERT(nodes.size() == other.nodes.size());
 
@@ -37,7 +37,7 @@ inline graph_match sector<T>::contains(const sector& other) const {
 			}; //Exit 3a: Children not conformant
 
 			graph_match temp;
-			while (!(temp = (*i)->contains(**j))) {
+			while (!(temp = (*i)->search(**j))) {
 				i++;
 				if (i == children.end()) {
 					//std::cout << "Sectors " << *this << " and " << other << " failed on children! 3b" << std::endl;
