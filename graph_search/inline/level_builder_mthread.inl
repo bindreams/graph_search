@@ -1,70 +1,6 @@
 #pragma once
-#include <iterator>
-#include <future>
-#include "level_builder.hpp"
+#include "level_builder/level_builder_mthread.hpp"
 #include "util/iterator.hpp"
-#include "util/assert.hpp"
-
-template<class T>
-inline void build_results<T>::add(const sector<T>& rslt) {
-	auto[it, insert_happened] = this->insert(rslt);
-
-	if (!insert_happened) {
-		// If insertion did not take place, just join children
-		it->join_children(rslt);
-	}
-}
-
-template<class T>
-inline void build_results<T>::join(const build_results& other) {
-	for (const auto& sec : other) {
-		add(sec);
-	}
-}
-
-template<class T>
-template<class Container, class>
-inline bool level_builder<T, false>::build(const Container& last_level) {
-	return build(std::begin(last_level), std::end(last_level));
-}
-
-template<class T>
-template<class InputIt>
-inline bool level_builder<T, false>::build(InputIt first, InputIt last) {
-	GS_ASSERT(first->nodes.size() >= 2);
-	sources.clear();
-	results.clear();
-
-	// For each sector in last level
-	for (InputIt it = first; it != last; ++it) {
-		const sector<T>& sector = *it;
-		// Go over each possible part of its group
-		// (see node_group::except_1)
-		for (auto& part : sector.nodes.except_1()) {
-			// Example: sector is abc, part is ac
-			// In sources[part], go over all values, build a new sector with
-			// each of them, and insert each one into results
-			for (auto& source : sources[part]) {
-				results.add({sector, *source});
-			}
-			// Finally, add this sector to sources
-			sources[part].push_back(&sector);
-		}
-	}
-
-	if (results.empty()) return false;
-	return true;
-}
-
-template<class T>
-inline build_results<T>& level_builder<T, false>::result() noexcept {
-	return results;
-}
-
-template<class T>
-inline const build_results<T>& level_builder<T, false>::result() const noexcept {
-	return results;
-}
 
 template<class T>
 const unsigned int level_builder<T, true>::worker_count = std::thread::hardware_concurrency() - 1;
@@ -86,8 +22,8 @@ inline void level_builder<T, true>::populate(InputIt first, InputIt last) {
 
 template<class T>
 template<class InputIt>
-inline build_results<T> level_builder<T, true>::build_safe(InputIt first, InputIt last) {
-	build_results<T> rslt;
+inline build_result<T> level_builder<T, true>::build_safe(InputIt first, InputIt last) {
+	build_result<T> rslt;
 
 	// For each sector in last level
 	for (InputIt it = first; it != last; ++it) {
@@ -137,7 +73,7 @@ inline bool level_builder<T, true>::build(InputIt first, InputIt last, std::size
 	// Populate the sources
 	populate(first, last);
 
-	std::vector<std::future<build_results<T>>> async_results;
+	std::vector<std::future<build_result<T>>> async_results;
 	async_results.reserve(worker_count);
 
 	// Concurrently compute parts of solution in increments of block_size
@@ -175,11 +111,11 @@ inline level_builder<T, true>::level_builder() :
 }
 
 template<class T>
-inline build_results<T>& level_builder<T, true>::result() noexcept {
+inline build_result<T>& level_builder<T, true>::result() noexcept {
 	return results;
 }
 
 template<class T>
-inline const build_results<T>& level_builder<T, true>::result() const noexcept {
+inline const build_result<T>& level_builder<T, true>::result() const noexcept {
 	return results;
 }
