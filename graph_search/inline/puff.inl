@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "puff.hpp"
-#include "level_builder.hpp"
+#include "level_builder/level_builder.hpp"
 #include "util/assert.hpp"
 
 template<class T>

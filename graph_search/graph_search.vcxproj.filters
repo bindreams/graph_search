@@ -66,9 +66,6 @@
     <ClInclude Include="include\util\pretty_print.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\level_builder.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\node_group.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -103,6 +100,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inline\graph_random.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\level_builder\build_result.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\level_builder\safe_sectors_view.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\level_builder\level_builder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\level_builder\level_builder_1thread.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\level_builder\level_builder_mthread.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -142,9 +154,6 @@
     <None Include="inline\sector.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="inline\level_builder.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="inline\sector_functors.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -158,6 +167,18 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="inline\graph_search.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\build_result.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\level_builder_1thread.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\level_builder_mthread.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\safe_sectors_view.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
