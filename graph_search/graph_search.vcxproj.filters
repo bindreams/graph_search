@@ -117,6 +117,18 @@
     <ClInclude Include="include\level_builder\level_builder_mthread.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="deps\zh\proxy_iterator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\iterator_functors.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\container_view.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\functors\graph_functors.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

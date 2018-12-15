@@ -40,7 +40,7 @@ inline const std::unordered_set<node<T>*>& node<T>::edges() const {
 }
 
 template<class T>
-inline std::size_t node<T>::id() const {
+inline std::size_t node<T>::id() const noexcept {
 	return reinterpret_cast<std::size_t>(m_value.get());
 }
 

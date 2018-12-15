@@ -5,18 +5,18 @@
 template<class T>
 inline graph<T>::graph(const graph& other) {
 	// Reserve size for perfomance and to prevent iterator/pointer invalidation
-	nodes.reserve(other.nodes.size());
+	m_nodes.reserve(other.m_nodes.size());
 
 	// Match other's ptr to node to equivalent ptr in this
 	ska::unordered_map<const node<T>*, node<T>*> ptr_match;
 
-	// Emplacing all nodes (not connecting)
+	// Emplacing all m_nodes (not connecting)
 	for (auto& nd : other) {
-		nodes.emplace_back(nd.value());
-		ptr_match[&nd] = &nodes.back();
+		m_nodes.emplace_back(nd.value());
+		ptr_match[&nd] = &m_nodes.back();
 	}
 
-	// Connect all nodes by looking at other's edges and transforming pointers
+	// Connect all m_nodes by looking at other's edges and transforming pointers
 	for (auto& nd : other) {
 		for (auto& edge_ptr : nd.edges()) {
 			connect(
@@ -44,39 +44,54 @@ inline void swap(graph<T_>& lhs, graph<T_>& rhs) noexcept {
 	// enable ADL
 	using std::swap;
 
-	swap(lhs.nodes, rhs.nodes);
+	swap(lhs.m_nodes, rhs.m_nodes);
 }
 
 // =============================================================================
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::begin() noexcept {
-	return nodes.begin();
+	return iterator(m_nodes.begin());
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::begin() const noexcept {
-	return nodes.begin();
+	return const_iterator(m_nodes.begin());
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::cbegin() const noexcept {
-	return nodes.cbegin();
+	return const_iterator(m_nodes.cbegin());
 }
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::end() noexcept {
-	return nodes.end();
+	return iterator(m_nodes.end());
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::end() const noexcept {
-	return nodes.end();
+	return const_iterator(m_nodes.end());
 }
 
 template<class T>
 inline typename graph<T>::const_iterator graph<T>::cend() const noexcept {
-	return nodes.cend();
+	return const_iterator(m_nodes.cend());
+}
+
+template<class T>
+inline typename graph<T>::nodes_view 
+graph<T>::nodes() noexcept {
+	return nodes_view(
+		m_nodes.begin(), m_nodes.end(), 
+		m_nodes.cbegin(), m_nodes.cend());
+}
+
+template<class T>
+inline typename graph<T>::const_nodes_view 
+graph<T>::nodes() const noexcept {
+	return const_nodes_view(
+		m_nodes.cbegin(), m_nodes.cend());
 }
 
 template<class T>
@@ -86,7 +101,7 @@ inline void graph<T>::connect(node_type& n1, node_type& n2) {
 }
 
 template<class T>
-inline void graph<T>::connect(iterator it1, iterator it2) {
+inline void graph<T>::connect(node_iterator it1, node_iterator it2) {
 	connect(*it1, *it2);
 }
 
@@ -96,18 +111,38 @@ inline void graph<T>::disconnect(node_type& n1, node_type& n2) {
 }
 
 template<class T>
-inline void graph<T>::disconnect(iterator it1, iterator it2) {
+inline void graph<T>::disconnect(node_iterator it1, node_iterator it2) {
 	disconnect(*it1, *it2);
 }
 
 template<class T>
+inline typename graph<T>::reference graph<T>::front() {
+	return *begin();
+}
+
+template<class T>
+inline typename graph<T>::const_reference graph<T>::front() const {
+	return *begin();
+}
+
+template<class T>
+inline typename graph<T>::reference graph<T>::back() {
+	return *std::prev(end());
+}
+
+template<class T>
+inline typename graph<T>::const_reference graph<T>::back() const {
+	return *std::prev(end());
+}
+
+template<class T>
 inline typename graph<T>::iterator graph<T>::insert(const T& val) {
-	return nodes.emplace_back(val);
+	return m_nodes.emplace_back(val);
 }
 
 template<class T>
 inline typename graph<T>::iterator graph<T>::insert(T&& val) {
-	return nodes.emplace_back(std::move(val));
+	return m_nodes.emplace_back(std::move(val));
 }
 
 template<class T>
@@ -126,35 +161,43 @@ inline void graph<T>::insert(std::initializer_list<value_type> ilist) {
 template<class T>
 template<class... Args>
 inline typename graph<T>::iterator graph<T>::emplace(Args&&... args) {
-	nodes.emplace_back(std::forward<Args>(args)...);
-	return std::prev(nodes.end());
+	m_nodes.emplace_back(std::forward<Args>(args)...);
+	return std::prev(end());
 }
 
 template<class T>
-inline typename graph<T>::iterator graph<T>::erase(iterator it) {
-	return nodes.erase(it);
+inline typename graph<T>::iterator 
+graph<T>::erase(iterator it) {
+	return m_nodes.erase(
+		static_cast<typename container::iterator&>(it));
+}
+
+template<class T>
+inline typename graph<T>::node_iterator 
+graph<T>::erase(node_iterator it) {
+	return m_nodes.erase(it);
 }
 
 template<class T>
 inline bool graph<T>::empty() const noexcept {
-	return nodes.empty();
+	return m_nodes.empty();
 }
 
 template<class T>
 inline void graph<T>::clear() noexcept {
-	nodes.clear();
+	m_nodes.clear();
 }
 
 template<class T>
 inline void graph<T>::reserve(size_type new_size) {
-	nodes.reserve(new_size);
+	m_nodes.reserve(new_size);
 }
 
 template<class T>
 inline std::size_t graph<T>::count_edges() const noexcept {
 	std::size_t rslt = 0;
 
-	for (auto&& i : nodes) {
+	for (auto&& i : m_nodes) {
 		rslt += i.second.edges().size();
 	}
 	rslt /= 2;
@@ -172,18 +215,18 @@ inline double graph<T>::ratio() const noexcept {
 
 template<class T>
 inline std::size_t graph<T>::size() const noexcept {
-	return nodes.size();
+	return m_nodes.size();
 }
 
 template <class T>
 std::ostream& operator<<(std::ostream& os, const graph<T>& obj) {
 	os << "{" << std::endl;
 
-	for (auto& i : obj) {
-		os << "    " << i;
-		if (!i.edges().empty()) os << " -> ";
+	for (auto& nd : obj.nodes()) {
+		os << "    " << nd;
+		if (!nd.edges().empty()) os << " -> ";
 
-		for (auto& connection : i.edges()) {
+		for (auto& connection : nd.edges()) {
 			os << *connection << " ";
 		}
 
@@ -197,7 +240,7 @@ std::ostream& operator<<(std::ostream& os, const graph<T>& obj) {
 
 template <class T>
 void to_json(json& j, const graph<T>& obj) {
-	for (auto&& nd : obj) {
+	for (auto&& nd : obj.nodes()) {
 		json temp;
 		temp["value"] = nd.value();
 		temp["id"] = nd.id();
@@ -213,21 +256,23 @@ void to_json(json& j, const graph<T>& obj) {
 
 template <class T>
 void from_json(const json& j, graph<T>& obj) {
+	using node_iterator = typename graph<T>::node_iterator;
+
 	// Clearing
 	obj.clear();
 	// Reserve size for perfomance and to prevent iterator/pointer invalidation
 	obj.reserve(j.size());
 
 	// Match other's id to node to equivalent ptr in this
-	ska::unordered_map<std::size_t, node<T>*> ptr_match;
+	ska::unordered_map<std::size_t, node_iterator> ptr_match;
 
-	// Emplacing all nodes (not connecting)
+	// Emplacing all m_nodes (not connecting)
 	for (auto& nd : j) {
 		auto it = obj.emplace(nd["value"].get<T>());
-		ptr_match[nd["id"]] = &*it;
+		ptr_match[nd["id"]] = node_iterator(it);
 	}
 
-	// Connect all nodes by looking at j's ids and transforming pointers
+	// Connect all m_nodes by looking at j's ids and transforming pointers
 	for (auto& nd : j) {
 		for (auto& edge_id : nd["edges"]) {
 			obj.connect(

@@ -11,7 +11,7 @@ template <class T>
 class node {
 public:
 	// Constructors ============================================================
-	template<class... Args>
+	template <class... Args>
 	node(Args&&... args);
 
 	node() = delete;
@@ -23,7 +23,7 @@ public:
 	~node();
 
 	// Observers ===============================================================
-	std::size_t id() const;
+	std::size_t id() const noexcept;
 
 	// Member access ===========================================================
 	T& value();

@@ -160,8 +160,12 @@
     <ClInclude Include="deps\ska\bytell_hash_map.hpp" />
     <ClInclude Include="deps\ska\flat_hash_map.hpp" />
     <ClInclude Include="deps\ska\unordered_map.hpp" />
+    <ClInclude Include="deps\zh\container_view.hpp" />
     <ClInclude Include="deps\zh\extra_traits.hpp" />
+    <ClInclude Include="deps\zh\iterator_functors.hpp" />
+    <ClInclude Include="deps\zh\proxy_iterator.hpp" />
     <ClInclude Include="include\benchmark.hpp" />
+    <ClInclude Include="include\functors\graph_functors.hpp" />
     <ClInclude Include="include\level_builder\build_result.hpp" />
     <ClInclude Include="include\functors\node_functors.hpp" />
     <ClInclude Include="include\functors\sector_functors.hpp" />

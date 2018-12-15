@@ -59,6 +59,10 @@ public:
 	ConstIterator end() const noexcept { return m_cend; }
 	ConstIterator cend() const noexcept { return m_cend; }
 
+	// Observers --------------------------------------------------------------
+	std::size_t size() const noexcept { 
+		return std::distance(m_cbegin, m_cend); 
+	}
 };
 
 template <class ConstIterator>
@@ -94,6 +98,15 @@ public:
 		m_cbegin(cfirst),
 		m_cend(clast) {
 	}
+
+	// Construct from a mutable container_view
+	template <class Iterator>
+	constexpr const_container_view(
+		const container_view<Iterator, ConstIterator>& view) :
+		m_cbegin(view.cbegin()),
+		m_cend(view.cend()) {
+	}
+
 	~const_container_view() = default;
 
 	// Iterators --------------------------------------------------------------
@@ -103,6 +116,10 @@ public:
 	ConstIterator end() const noexcept { return m_cend; }
 	ConstIterator cend() const noexcept { return m_cend; }
 
+	// Observers --------------------------------------------------------------
+	std::size_t size() const noexcept {
+		return std::distance(m_cbegin, m_cend);
+	}
 };
 
 template <class Iterator, class ConstIterator>
