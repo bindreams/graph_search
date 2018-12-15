@@ -162,6 +162,7 @@
     <ClInclude Include="deps\ska\unordered_map.hpp" />
     <ClInclude Include="deps\zh\container_view.hpp" />
     <ClInclude Include="deps\zh\extra_traits.hpp" />
+    <ClInclude Include="deps\zh\functor_sequence.hpp" />
     <ClInclude Include="deps\zh\iterator_functors.hpp" />
     <ClInclude Include="deps\zh\proxy_iterator.hpp" />
     <ClInclude Include="include\benchmark.hpp" />

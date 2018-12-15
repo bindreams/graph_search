@@ -3,14 +3,39 @@
 #include <memory>
 #include <iomanip>
 #include <cstdint>
+#include "deps/zh/proxy_iterator.hpp"
+#include "deps/zh/container_view.hpp"
+#include "deps/zh/functor_sequence.hpp"
+#include "functors/graph_functors.hpp"
 
 #include "deps/json.hpp"
 using json = nlohmann::json;
 
 template <class T>
 class node {
+private:
+	// Members -----------------------------------------------------------------
+	std::unique_ptr<T> m_value;
+
+	using container = std::unordered_set<node*>;
+	container m_edges;
+
 public:
-	// Constructors ============================================================
+	// Public types ============================================================
+
+	// Warning: node iterators and node views are not the same as in class graph
+	using node_iterator
+		= zh::proxy_iterator<typename container::iterator,
+		zh::dereference>;
+	using const_node_iterator
+		= zh::proxy_iterator<typename container::const_iterator,
+		zh::functor_sequence<zh::dereference, zh::add_const>>;
+	using nodes_view 
+		= zh::container_view<node_iterator, const_node_iterator>;
+	using const_nodes_view 
+		= zh::const_container_view<const_node_iterator>;
+
+	// Constructors ------------------------------------------------------------
 	template <class... Args>
 	node(Args&&... args);
 
@@ -22,29 +47,28 @@ public:
 	node& operator=(node&&) = default;
 	~node();
 
-	// Observers ===============================================================
+	// Iterators ---------------------------------------------------------------
+	nodes_view adjacent_nodes() noexcept;
+	const_nodes_view adjacent_nodes() const noexcept;
+
+	// Observers ---------------------------------------------------------------
 	std::size_t id() const noexcept;
 
-	// Member access ===========================================================
+	// Member access -----------------------------------------------------------
 	T& value();
 	const T& value() const;
 
-	const std::unordered_set<node*>& edges() const;
-
-	// Friends =================================================================
+	// Friends -----------------------------------------------------------------
 	template <class T_>
 	friend class graph;
+
 private:
-	// Connecting ==============================================================
+	// Connecting --------------------------------------------------------------
 	void fw_connect(node* n); //one-way connecting
 	void bi_connect(node* n); //two-way connecting
 
 	void fw_disconnect(node* n);
 	void bi_disconnect(node* n);
-
-	// Members =================================================================
-	std::unique_ptr<T> m_value;
-	std::unordered_set<node*> m_edges;
 };
 
 template <class T>

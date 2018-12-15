@@ -35,11 +35,6 @@ inline void node<T>::bi_disconnect(node* n) {
 }
 
 template<class T>
-inline const std::unordered_set<node<T>*>& node<T>::edges() const {
-	return m_edges;
-}
-
-template<class T>
 inline std::size_t node<T>::id() const noexcept {
 	return reinterpret_cast<std::size_t>(m_value.get());
 }
@@ -52,9 +47,27 @@ inline node<T>::node(Args&&... args) :
 
 template<class T>
 inline node<T>::~node() {
-	for (auto&& connected_node : edges()) {
-		connected_node->m_edges.erase(this);
+	for (auto& nd : adjacent_nodes()) {
+		nd.m_edges.erase(this);
 	}
+}
+
+template<class T>
+inline typename node<T>::nodes_view 
+node<T>::adjacent_nodes() noexcept {
+	return nodes_view(
+		node_iterator(m_edges.begin()), 
+		node_iterator(m_edges.end()),
+		const_node_iterator(m_edges.cbegin()),
+		const_node_iterator(m_edges.cend()));
+}
+
+template<class T>
+inline typename node<T>::const_nodes_view 
+node<T>::adjacent_nodes() const noexcept {
+	return const_nodes_view(
+		const_node_iterator(m_edges.cbegin()), 
+		const_node_iterator(m_edges.cend()));
 }
 
 template <class T>

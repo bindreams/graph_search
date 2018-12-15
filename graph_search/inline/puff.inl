@@ -29,12 +29,12 @@ inline puff<T>::puff(const graph<T>& gr, std::size_t max_depth) {
 		for (auto& sector : sectors.front()) {
 			// Check edges
 			const node<T>& only_node = (**sector.nodes.begin());
-			for (auto& edge : only_node.edges()) {
+			for (auto& adjacent : only_node.adjacent_nodes()) {
 				// Based on edges id emplace in one of vectors
-				if (edge->id() > only_node.id())
-					new_level1.emplace_back(sector, *edge);
+				if (adjacent.id() > only_node.id())
+					new_level1.emplace_back(sector, adjacent);
 				else
-					new_level2.emplace_back(sector, *edge);
+					new_level2.emplace_back(sector, adjacent);
 			}
 		}
 

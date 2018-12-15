@@ -63,6 +63,10 @@ public:
 	std::size_t size() const noexcept { 
 		return std::distance(m_cbegin, m_cend); 
 	}
+
+	bool empty() const noexcept {
+		return m_cbegin == m_cend;
+	}
 };
 
 template <class ConstIterator>
@@ -119,6 +123,10 @@ public:
 	// Observers --------------------------------------------------------------
 	std::size_t size() const noexcept {
 		return std::distance(m_cbegin, m_cend);
+	}
+
+	bool empty() const noexcept {
+		return m_cbegin == m_cend;
 	}
 };
 
