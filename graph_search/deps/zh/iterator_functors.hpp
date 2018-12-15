@@ -6,7 +6,7 @@ namespace zh {
 
 struct dereference {
 	template <class PtrLikeType>
-	decltype(auto) operator()(PtrLikeType& ptr) const {
+	decltype(auto) operator()(PtrLikeType&& ptr) const {
 		return *ptr;
 	}
 };
@@ -14,7 +14,7 @@ struct dereference {
 template <std::size_t index>
 struct get_element {
 	template <class PairType>
-	decltype(auto) operator()(PairType& pair_obj) const {
+	decltype(auto) operator()(PairType&& pair_obj) const {
 		return std::get<index>(pair_obj);
 	}
 };

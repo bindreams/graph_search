@@ -14,8 +14,8 @@ inline puff<T>::puff(const graph<T>& gr, std::size_t max_depth) {
 
 	// Build level 1
 	sectors.emplace_back();
-	for (auto& i : gr) {
-		sectors.front().emplace_back(i);
+	for (auto& nd : gr.nodes()) {
+		sectors.front().emplace_back(nd);
 	}
 
 	// Build level 2, if needed

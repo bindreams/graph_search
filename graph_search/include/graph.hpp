@@ -1,6 +1,9 @@
 #pragma once
 #include <vector>
 #include "node.hpp"
+#include "deps/zh/proxy_iterator.hpp"
+#include "deps/zh/container_view.hpp"
+#include "functors/graph_functors.hpp"
 
 #include "deps/json.hpp"
 using json = nlohmann::json;
@@ -9,7 +12,7 @@ template <class T>
 class graph {
 private:
 	using container = std::vector<node<T>>;
-	container nodes;
+	container m_nodes;
 
 public:
 	// Member types ============================================================
@@ -23,8 +26,20 @@ public:
 	using pointer         = typename container::pointer;
 	using const_pointer   = typename container::const_pointer;
 
-	using iterator        = typename container::iterator;
-	using const_iterator  = typename container::const_iterator;
+	using iterator
+		= zh::proxy_iterator<typename container::iterator, access_value>;
+	using const_iterator 
+		= zh::proxy_iterator<typename container::const_iterator, access_value>;
+
+	using node_iterator       = typename container::iterator;
+	using const_node_iterator = typename container::const_iterator;
+
+	// nodes_view is a container_view - a lightweight struct that provides a
+	// way to access elements inside via begin and end. Since there are several
+	// ways to iterate over a graph (values, nodes, edges), graph provides
+	// nodes_view, edges_view, as well as plain begin/end for values.
+	using nodes_view = zh::container_view<node_iterator, const_node_iterator>;
+	using const_nodes_view = zh::const_container_view<const_node_iterator>;
 
 	// Member functions ========================================================
 	// Constructors ------------------------------------------------------------
@@ -47,11 +62,25 @@ public:
 	const_iterator end() const noexcept;
 	const_iterator cend() const noexcept;
 
+	// Node iterators ----------------------------------------------------------
+	nodes_view nodes() noexcept;
+	const_nodes_view nodes() const noexcept;
+
 	// Connecting --------------------------------------------------------------
 	void connect(node_type& n1, node_type& n2);
-	void connect(iterator it1, iterator it2);
+	void connect(node_iterator it1, node_iterator it2);
 	void disconnect(node_type& n1, node_type& n2);
-	void disconnect(iterator it1, iterator it2);
+	void disconnect(node_iterator it1, node_iterator it2);
+
+	// Element access ----------------------------------------------------------
+	
+	// "Every container has to have a front() and back(). Except maybe 
+	//  forward_list, but don't use forward_list"
+	//     - andreasxp 2018
+	reference front();
+	const_reference front() const;
+	reference back();
+	const_reference back() const;
 
 	// Modifiers ---------------------------------------------------------------
 	iterator insert(const T& val);
@@ -65,6 +94,7 @@ public:
 	iterator emplace(Args&&... args);
 
 	iterator erase(iterator it);
+	node_iterator erase(node_iterator it);
 	void clear() noexcept;
 
 	void reserve(size_type new_size);

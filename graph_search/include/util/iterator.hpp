@@ -50,18 +50,18 @@ constexpr bool advance(InputIt& it, InputIt limit, Distance n) {
 	return false;
 }
 
-// select =====================================================================
+// select_from ================================================================
 // Select a random iterator in range [first, last), optional generator.
 // Behavior is undefined if first is equal to last.
 template <class InputIt>
-InputIt select(InputIt first, InputIt last) {
+InputIt select_from(InputIt first, InputIt last) {
 	assert(first != last);
 	std::advance(first, generator<std::size_t>()(0, std::distance(first, last)-1));
 	return first;
 }
 
 template <class InputIt, class Gen>
-InputIt select(InputIt first, InputIt last, Gen&& gen) {
+InputIt select_from(InputIt first, InputIt last, Gen&& gen) {
 	assert(first != last);
 
 	std::uniform_int_distribution<std::size_t> dist(0, std::distance(first, last) - 1);
@@ -75,7 +75,7 @@ InputIt select(InputIt first, InputIt last, Gen&& gen) {
 template <class Container, class = std::enable_if_t<
 	zh::is_range_v<Container> &&
 	zh::has_size_v<Container>>>
-auto select(Container&& cont) {
+auto select_from(Container&& cont) {
 	// Auto return type to select const_iterator where needed
 	assert(std::size(std::forward<Container>(cont)) > 0);
 
@@ -86,7 +86,7 @@ auto select(Container&& cont) {
 template <class Container, class Gen, class = std::enable_if_t<
 	zh::is_range_v<Container> &&
 	zh::has_size_v<Container>>>
-auto select(Container&& cont, Gen&& gen) {
+auto select_from(Container&& cont, Gen&& gen) {
 	// Auto return type to select const_iterator where needed
 	assert(std::size(std::forward<Container>(cont)) > 0);
 
