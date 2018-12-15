@@ -224,10 +224,10 @@ std::ostream& operator<<(std::ostream& os, const graph<T>& obj) {
 
 	for (auto& nd : obj.nodes()) {
 		os << "    " << nd;
-		if (!nd.edges().empty()) os << " -> ";
+		if (!nd.adjacent_nodes().empty()) os << " -> ";
 
-		for (auto& connection : nd.edges()) {
-			os << *connection << " ";
+		for (auto& connection : nd.adjacent_nodes()) {
+			os << connection << " ";
 		}
 
 		os << std::endl;
@@ -246,8 +246,8 @@ void to_json(json& j, const graph<T>& obj) {
 		temp["id"] = nd.id();
 		
 		temp["edges"] = json::array();
-		for (auto&& edge : nd.edges()) {
-			temp["edges"].push_back(edge->id());
+		for (auto&& adjacent : nd.adjacent_nodes()) {
+			temp["edges"].push_back(adjacent.id());
 		}
 
 		j.push_back(temp);
