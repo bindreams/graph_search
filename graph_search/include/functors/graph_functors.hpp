@@ -2,7 +2,7 @@
 
 struct access_value {
 	template <class T>
-	decltype(auto) operator()(T&& obj) const {
+	decltype(auto) operator()(T&& obj) const noexcept {
 		return obj.value();
 	}
 };

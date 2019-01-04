@@ -36,9 +36,6 @@
     <ClInclude Include="include\graph.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\proxy_iterator.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\report\data_unit_lex_order.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -58,9 +55,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\benchmark.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="deps\zh\extra_traits.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\util\pretty_print.hpp">
@@ -85,9 +79,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="deps\ska\flat_hash_map.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\util\iterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\util\assert.hpp">
@@ -117,19 +108,121 @@
     <ClInclude Include="include\level_builder\level_builder_mthread.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="deps\zh\proxy_iterator.hpp">
+    <ClInclude Include="include\functors\graph_functors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="deps\zh\iterator_functors.hpp">
+    <ClInclude Include="include\functors\node_lookup.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pseudonode.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\as_functor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="deps\zh\container_view.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\functors\graph_functors.hpp">
+    <ClInclude Include="deps\zh\container_view_impl.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="deps\zh\functor_sequence.hpp">
+    <ClInclude Include="deps\zh\container_view_impl_no_reverse.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\container_view_impl_reverse.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\deriveable_ptr.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\fseq.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\fseq_impl.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\iterator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\iterator_functors.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\make_from_first_and_tuple.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\proxy_iterator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\random.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\defines_type.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\enable_if_defined.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\has_size.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_bidirectional.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_bidirectional_range.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_forward.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_function_like.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_input.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_less_cv.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_more_cv.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_output.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_random_access.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_range.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_ratio.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_same.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_similar.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_stronger_qualified.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\is_weaker_qualified.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\type_traits\remove_all_pointers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\random\generator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\random\multigenerator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\zh\random\thread_safe_random_device.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -175,9 +268,6 @@
     <None Include="inline\node_functors.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="inline\generator.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="inline\puff.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -194,6 +284,27 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="inline\safe_sectors_view.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\node_lookup.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="inline\pseudonode.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="deps\zh\container_view_impl_no_reverse.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="deps\zh\container_view_impl_reverse.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="deps\zh\deriveale_ptr.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="deps\zh\iterator.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="deps\zh\proxy_iterator.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

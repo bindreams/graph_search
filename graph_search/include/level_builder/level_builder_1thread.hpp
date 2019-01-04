@@ -1,5 +1,5 @@
 #pragma once
-#include "deps/zh/extra_traits.hpp"
+#include "deps/zh/type_traits.hpp"
 #include "level_builder.hpp"
 #include "build_result.hpp"
 

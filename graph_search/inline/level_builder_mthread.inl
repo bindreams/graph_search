@@ -1,6 +1,6 @@
 #pragma once
 #include "level_builder/level_builder_mthread.hpp"
-#include "util/iterator.hpp"
+#include "deps/zh/iterator.hpp"
 
 template<class T>
 const unsigned int level_builder<T, true>::worker_count = std::thread::hardware_concurrency() - 1;

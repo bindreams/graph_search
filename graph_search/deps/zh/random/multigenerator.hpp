@@ -1,9 +1,41 @@
 #pragma once
-#include "util/generator.hpp"
+#include <random>
+#include <type_traits>
+#include <limits>
+#include <cstdint>
 
-inline multigenerator::multigenerator() :
-	mt(rd()) {
-}
+#include "thread_safe_random_device.hpp"
+
+// A generic generator that creates uniform values of any base type with no
+// restrictions. Can be seeded, seeded automatically by a random_device.
+class multigenerator {
+private:
+	inline static thread_safe_random_device rd;
+	
+	std::conditional_t<sizeof(std::size_t) == 8,
+		std::mt19937_64,
+		std::mt19937> mt;
+
+public:
+	multigenerator() :
+		mt(rd()) {
+	}
+
+	multigenerator(const multigenerator& other) = default;
+	multigenerator(multigenerator&& other) = default;
+
+	multigenerator& operator=(const multigenerator& other) = default;
+	multigenerator& operator=(multigenerator&& other) = default;
+
+	void seed(unsigned int s);
+	void seed();
+
+	template <class T>
+	T get();
+
+	template <class T>
+	T get(T min, T max);
+};
 
 inline void multigenerator::seed(unsigned int s) {
 	mt.seed(s);
@@ -52,12 +84,4 @@ inline T multigenerator::get(T min, T max) {
 		std::uniform_real_distribution<T> dist(min, max);
 		return dist(mt);
 	}
-	else {
-		static_assert("multigenerator::get: unknown type");
-	}
-}
-
-template <class T>
-inline T generator<T>::operator()(const T& min, const T& max) {
-	return get<T>(min, max);
 }

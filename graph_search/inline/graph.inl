@@ -1,6 +1,124 @@
 #pragma once
-#include "deps/ska/unordered_map.hpp"
 #include "graph.hpp"
+
+#include "deps/ska/unordered_map.hpp"
+#include "util/assert.hpp"
+#include "pseudonode.hpp"
+
+template <class T>
+inline graph<T>::iterator::iterator(const container_iterator& other)
+	: base(other) {
+}
+
+template <class T>
+inline graph<T>::iterator::iterator(const node_iterator& other)
+	: base(other.get_iterator()) {
+}
+
+template <class T>
+inline graph<T>::const_iterator::const_iterator(const iterator& other)
+	: base(other) {
+}
+
+template <class T>
+inline graph<T>::const_iterator::const_iterator(const const_container_iterator& other)
+	: base(other) {
+}
+
+template <class T>
+inline graph<T>::const_iterator::const_iterator(const node_iterator& other)
+	: base(other.get_iterator()) {
+}
+
+template <class T>
+inline graph<T>::const_iterator::const_iterator(const const_node_iterator& other)
+	: base(other.get_iterator()) {
+}
+
+template <class T>
+inline graph<T>::node_iterator::node_iterator(const container_iterator& other)
+	: base(other) {
+}
+
+template <class T>
+inline graph<T>::node_iterator::node_iterator(const typename node_type::node_iterator& other)
+	// other iterator was end() or default-constructed, default-construct
+	// otherwise, get node_iterator to the id stored in other.get_iterator()
+	: node_iterator(other.is_valid() ? 
+		other.get_functor().get_graph().find(*other.get_iterator()) : 
+		other.get_functor().get_graph().nodes().end()) {
+}
+
+template <class T>
+inline graph<T>::node_iterator::node_iterator(const iterator& other)
+	: base(other.get_iterator()) {
+}
+
+template <class T>
+inline graph<T>::const_node_iterator::const_node_iterator(const node_iterator& other)
+	: base(other) {
+}
+
+template <class T>
+inline graph<T>::const_node_iterator::const_node_iterator(const const_container_iterator& other)
+	: base(other) {
+}
+
+template <class T>
+inline graph<T>::const_node_iterator::const_node_iterator(const typename node_type::node_iterator& other)
+	// other iterator was end() or default-constructed, default-construct
+	// otherwise, get node_iterator to the id stored in other.get_iterator()
+	: const_node_iterator(other.is_valid() ? 
+		other.get_functor().get_graph().find(*other.get_iterator()) : 
+		other.get_functor().get_graph().nodes().cend()) {
+}
+
+template <class T>
+inline graph<T>::const_node_iterator::const_node_iterator(const typename node_type::const_node_iterator& other)
+	// other iterator was end() or default-constructed, default-construct
+	// otherwise, get node_iterator to the id stored in other.get_iterator()
+	: const_node_iterator(other.is_valid() ? 
+		other.get_functor().get_graph().find(*other.get_iterator()) :
+		other.get_functor().get_graph().nodes().cend()) {
+}
+
+template <class T>
+inline graph<T>::const_node_iterator::const_node_iterator(const iterator& other)
+	: base(other.get_iterator()) {
+}
+
+template <class T>
+inline graph<T>::const_node_iterator::const_node_iterator(const const_iterator& other)
+	: base(other.get_iterator()) {
+}
+
+template<class T>
+inline typename graph<T>::node_iterator 
+graph<T>::find(typename node<T>::id_type id) {
+	// If an id of 0 was passed, that usually means that it was aquired from
+	// dereferencing a node<T>::node_iterator that was equal to end().
+	// Such action results in undefined behaviour.
+	GS_ASSERT(id != 0);
+
+	pseudonode<T> key(*this, id);
+	auto got = m_nodes.find(key.imitator());
+
+	return node_iterator(got);
+}
+
+template<class T>
+inline typename graph<T>::const_node_iterator 
+graph<T>::find(typename node<T>::id_type id) const {
+	// If an id of 0 was passed, that usually means that it was aquired from
+	// dereferencing a node<T>::node_iterator that was equal to end().
+	// Such action results in undefined behaviour.
+	GS_ASSERT(id != 0);
+
+	pseudonode<T> key(*this, id);
+	auto got = m_nodes.find(key.imitator());
+
+	return const_node_iterator(got);
+}
 
 template<class T>
 inline graph<T>::graph(const graph& other) {
@@ -12,7 +130,7 @@ inline graph<T>::graph(const graph& other) {
 
 	// Emplacing all m_nodes (not connecting)
 	for (auto& nd : other) {
-		m_nodes.emplace_back(nd.value());
+		emplace(nd.value());
 		ptr_match[&nd] = &m_nodes.back();
 	}
 
@@ -82,22 +200,24 @@ inline typename graph<T>::const_iterator graph<T>::cend() const noexcept {
 template<class T>
 inline typename graph<T>::nodes_view 
 graph<T>::nodes() noexcept {
-	return nodes_view(
-		m_nodes.begin(), m_nodes.end(), 
-		m_nodes.cbegin(), m_nodes.cend());
+	return nodes_view(m_nodes);
 }
 
 template<class T>
 inline typename graph<T>::const_nodes_view 
 graph<T>::nodes() const noexcept {
-	return const_nodes_view(
-		m_nodes.cbegin(), m_nodes.cend());
+	return const_nodes_view(m_nodes);
 }
 
 template<class T>
 inline void graph<T>::connect(node_type& n1, node_type& n2) {
 	if (n1.id() == n2.id()) throw std::invalid_argument("graph::connect: cannot connect node to itself");
-	n1.bi_connect(&n2);
+	n1.bi_connect(n2);
+}
+
+template<class T>
+inline void graph<T>::connect(iterator it1, iterator it2) {
+	connect(node_iterator(it1), node_iterator(it2));
 }
 
 template<class T>
@@ -107,7 +227,12 @@ inline void graph<T>::connect(node_iterator it1, node_iterator it2) {
 
 template<class T>
 inline void graph<T>::disconnect(node_type& n1, node_type& n2) {
-	n1.bi_disconnect(&n2);
+	n1.bi_disconnect(n2);
+}
+
+template<class T>
+inline void graph<T>::disconnect(iterator it1, iterator it2) {
+	disconnect(node_iterator(it1), node_iterator(it2));
 }
 
 template<class T>
@@ -161,21 +286,27 @@ inline void graph<T>::insert(std::initializer_list<value_type> ilist) {
 template<class T>
 template<class... Args>
 inline typename graph<T>::iterator graph<T>::emplace(Args&&... args) {
-	m_nodes.emplace_back(std::forward<Args>(args)...);
-	return std::prev(end());
+	return iterator(m_nodes.emplace(*this, std::forward<Args>(args)...)
+		.first);
 }
 
 template<class T>
 inline typename graph<T>::iterator 
 graph<T>::erase(iterator it) {
-	return m_nodes.erase(
-		static_cast<typename container::iterator&>(it));
+	return iterator(m_nodes.erase(node_iterator(it)));
 }
 
 template<class T>
 inline typename graph<T>::node_iterator 
 graph<T>::erase(node_iterator it) {
-	return m_nodes.erase(it);
+	GS_ASSERT(it != nodes().end());
+
+	for (auto& nd : it->adjacent_nodes()) {
+		// Remove all connections other nodes have to this node
+		nd.fw_disconnect(*it);
+	}
+
+	return node_iterator(m_nodes.erase(it.get_iterator));
 }
 
 template<class T>
@@ -276,8 +407,8 @@ void from_json(const json& j, graph<T>& obj) {
 	for (auto& nd : j) {
 		for (auto& edge_id : nd["edges"]) {
 			obj.connect(
-				*ptr_match[nd["id"]],
-				*ptr_match[edge_id]
+				ptr_match[nd["id"]],
+				ptr_match[edge_id]
 			);
 		}
 	}

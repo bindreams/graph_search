@@ -1,6 +1,6 @@
 #pragma once
 #include <benchmark/benchmark.h>
-#include "deps/zh/extra_traits.hpp"
+#include "deps/zh/type_traits.hpp"
 
 // Run Google Benchmark
 // All benchmarks are defined in benchmark.cpp
