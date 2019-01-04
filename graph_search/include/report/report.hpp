@@ -12,4 +12,4 @@ inline void report(const std::string& save_path,
 		const Range3& ratios,
 		int attempts = 5);
 
-#include "inline/report.inl"
+#include "report.inl"

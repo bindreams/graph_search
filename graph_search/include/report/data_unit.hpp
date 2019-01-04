@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "graph.hpp"
-#include "puff.hpp"
+#include "graph_search/puff.hpp"
 #include "deps/json.hpp"
 using json = nlohmann::json;
 
@@ -29,4 +29,4 @@ struct data_unit {
 void from_json(const json& j, data_unit& du);
 void to_json(json& j, const data_unit& du);
 
-#include "inline/data_unit.inl"
+#include "data_unit.inl"

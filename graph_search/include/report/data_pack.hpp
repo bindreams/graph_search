@@ -23,4 +23,4 @@ public:
 	friend void to_json(json& j, const data_pack& du);
 };
 
-#include "inline/data_pack.inl"
+#include "data_pack.inl"

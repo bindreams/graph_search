@@ -1,14 +1,4 @@
 #pragma once
-#include <set>
-#include "graph.hpp"
-#include "graph_match.hpp"
-
-template <class T>
-std::set<graph_match> search(const graph<T>& source, const graph<T>& target);
-
-template <class T>
-bool operator==(const graph<T>& lhs, const graph<T>& rhs);
-template <class T>
-bool operator!=(const graph<T>& lhs, const graph<T>& rhs);
-
-#include "inline/graph_search.inl"
+// This header file exposes the graph_search submodule to the public
+// interface. All relevant files are located graph_search/*
+#include "graph_search/graph_search.hpp"
