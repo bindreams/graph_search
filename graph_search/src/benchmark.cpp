@@ -8,7 +8,6 @@
 #include "benchmark.hpp"
 #include "deps/zh/type_traits.hpp"
 #include "util/generator.hpp"
-#include "puff.hpp"
 #include "graph_search.hpp"
 
 namespace fs = std::filesystem;
