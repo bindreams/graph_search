@@ -6,7 +6,7 @@
 #pragma comment(lib, "shlwapi.lib") // MSVC++ does not work without this
 
 #include "benchmark.hpp"
-#include "deps/zh/extra_traits.hpp"
+#include "deps/zh/type_traits.hpp"
 #include "util/generator.hpp"
 #include "puff.hpp"
 #include "graph_search.hpp"

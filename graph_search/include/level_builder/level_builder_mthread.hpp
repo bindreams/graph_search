@@ -1,6 +1,6 @@
 #pragma once
 #include "deps/ska/bytell_hash_map.hpp"
-#include "deps/zh/extra_traits.hpp"
+#include "deps/zh/type_traits.hpp"
 #include "deps/ctpl_stl.h"
 #include "level_builder.hpp"
 #include "node_group.hpp"

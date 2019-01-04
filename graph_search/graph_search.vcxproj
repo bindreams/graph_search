@@ -28,26 +28,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>llvm</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>llvm</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>llvm</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>llvm</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -160,13 +160,45 @@
     <ClInclude Include="deps\ska\bytell_hash_map.hpp" />
     <ClInclude Include="deps\ska\flat_hash_map.hpp" />
     <ClInclude Include="deps\ska\unordered_map.hpp" />
+    <ClInclude Include="deps\zh\as_functor.hpp" />
     <ClInclude Include="deps\zh\container_view.hpp" />
-    <ClInclude Include="deps\zh\extra_traits.hpp" />
-    <ClInclude Include="deps\zh\functor_sequence.hpp" />
+    <ClInclude Include="deps\zh\container_view_impl.hpp" />
+    <ClInclude Include="deps\zh\container_view_impl_no_reverse.hpp" />
+    <ClInclude Include="deps\zh\container_view_impl_reverse.hpp" />
+    <ClInclude Include="deps\zh\deriveable_ptr.hpp" />
+    <ClInclude Include="deps\zh\fseq.hpp" />
+    <ClInclude Include="deps\zh\fseq_impl.hpp" />
+    <ClInclude Include="deps\zh\iterator.hpp" />
     <ClInclude Include="deps\zh\iterator_functors.hpp" />
+    <ClInclude Include="deps\zh\make_from_first_and_tuple.hpp" />
     <ClInclude Include="deps\zh\proxy_iterator.hpp" />
+    <ClInclude Include="deps\zh\random.hpp" />
+    <ClInclude Include="deps\zh\random\generator.hpp" />
+    <ClInclude Include="deps\zh\random\multigenerator.hpp" />
+    <ClInclude Include="deps\zh\random\thread_safe_random_device.hpp" />
+    <ClInclude Include="deps\zh\type_traits.hpp" />
+    <ClInclude Include="deps\zh\type_traits\defines_type.hpp" />
+    <ClInclude Include="deps\zh\type_traits\enable_if_defined.hpp" />
+    <ClInclude Include="deps\zh\type_traits\has_size.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_bidirectional.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_bidirectional_range.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_forward.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_function_like.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_input.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_less_cv.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_more_cv.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_output.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_random_access.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_range.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_ratio.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_same.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_similar.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_stronger_qualified.hpp" />
+    <ClInclude Include="deps\zh\type_traits\is_weaker_qualified.hpp" />
+    <ClInclude Include="deps\zh\type_traits\remove_all_pointers.hpp" />
     <ClInclude Include="include\benchmark.hpp" />
     <ClInclude Include="include\functors\graph_functors.hpp" />
+    <ClInclude Include="include\functors\node_lookup.hpp" />
     <ClInclude Include="include\level_builder\build_result.hpp" />
     <ClInclude Include="include\functors\node_functors.hpp" />
     <ClInclude Include="include\functors\sector_functors.hpp" />
@@ -177,15 +209,14 @@
     <ClInclude Include="include\level_builder\level_builder_mthread.hpp" />
     <ClInclude Include="include\level_builder\safe_sectors_view.hpp" />
     <ClInclude Include="include\node_group.hpp" />
+    <ClInclude Include="include\pseudonode.hpp" />
     <ClInclude Include="include\report\data_pack.hpp" />
     <ClInclude Include="include\report\data_unit.hpp" />
     <ClInclude Include="include\report\data_unit_lex_order.hpp" />
-    <ClInclude Include="include\util\iterator.hpp" />
     <ClInclude Include="include\util\assert.hpp" />
     <ClInclude Include="include\util\generator.hpp" />
     <ClInclude Include="include\graph.hpp" />
     <ClInclude Include="include\graph_match.hpp" />
-    <ClInclude Include="include\proxy_iterator.hpp" />
     <ClInclude Include="deps\json.hpp" />
     <ClInclude Include="include\node.hpp" />
     <ClInclude Include="include\report\report.hpp" />
@@ -197,16 +228,22 @@
     <ClInclude Include="inline\graph_random.inl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="deps\zh\container_view_impl_no_reverse.inl" />
+    <None Include="deps\zh\container_view_impl_reverse.inl" />
+    <None Include="deps\zh\deriveale_ptr.inl" />
+    <None Include="deps\zh\iterator.inl" />
+    <None Include="deps\zh\proxy_iterator.inl" />
     <None Include="inline\build_result.inl" />
     <None Include="inline\data_pack.inl" />
     <None Include="inline\data_unit.inl" />
-    <None Include="inline\generator.inl" />
     <None Include="inline\graph.inl" />
     <None Include="inline\graph_search.inl" />
     <None Include="inline\level_builder_mthread.inl" />
     <None Include="inline\level_builder_1thread.inl" />
     <None Include="inline\node.inl" />
     <None Include="inline\node_functors.inl" />
+    <None Include="inline\node_lookup.inl" />
+    <None Include="inline\pseudonode.inl" />
     <None Include="inline\puff.inl" />
     <None Include="inline\report.inl" />
     <None Include="inline\safe_sectors_view.inl" />

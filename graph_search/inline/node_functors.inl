@@ -12,3 +12,8 @@ inline bool node_value_order<T>::operator()(const node<T>* const & lhs, const no
 	return lhs->value() < rhs->value() ||
 		(lhs->value() == rhs->value() && lhs->id() < rhs->id());
 }
+
+template<class T>
+inline bool node_id_equal<T>::operator()(const node<T>& lhs, const node<T>& rhs) const noexcept {
+	return lhs.id() == rhs.id();
+}
